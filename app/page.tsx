@@ -158,11 +158,7 @@ export default function Home() {
           </div>
         </div>
 
-        <img
-          alt=""
-          src="https://images.unsplash.com/photo-1532009324734-20a7a5813719?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1778&q=80"
-          className="h-full w-full object-cover sm:h-[calc(100%_-_2rem)] sm:self-end sm:rounded-ss-[30px] md:h-[calc(100%_-_4rem)] md:rounded-ss-[60px]"
-        />
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/FlhInFF0fwM?si=fxiEadPSMxLpFnCk" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
       </section>
       <section className="">
         <div
@@ -666,11 +662,7 @@ export default function Home() {
 
       <footer className="">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          <p className="mx-auto mt-6 max-w-md text-center leading-relaxed text-gray-500">
-            SwahiliPro is open-source software released under the MIT License.
-            You are free to use, modify, and distribute it according to the
-            terms of the license.
-          </p>
+          
 
           <ul className="mt-12 flex flex-wrap justify-center gap-6 md:gap-8 lg:gap-12">
             <li>
