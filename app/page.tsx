@@ -144,21 +144,24 @@ export default function Home() {
             <p className="hidden text-gray-500 md:mt-4 md:block">
               Swahilipro is a compiler for a Swahili-based programming language
               that allows Swahili speakers to write executable code in their
-              native language.
+              native language.Download the installer below and run the file to install the compiler on your computer
             </p>
 
             <div className="mt-4 md:mt-8">
-              <a
-                href="https://pypi.org/project/swahilipro/"
-                className="inline-block rounded bg-emerald-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-emerald-700 focus:outline-none focus:ring focus:ring-yellow-400"
-              >
-                Get Started Today
-              </a>
+            <a
+  href="/swa.bat"
+  download="swa.bat"
+  className="inline-block rounded bg-emerald-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-emerald-700 focus:outline-none focus:ring focus:ring-yellow-400"
+>
+  Download Installer
+</a>
+
+
             </div>
           </div>
         </div>
 
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/FlhInFF0fwM?si=fxiEadPSMxLpFnCk" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/gpaE90QK5yE?si=kO_R8QpFunZYwecI" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
       </section>
       <section className="">
         <div
@@ -175,7 +178,7 @@ export default function Home() {
               intuitive to swahili speakers.We believe a programmer would be
               able to solve problems easier if they could reason it out in their
               native language.Our project aligns with Standard developmet goals
-              (SDG 5: QUALITY EDUCATION)
+              (SDG 4: ENSURING INCLUSIVE AND EQUITABLE QUALITY EDUCATION)
             </p>
           </div>
 
@@ -183,11 +186,11 @@ export default function Home() {
             <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:divide-x sm:divide-gray-100">
               <div className="flex flex-col px-4 py-8 text-center">
                 <dt className="order-last text-lg font-medium text-gray-500">
-                  Total Active Users
+                  Current Active Users
                 </dt>
 
                 <dd className="text-4xl font-extrabold text-emerald-600 md:text-5xl">
-                  10+
+                  19
                 </dd>
               </div>
 
@@ -227,14 +230,14 @@ export default function Home() {
             <p className="mt-4 text-gray-600">
               The swahilipro compiler supports several programming features
               similar with popular programming languages.This features allow
-              users to create complex algorithms in swahili.
+              users to create complex algorithms in swahili.Swahilipro also offers a visual studio code extension that helps with language icon representaition and syntax highlighting.
             </p>
 
             <a
-              href="https://pypi.org/project/swahilipro/"
+              href="vscode:extension/masota.swahilipro"
               className="mt-8 inline-block rounded bg-emerald-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-yellow-400"
             >
-              Explore more...
+              Install Extension
             </a>
           </div>
 

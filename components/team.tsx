@@ -8,14 +8,17 @@ const teamMembers = [
     bio: "As the Lead Developer, Boniface is responsible for guiding the foundations strategic direction and overseeing the development of the compiler",
     image:
       "https://th.bing.com/th/id/R.3cbf0ed318d716a013b48df28881e94d?rik=hNz9sffMEwL3yQ&riu=http%3a%2f%2fwww.somewhere-magazine.com%2fwp-content%2fuploads%2f2020%2f07%2fapple-memoji-update-headwear-masks-hairstyles-4.png&ehk=SFprajXcJfL1s1%2bHw8UzLmvspxflV710js9tyFFG6UM%3d&risl=&pid=ImgRaw&r=0", // Placeholder image URL
-  },
+ 
+    contact:'Contact : 0722218106'
+    },
   {
     name: "Godfrey Ngigi",
     position: "Co-founder, Product Lead ",
     bio: "As the Lead Developer, Godfrey is responsible for guiding the foundations strategic direction and overseeing the development of the compiler",
     image:
       "https://miro.medium.com/v2/resize:fit:2400/1*pyprQ9zXLGlVqYBvs7jz_w@2x.jpeg", // Placeholder image URL
-  },
+    contact:'Contact :  0743533648'
+    },
 
   // Add more team members as needed
 ];
@@ -45,6 +48,9 @@ const TeamPage = () => {
                     </p>
                     <small className="text-default-500">
                       {member.position}
+                    </small>
+                    <small className="text-default-500">
+                      {member.contact}
                     </small>
                   </CardHeader>
                   <CardBody className="overflow-visible py-2">
