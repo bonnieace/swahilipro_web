@@ -58,10 +58,7 @@ const CONCEPTS = [
     shortDescription: "Jifunze kuhifadhi data katika vigezo na kuvitumia.",
     explanation: "Variabu/Vigezo hutangazwa kwa kutumia neno kuu var. Vigezo hivi vinaweza kuhifadhi aina tofauti za data kama maandishi (string) na nambari (int).",
     examples: [
-      {
-        code: "var jina = \"Habari\"\nvar idadi = 10",
-        description: "Fungua Visual Studio Code.\nUnda faili na kiendelezi(extension) .swa. \nFungua Command Line Interface.\nAndika swahilipro kuanzisha mkusanyaji (compiler).\nAndika swa(\"filename.swa\") ili kutekeleza faili hilo."
-      },
+     
       {
         code: "var jina = \"Habari\"\nvar idadi = 10",
         description: "Kutangaza Kigezo cha Msingi (Basic variable declaration)"
