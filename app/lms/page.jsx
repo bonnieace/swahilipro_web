@@ -9,146 +9,175 @@ const BADGES = [
     name: "Mwanafunzi",
     requiredPoints: 25,
     icon: "🌱",
-    description: "Beginner"
+    description: "Mwanafunzi"
   },
   {
     name: "Mjuzi",
     requiredPoints: 60,
     icon: "⭐",
-    description: "Intermediate"
+    description: "Mjuzi"
   },
   {
     name: "Mtaalam",
     requiredPoints: 100,
     icon: "👑",
-    description: "Expert"
+    description: "Mtaalam"
   }
 ];
 
 const CONCEPTS = [
   {
-    id: 1,
-    title: "Variables (Vigezo)",
-    points: 10,
-    shortDescription: "Learn about storing and manipulating data with variables",
-    explanation: "Variables in Swahili programming are declared using the 'var' keyword. They can store different types of data like text (string) and numbers.",
+    id: 0,
+    title: "Introduction (Utangulizi)",
+    points: 20,
+    shortDescription: "Jifunze kuandika msimbo kwa kiswahili na kutekeleza.",
+    explanation: "Karibu katika masomo ya swahilipro.\nHapa utajifunza kuandika na kutekeleza lugha hii.\n Fungua Visual Studio Code.\nUnda faili na kiendelezi (extension) .swa. \nFungua Command Line Interface. (CMD)\nAndika swahilipro  katika CMD ili uweze kuanzisha mkusanyaji (compiler).\nKisha andika swa(\"filename.swa\") ili kutekeleza faili hilo.",
     examples: [
       {
-        code: "var jina = \"Habari\"\nvar idadi = 10",
-        description: "Basic variable declaration"
+        code: "ikiwa faili yako umeiita msimbo.swa \nandika swahilipro katika cmd\nKisha andika swa(\"msimbo.swa\")",
+        description: "utekelezaji (Compilation)"
       },
       {
-        code: "var salamu = \"Habari\" + \" Dunia\"\nandika(salamu)",
-        description: "String operations"
-      }
+        code: "andika(\"Habari Kenya!\")",
+        description: "Hello world!"
+      },
+      
     ],
     practice: [
       {
-        question: "Create a variable named 'umri' and assign it the value 25",
-        answer: "var umri = 25"
+        question: "Unda msimbo unaoandika neno swahilipro",
+        answer: "andika(\"Swahilipro.\")"
       }
     ],
     requiredPoints: 0
   },
   {
-    id: 2,
-    title: "Arithmetic Operations (Operesheni za Hisabati)",
-    points: 15,
-    shortDescription: "Master basic mathematical operations in Swahili",
-    explanation: "Swahili programming supports basic arithmetic operations:\n+ (Ongeza) for addition\n- (Toa) for subtraction\n* (Mara) for multiplication\n/ (Gawa) for division\n^ (Karisimu) for exponentiation",
+    id: 1,
+    title: "Variables (Vigezo)",
+    points: 10,
+    shortDescription: "Jifunze kuhifadhi data katika vigezo na kuvitumia.",
+    explanation: "Variabu/Vigezo hutangazwa kwa kutumia neno kuu var. Vigezo hivi vinaweza kuhifadhi aina tofauti za data kama maandishi (string) na nambari (int).",
     examples: [
       {
-        code: "var a = 5\nvar b = 2\nvar jumla = a + b\nandika(jumla)  \n# Matokeo: 7",
-        description: "Addition"
+        code: "var jina = \"Habari\"\nvar idadi = 10",
+        description: "Fungua Visual Studio Code.\nUnda faili na kiendelezi(extension) .swa. \nFungua Command Line Interface.\nAndika swahilipro kuanzisha mkusanyaji (compiler).\nAndika swa(\"filename.swa\") ili kutekeleza faili hilo."
       },
       {
-        code: "var tofauti = 10 - 3\nandika(tofauti)  \n# Matokeo: 7",
-        description: "Subtraction"
+        code: "var jina = \"Habari\"\nvar idadi = 10",
+        description: "Kutangaza Kigezo cha Msingi (Basic variable declaration)"
       },
       {
-        code: "var zao = 4 * 3\nandika(zao)  \n# Matokeo: 12",
-        description: "Multiplication"
+        code: "var salamu = \"Habari\" + \" Dunia\"\nandika(salamu)",
+        description: "Kuunganisha maneno (String Concatenation)"
       }
     ],
     practice: [
       {
-        question: "Calculate the average of numbers 10, 15, and 20",
+        question: "Unda Kigezo Kinachoitwa 'umri' na Kipe Thamani 25",
+        answer: "var umri = 25"
+      }
+    ],
+    requiredPoints: 20
+  },
+  {
+    id: 2,
+    title: "Arithmetic Operations (Operesheni za Hisabati)",
+    points: 15,
+    shortDescription: "Jifunze kutumia operesheni za hisabati katika msimbo.",
+    explanation: "Operesheni za hisabati :\n + Ongeza  (addition),\n - Toa  (subtraction)\n* Mara  (multiplication),\n/ Gawa  (division), \n^ Karisimu  (exponentiation)",
+    examples: [
+      {
+        code: "var a = 5\nvar b = 2\nvar jumla = a + b\nandika(jumla)  \n",
+        description: "Operesheni ya Jumla (Addition)"
+      },
+      {
+        code: "var tofauti = 10 - 3\nandika(tofauti)  \n",
+        description: "Operesheni ya Toa (Subtraction)"
+      },
+      {
+        code: "var zao = 4 * 3\nandika(zao)  \n# Matokeo: 12",
+        description: "Operesheni ya mara (Multiplication)"
+      }
+    ],
+    practice: [
+      {
+        question: "Andika msimbo unaohesabu wastani wa nambari : 10, 15, and 20",
         answer: "var jumla = 10 + 15 + 20\nvar wastani = jumla / 3\nandika(wastani)"
       }
     ],
-    requiredPoints: 10
+    requiredPoints: 30
   },
   {
     id: 3,
     title: "Control Structures (Miundo ya Kudhibiti)",
     points: 20,
-    shortDescription: "Learn about conditional statements and loops",
-    explanation: "Control structures help manage program flow using conditions and loops. They include if statements (ikiwa) and loops (kwa).",
+    shortDescription: "Jifunze miundo ya kudhibiti na matumizi yake.",
+    explanation: "Miundo ya udhibiti husimamia mtiririko wa programu kwa kutumia masharti  kama vile taarifa za `ikiwa`(if) na `kwa`(for)",
     examples: [
       {
         code: "var umri = 18\nikiwa umri >= 18 basi\n    andika(\"Umekua\")\nikiwa_nyingine\n    andika(\"Bado mdogo\")\nfunga",
-        description: "If-else statement"
+        description: "(If-else statement) :Taarifa ya ikiwa/ikiwa_nyingine hutumika kutekeleza vitendo tofauti kulingana na sharti lililotolewa. Ikiwa sharti ni kweli (true), sehemu ya kwanza ya msimbo hufanyika. Ikiwa si kweli (false), sehemu nyingine (ikiwa_nyingine) hutekelezwa."
       },
       {
         code: " var i = 1\n kwa i=1 hadi 5 basi\n    andika(i)\nfunga",
-        description: "For loop"
+        description: "(For loop): Kwa hutumika kurudia utekelezaji wa msimbo fulani kwa idadi maalum ya mara. "
       }
     ],
     practice: [
       {
-        question: "Write a loop that prints numbers from 1 to 3",
-        answer: "kwa var i = 1 hadi 3 basi\n    andika(i)\nfunga"
-      }
-    ],
-    requiredPoints: 25
-  },
-  {
-    id: 4,
-    title: "Functions (Njia)",
-    points: 20,
-    shortDescription: "Create reusable blocks of code with functions",
-    explanation: "Functions are defined using the 'njia' keyword and can return values using 'rudisha'.",
-    examples: [
-      {
-        code: "njia ongeza(a, b) basi\n    rudisha a + b\nfunga\n\nvar matokeo = ongeza(5, 3)\nandika(matokeo)  \n# Matokeo: 8",
-        description: "Basic function"
-      },
-      {
-        code: "njia karibisha(jina) basi\n    rudisha \"Habari, \" + jina\nfunga",
-        description: "Function with string parameter"
-      }
-    ],
-    practice: [
-      {
-        question: "Create a function that multiplies two numbers",
-        answer: "njia zidisha(a, b) basi\n    rudisha a * b\nfunga"
+        question: " msimbo unaoandika nambari toka moja hadi tatu",
+        answer: "var i = 1\nkwa  i = 1 hadi 4 basi\n    andika(i)\nfunga"
       }
     ],
     requiredPoints: 45
   },
   {
-    id: 5,
-    title: "Logical & Comparison Operators",
-    points: 15,
-    shortDescription: "Learn how to compare values and combine conditions",
-    explanation: "Logical operators (na, au) and comparison operators (==, !=, <, >, <=, >=) are used for creating conditions.",
+    id: 4,
+    title: "Functions (Njia)",
+    points: 20,
+    shortDescription: "Unda Vipande vya Msimbo Vinavyotumika Tena kwa Kutumia njia",
+    explanation: "Functions zinatambulishwa kwa kutumia neno kuu njia, na zinaweza kurudisha thamani kwa kutumia neno rudisha.Hii ni sehemu ya msimbo inayotekeleza jukumu maalum na inaweza kuitwa tena inapohitajika bila kuandikwa upya.",
     examples: [
       {
-        code: "var umri = 25\nvar ana_kitambulisho = kweli\n\nikiwa umri >= 18 na ana_kitambulisho basi\n    andika(\"Unaweza kuingia\")\nfunga",
-        description: "Logical AND operator"
+        code: "njia ongeza(a,b)\n    rudisha (a + b)\nfunga\n\nvar jibu = ongeza(5,3)\n andika(jibu) ",
+        description: " Njia inayopokea thamani ya nambari  kama ingizo (integer parameter) ili kutekeleza jukumu maalum."
       },
       {
-        code: "var saa = 17\nikiwa saa < 12 au saa > 22 basi\n    andika(\"Duka limefungwa\")\nfunga",
-        description: "Logical OR operator"
+        code: "njia karibisha(jina) \n    rudisha( \"Habari, \" + jina)\nfunga\n var jibu = karibisha(\"bonnie\")\nandika(jibu)",
+        description: "njia inayopokea thamani ya maandishi  kama ingizo (string parameter) ili kutekeleza jukumu maalum."
       }
     ],
     practice: [
       {
-        question: "Write a condition that checks if a number is between 1 and 10",
-        answer: "var nambari = 5\nikiwa nambari >= 1 na nambari <= 10 basi\n    andika(\"Nambari sahihi\")\nfunga"
+        question: "Andika njia inayozidisha nambari mbili(multiplication of two numbers)",
+        answer: "njia zidisha(a, b) \n    rudisha (a * b)\nfunga\nvar tokeo = zidisha(2,3)"
       }
     ],
     requiredPoints: 65
+  },
+  {
+    id: 5,
+    title: "Logical & Comparison Operators. (Operesheni za ulinganishaji)",
+    points: 15,
+    shortDescription: "Jifunze Jinsi ya Kulinganisha Thamani .",
+    explanation: " uendeshaji wa mantiki kwa kutumia na , au (AND OR Statements)  na  ulinganishaji  kwa kutumia  (==, !=, <, >, <=, >=) (Comparission operators) ni muhimu kwa kutengeneza masharti yanayosaidia kudhibiti mtiririko wa programu.",
+    examples: [
+      {
+        code: "var umri = 25\nvar ana_kitambulisho = kweli\n\nikiwa umri >= 18 na ana_kitambulisho basi\n    andika(\"Unaweza kuingia\")\nfunga",
+        description: "(Logical AND operator) Na: hutumika kuunganisha masharti mawili au zaidi, na kurudisha kweli tu ikiwa yote ya masharti yaliyounganishwa ni kweli (true). Ikiwa hata moja ya masharti ni false, basi matokeo yatakuwa false."
+      },
+      {
+        code: "var saa = 17\nikiwa saa < 12 au saa > 22 basi\n    andika(\"Duka limefungwa\")\nfunga",
+        description: "(Logical OR operator)Au:  hutumika kuunganisha masharti mawili au zaidi, na kurudisha kweli ikiwa angalau moja ya masharti ni kweli (true)"
+      }
+    ],
+    practice: [
+      {
+        question: "Andika msimbo unaotafuta nambari kati ya 1 na 10.",
+        answer: "var nambari = 5\nikiwa nambari >= 1 na nambari <= 10 basi\n    andika(\"Nambari sahihi\")\nfunga"
+      }
+    ],
+    requiredPoints: 85
   }
   // ... other concepts
 ];
@@ -167,7 +196,7 @@ const PracticeItem = ({ item }) => {
           isRevealed ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
         }`}
       >
-        {isRevealed ? "Hide Answer" : "Reveal Answer"}
+        {isRevealed ? "Ficha Jibu" : "Onyesha Jibu"}
       </button>
       
       {isRevealed && (
@@ -188,8 +217,8 @@ const ProgressBar = ({ currentPoints, totalPoints = 100 }) => (
       />
     </div>
     <div className="flex justify-between text-xs sm:text-sm text-gray-600">
-      <span>{currentPoints} points earned</span>
-      <span>{totalPoints} points total</span>
+      <span>Umewai pointi : {currentPoints} </span>
+      <span>Pointi {totalPoints} jumla</span>
     </div>
   </div>
 );
@@ -256,7 +285,7 @@ const ConceptCard = ({ concept, isLocked, isCompleted, points, onClick }) => (
 
     {isLocked && (
       <div className="text-xs sm:text-sm text-gray-500 mt-4">
-        Unlocks at {concept.requiredPoints} points
+        Fungua na pointi {concept.requiredPoints} 
       </div>
     )}
   </button>
@@ -272,7 +301,7 @@ const ConceptView = ({ concept, isCompleted, onBack, onComplete }) => (
           aria-label="Back to concepts list"
         >
           <ChevronLeft className="w-5 h-5" aria-hidden="true" />
-          Back to Concepts
+         Rudi nyuma
         </button>
         
         {!isCompleted && (
@@ -282,7 +311,7 @@ const ConceptView = ({ concept, isCompleted, onBack, onComplete }) => (
             aria-label="Mark concept as complete"
           >
             <CheckCircle className="w-4 h-4" aria-hidden="true" />
-            Mark as Complete
+            Maliza somo
           </button>
         )}
       </div>
@@ -295,7 +324,7 @@ const ConceptView = ({ concept, isCompleted, onBack, onComplete }) => (
             {isCompleted && (
               <span className="flex items-center gap-1 text-green-600">
                 <CheckCircle className="w-4 h-4" />
-                Completed
+                Imekamilika
               </span>
             )}
           </div>
@@ -306,7 +335,7 @@ const ConceptView = ({ concept, isCompleted, onBack, onComplete }) => (
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold mb-4">Examples</h2>
+          <h2 className="text-xl font-semibold mb-4">Mifano</h2>
           {concept.examples.map((example, index) => (
             <div key={index} className="mb-6">
               <h3 className="font-medium mb-2">{example.description}</h3>
@@ -375,7 +404,7 @@ const SwahiliProgrammingLMS = () => {
   };
 
   return (
-    <>
+    <div>
       {showAlert && <CompletionAlert onClose={() => setShowAlert(false)} />}
       
       {selectedConcept ? (
@@ -390,7 +419,7 @@ const SwahiliProgrammingLMS = () => {
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
             <div className="text-center sm:text-left">
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">SwahiliPro</h1>
-              <p className="text-gray-600">Master Swahili Programming</p>
+              <p className="text-gray-600">Jifunze lugha ya msimbo ya kiswahili</p>
             </div>
             <BadgeDisplay currentPoints={getCurrentPoints()} />
           </div>
@@ -411,7 +440,7 @@ const SwahiliProgrammingLMS = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
