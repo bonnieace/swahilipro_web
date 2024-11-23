@@ -320,7 +320,7 @@ const ConceptView = ({ concept, isCompleted, onBack, onComplete }) => (
         <div>
           <h1 className="text-3xl font-bold">{concept.title}</h1>
           <div className="flex items-center gap-2 text-sm text-gray-600 mt-2">
-            <span>{concept.points} points</span>
+            <span>Pointi {concept.points} </span>
             {isCompleted && (
               <span className="flex items-center gap-1 text-green-600">
                 <CheckCircle className="w-4 h-4" />
