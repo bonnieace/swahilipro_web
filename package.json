@@ -9,6 +9,7 @@
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.9.9",
     "@nextui-org/button": "2.0.33",
     "@nextui-org/card": "^2.0.30",
     "@nextui-org/code": "2.0.28",
@@ -42,10 +43,14 @@
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^3.2.0",
+    "firebase": "^10.3.0",
+    "firebase-admin": "^13.0.2",
+    "firebaseui": "^6.1.0",
     "framer-motion": "~11.1.1",
     "intl-messageformat": "^10.5.0",
     "lucide-react": "^0.456.0",
     "next": "14.2.3",
+    "next-auth": "^4.24.11",
     "next-themes": "^0.2.1",
     "postcss": "8.4.38",
     "react": "18.3.1",
