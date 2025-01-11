@@ -8,6 +8,7 @@ import {
 } from '@clerk/nextjs'
 
 import './globals.css'
+import { Suspense } from 'react'
 
 export default function RootLayout({
   children,
@@ -15,26 +16,27 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className="relative">
-          {/* Display SignInButton when the user is signed out */}
-          <SignedOut>
-            <RedirectToSignIn />
+    <Suspense fallback={<div>Loading...</div>}>
+      <ClerkProvider>
+        <html lang="en">
+          <body className="relative">
+            {/* Display SignInButton when the user is signed out */}
+            <SignedOut>
+              <RedirectToSignIn />
+            </SignedOut>
 
-          </SignedOut>
+            {/* Display UserButton when the user is signed in */}
+            <SignedIn>
+              <div className="absolute top-4 right-4">
+                <UserButton />
+              </div>
+            </SignedIn>
 
-          {/* Display UserButton when the user is signed in */}
-          <SignedIn>
-            <div className="absolute top-4 right-4">
-              <UserButton />
-            </div>
-          </SignedIn>
-
-          {/* Render the children content */}
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+            {/* Render the children content */}
+            {children}
+          </body>
+        </html>
+      </ClerkProvider>
+    </Suspense>
   )
 }
