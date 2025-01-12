@@ -1,25 +1,26 @@
-import dynamic from 'next/dynamic';
-import { ClerkProvider, RedirectToSignIn } from '@clerk/nextjs';
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import './globals.css';
 
-const SignedIn = dynamic(
-  () => import('@clerk/nextjs').then((mod) => mod.SignedIn),
-  { ssr: false }
-);
-const SignedOut = dynamic(
-  () => import('@clerk/nextjs').then((mod) => mod.SignedOut),
-  { ssr: false }
-);
-const UserButton = dynamic(
-  () => import('@clerk/nextjs').then((mod) => mod.UserButton),
-  { ssr: false }
-);
-
-export default function RootLayout({
-  children,
-}: {
+interface RootLayoutProps {
   children: React.ReactNode;
-}) {
+}
+
+const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    // Indicate that the component has mounted on the client
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    // Avoid rendering until after hydration
+    return null;
+  }
+
   return (
     <ClerkProvider>
       <html lang="en">
@@ -39,4 +40,6 @@ export default function RootLayout({
       </html>
     </ClerkProvider>
   );
-}
+};
+
+export default RootLayout;
