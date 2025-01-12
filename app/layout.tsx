@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import './globals.css';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -36,6 +37,8 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
           </SignedIn>
 
           {children}
+          <SpeedInsights/>
+
         </body>
       </html>
     </ClerkProvider>
