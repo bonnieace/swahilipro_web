@@ -4,6 +4,7 @@ import { ClerkProvider, SignedIn, SignedOut, SignIn, UserButton } from '@clerk/n
 import './globals.css';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Metadata } from 'next';
+import { Analytics } from "@vercel/analytics/react"
 
 interface RootLayoutProps {
   children: React.ReactNode;
