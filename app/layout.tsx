@@ -23,7 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
           {children}
           <SpeedInsights/>
-
+          <Analytics/>
         </body>
       </html>
   );
