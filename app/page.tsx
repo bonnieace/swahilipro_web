@@ -1,10 +1,7 @@
-import Link from "next/link";
-import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 import TeamPage from "../components/team";
+
 import AchievementsGallery from "@/components/achieve";
 import Navbar from "@/components/navbar";
-
-
 
 function Footer() {
   return (
@@ -13,17 +10,15 @@ function Footer() {
         <p className="text-sm text-slate-500 py-1">
           Tailwind CSS Component from{" "}
           <a
-            href="https://www.loopple.com/theme/motion-landing-library?ref=tailwindcomponents"
             className="text-slate-700 hover:text-slate-900"
-            
+            href="https://www.loopple.com/theme/motion-landing-library?ref=tailwindcomponents"
           >
             Motion Landing Library
           </a>{" "}
           by{" "}
           <a
-            href="https://www.loopple.com"
             className="text-slate-700 hover:text-slate-900"
-            
+            href="https://www.loopple.com"
           >
             Loopple Builder
           </a>
@@ -45,8 +40,8 @@ export default function Home() {
                 <span className="sr-only">Home</span>
                 <svg
                   className="h-8"
-                  viewBox="0 0 28 24"
                   fill="none"
+                  viewBox="0 0 28 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -57,7 +52,7 @@ export default function Home() {
               </a>
             </div>
 
-            <Navbar/>
+            <Navbar />
           </div>
         </div>
       </header>
@@ -77,39 +72,38 @@ export default function Home() {
             <p className=" text-gray-500 md:mt-4 md:block">
               Swahilipro is a compiler for a Swahili-based programming language
               that allows Swahili speakers to write executable code in their
-              native language.Download the installer below and run the file to install the compiler on your computer
+              native language.Download the installer below and run the file to
+              install the compiler on your computer
             </p>
 
             <div className="mt-4 md:mt-8">
-            <a
-  href="/swa.bat"
-  download="swa.bat"
-  className="inline-block rounded bg-emerald-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-emerald-700 focus:outline-none focus:ring focus:ring-yellow-400"
->
-  Download Installer
-</a>
-
-
+              <a
+                className="inline-block rounded bg-emerald-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-emerald-700 focus:outline-none focus:ring focus:ring-yellow-400"
+                download="swa.bat"
+                href="/swa.bat"
+              >
+                Download Installer
+              </a>
             </div>
           </div>
         </div>
 
         <div className="flex justify-center p-4">
           <iframe
+            allowFullScreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             className="w-full max-w-2xl h-64 sm:h-80 md:h-96"
+            frameBorder="0"
+            referrerPolicy="strict-origin-when-cross-origin"
             src="https://www.youtube.com/embed/9A6WDAUS2yA?si=xapscAxUw1jB6Glf"
             title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-          ></iframe>
+          />
         </div>
       </section>
       <section className="">
         <div
-          id="About"
           className="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 md:py-16 lg:px-8"
+          id="About"
         >
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
@@ -161,10 +155,10 @@ export default function Home() {
         </div>
       </section>
       <div
-        id="features"
         className=" mx-auto max-w-screen-2xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16"
+        id="features"
       >
-        <AchievementsGallery/>
+        <AchievementsGallery />
         <div className="grid grid-cols-1 gap-y-8 lg:grid-cols-2 lg:items-center lg:gap-x-16">
           <div className="mx-auto max-w-lg text-center lg:mx-0 ltr:lg:text-left rtl:lg:text-right">
             <h2 className="text-3xl font-bold sm:text-4xl">
@@ -174,12 +168,14 @@ export default function Home() {
             <p className="mt-4 text-gray-600">
               The swahilipro compiler supports several programming features
               similar with popular programming languages.This features allow
-              users to create complex algorithms in swahili.Swahilipro also offers a visual studio code extension that helps with language icon representaition and syntax highlighting.
+              users to create complex algorithms in swahili.Swahilipro also
+              offers a visual studio code extension that helps with language
+              icon representaition and syntax highlighting.
             </p>
 
             <a
-              href="vscode:extension/masota.swahilipro"
               className="mt-8 inline-block rounded bg-emerald-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-yellow-400"
+              href="vscode:extension/masota.swahilipro"
             >
               Install Extension
             </a>
@@ -199,11 +195,11 @@ export default function Home() {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
+                    d="M4 6h16M4 12h16M4 18h16"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  ></path>
+                  />
                 </svg>
               </span>
 
@@ -228,11 +224,11 @@ export default function Home() {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
+                    d="M6 9V2h12v7M6 14h12v8H6v-8zm6 8v-4"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M6 9V2h12v7M6 14h12v8H6v-8zm6 8v-4"
-                  ></path>
+                  />
                 </svg>
               </span>
 
@@ -257,11 +253,11 @@ export default function Home() {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
+                    d="M7 3v4a1 1 0 001 1h8a1 1 0 001-1V3m-6 10v4m-4 0h8"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M7 3v4a1 1 0 001 1h8a1 1 0 001-1V3m-6 10v4m-4 0h8"
-                  ></path>
+                  />
                 </svg>
               </span>
 
@@ -286,11 +282,11 @@ export default function Home() {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
+                    d="M5 5l14 14M5 19L19 5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M5 5l14 14M5 19L19 5"
-                  ></path>
+                  />
                 </svg>
               </span>
 
@@ -315,11 +311,11 @@ export default function Home() {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
+                    d="M10 9l3 3-3 3m0-6h4a2 2 0 012 2v4"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M10 9l3 3-3 3m0-6h4a2 2 0 012 2v4"
-                  ></path>
+                  />
                 </svg>
               </span>
 
@@ -344,11 +340,11 @@ export default function Home() {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
+                    d="M12 2v2M12 20v2M2 12h2M20 12h2M16.24 7.76l1.42-1.42M5.34 18.66l1.42-1.42M7.76 7.76l-1.42-1.42M18.66 18.66l-1.42-1.42M12 4a8 8 0 100 16 8 8 0 000-16z"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M12 2v2M12 20v2M2 12h2M20 12h2M16.24 7.76l1.42-1.42M5.34 18.66l1.42-1.42M7.76 7.76l-1.42-1.42M18.66 18.66l-1.42-1.42M12 4a8 8 0 100 16 8 8 0 000-16z"
-                  ></path>
+                  />
                 </svg>
               </span>
 
@@ -370,8 +366,8 @@ export default function Home() {
 
       <section className="">
         <div
-          id="Reviews"
           className="mx-auto max-w-screen-2xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16"
+          id="Reviews"
         >
           <div className="md:flex md:items-end md:justify-between">
             <div className="max-w-xl">
@@ -381,23 +377,23 @@ export default function Home() {
             </div>
 
             <a
-              href="#Reviews"
               className="mt-6 inline-flex shrink-0 items-center gap-2 rounded-full border border-rose-600 px-5 py-3 text-rose-600 transition hover:bg-rose-600 hover:text-white md:mt-0"
+              href="#Reviews"
             >
               <span className="font-medium">Read all</span>
 
               <svg
-                xmlns="http://www.w3.org/2000/svg"
                 className="size-4 rtl:rotate-180"
                 fill="none"
-                viewBox="0 0 24 24"
                 stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
                 />
               </svg>
             </a>
@@ -609,8 +605,6 @@ export default function Home() {
 
       <footer className="">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          
-
           <ul className="mt-12 flex flex-wrap justify-center gap-6 md:gap-8 lg:gap-12">
             <li>
               <a
