@@ -1,31 +1,42 @@
+import {
+  ClerkProvider,
+  RedirectToSignIn,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/nextjs'
 
-import React, { useEffect, useState } from 'react';
-import { ClerkProvider, SignedIn, SignedOut, SignIn, UserButton } from '@clerk/nextjs';
-import './globals.css';
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Metadata } from 'next';
-import { Analytics } from "@vercel/analytics/react"
+import './globals.css'
+import Buttonstyle from './avater'
 
-interface RootLayoutProps {
-  children: React.ReactNode;
-}
-export const metadata: Metadata={
-  title: "swahilipro App",
-  description: "Clerk App",
-  
-}
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
+    <div>
+    <ClerkProvider>
       <html lang="en">
         <body className="relative">
-        
-          
+          {/* Display SignInButton when the user is signed out */}
+          <SignedOut>
+            <RedirectToSignIn />
 
+          </SignedOut>
+
+          {/* Display UserButton when the user is signed in */}
+          <SignedIn>\
+            <UserButton />
+           
+          </SignedIn>
+
+          {/* Render the children content */}
           {children}
-          <SpeedInsights/>
-          <Analytics/>
         </body>
       </html>
-  );
-};
-
+    </ClerkProvider>
+    </div>
+  )
+}
