@@ -170,7 +170,17 @@ export default function Home() {
           </div>
         </div>
 
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/gpaE90QK5yE?si=kO_R8QpFunZYwecI" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+        <div className="flex justify-center p-4">
+          <iframe
+            className="w-full max-w-2xl h-64 sm:h-80 md:h-96"
+            src="https://www.youtube.com/embed/9A6WDAUS2yA?si=xapscAxUw1jB6Glf"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          ></iframe>
+        </div>
       </section>
       <section className="">
         <div
