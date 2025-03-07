@@ -22,7 +22,7 @@ const Navbar: React.FC = () => {
       {/* Logo/Brand - Left side */}
       <div className="flex-shrink-0">
         {/* Your logo or brand name would go here */}
-        <span className="text-gray-800 font-bold text-xl">Brand</span>
+        <span className="text-gray-800 font-bold text-xl"></span>
       </div>
 
       {/* Desktop Navigation - Middle/Right */}
