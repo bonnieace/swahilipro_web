@@ -24,10 +24,10 @@ const events: EventData[] = [
       "Our team pitching swahilipro for an opportunity to compete at the JKUAT Tech Expo 14.",
     date: "September 2024",
     images: [
-      { src: "/pitch.JPG", alt: "Swahilipro founders" },
-      { src: "/pitch2.JPG", alt: "Product demo" },
-      { src: "/pitch3.JPG", alt: "Expo Committee" },
-      { src: "/pitch4.JPG", alt: "Patent session" },
+      { src: "/pitch.jpg", alt: "Swahilipro founders" },
+      { src: "/pitch2.jpg", alt: "Product demo" },
+      { src: "/pitch3.jpg", alt: "Expo Committee" },
+      { src: "/pitch4.jpg", alt: "Patent session" },
     ],
   },
   {
