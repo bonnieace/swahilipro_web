@@ -1,6 +1,6 @@
 
 import './globals.css'
-import Buttonstyle from './avater'
+
 
 export default function RootLayout({
   children,
