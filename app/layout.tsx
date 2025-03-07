@@ -8,7 +8,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <div>
+    
       <html lang="en">
         <body className="relative">
           {/* Display SignInButton when the user is signed out */}
@@ -20,6 +20,6 @@ export default function RootLayout({
           {children}
         </body>
       </html>
-    </div>
+    
   )
 }

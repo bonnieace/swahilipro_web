@@ -1,22 +1,10 @@
 import Link from "next/link";
 import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 import TeamPage from "../components/team";
+import AchievementsGallery from "@/components/achieve";
+import Navbar from "@/components/navbar";
 
-function Navbar() {
-  return (
-    <nav className="w-full bg-white shadow">
-      <div className="container mx-auto px-4 py-2 flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">Swahilipro</h1>
-        <div className="flex space-x-4">
-          <Link href="#features">Features</Link>
-          <Link href="#testimonials">Testimonials</Link>
-          <Link href="#about">About Us</Link>
-          <Link href="#contact">Contact</Link>
-        </div>
-      </div>
-    </nav>
-  );
-}
+
 
 function Footer() {
   return (
@@ -69,71 +57,7 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="md:flex md:items-center md:gap-12">
-              <nav aria-label="Global" className="hidden md:block">
-                <ul className="flex items-center gap-6 text-sm">
-                  <li>
-                    <a
-                      className="text-gray-500 transition hover:text-gray-500/75"
-                      href="#About"
-                    >
-                      {" "}
-                      About{" "}
-                    </a>
-                  </li>
-
-                  <li>
-                    <a
-                      className="text-gray-500 transition hover:text-gray-500/75"
-                      href="#features"
-                    >
-                      {" "}
-                      Features{" "}
-                    </a>
-                  </li>
-
-                  <li>
-                    <a
-                      className="text-gray-500 transition hover:text-gray-500/75"
-                      href="#Reviews"
-                    >
-                      {" "}
-                      Reviews{" "}
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="text-gray-500 transition hover:text-gray-500/75"
-                      href="/lms"
-                    >
-                      {" "}
-                      Documentation{" "}
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-
-              <div className="flex items-center gap-4">
-                <div className="block md:hidden">
-                  <button className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M4 6h16M4 12h16M4 18h16"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
+            <Navbar/>
           </div>
         </div>
       </header>
@@ -150,7 +74,7 @@ export default function Home() {
               Welcome to Swahilipro
             </h2>
 
-            <p className="hidden text-gray-500 md:mt-4 md:block">
+            <p className=" text-gray-500 md:mt-4 md:block">
               Swahilipro is a compiler for a Swahili-based programming language
               that allows Swahili speakers to write executable code in their
               native language.Download the installer below and run the file to install the compiler on your computer
@@ -240,6 +164,7 @@ export default function Home() {
         id="features"
         className=" mx-auto max-w-screen-2xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16"
       >
+        <AchievementsGallery/>
         <div className="grid grid-cols-1 gap-y-8 lg:grid-cols-2 lg:items-center lg:gap-x-16">
           <div className="mx-auto max-w-lg text-center lg:mx-0 ltr:lg:text-left rtl:lg:text-right">
             <h2 className="text-3xl font-bold sm:text-4xl">
@@ -427,7 +352,7 @@ export default function Home() {
                 </svg>
               </span>
 
-              <h2 className="mt-2 font-bold">Funcion definitions.</h2>
+              <h2 className="mt-2 font-bold">Function definitions.</h2>
 
               <p className="hidden sm:mt-1 sm:block sm:text-sm sm:text-gray-600">
                 Users can define custom functions and call them to perform
