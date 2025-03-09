@@ -1,5 +1,5 @@
 import "./globals.css";
-
+import {Analytics} from "@vercel/analytics/react"
 export default function RootLayout({
   children,
 }: {
@@ -13,6 +13,7 @@ export default function RootLayout({
         {/* Display UserButton when the user is signed in */}
 
         {/* Render the children content */}
+        <Analytics/>
         {children}
       </body>
     </html>
