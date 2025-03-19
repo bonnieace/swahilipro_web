@@ -59,21 +59,21 @@ const CONCEPTS = [
     points: 10,
     shortDescription: "Jifunze kuhifadhi data katika vigezo na kuvitumia.",
     explanation:
-      "Variabu/Vigezo hutangazwa kwa kutumia neno kuu var. Vigezo hivi vinaweza kuhifadhi aina tofauti za data kama maandishi (string) na nambari (int).",
+      "Variabu/Vigezo hutangazwa kwa kutumia neno kuu wacha. Vigezo hivi vinaweza kuhifadhi aina tofauti za data kama maandishi (string) na nambari (int).",
     examples: [
       {
-        code: 'var jina = "Habari"\nvar idadi = 10',
+        code: 'wacha jina = "Habari"\nwacha idadi = 10',
         description: "Kutangaza Kigezo cha Msingi (Basic variable declaration)",
       },
       {
-        code: 'var salamu = "Habari" + " Dunia"\nandika(salamu)',
+        code: 'wacha salamu = "Habari" + " Dunia"\nandika(salamu)',
         description: "Kuunganisha maneno (String Concatenation)",
       },
     ],
     practice: [
       {
         question: "Unda Kigezo Kinachoitwa 'umri' na Kipe Thamani 25",
-        answer: "var umri = 25",
+        answer: "wacha umri = 25",
       },
     ],
     requiredPoints: 20,
@@ -87,15 +87,15 @@ const CONCEPTS = [
       "Operesheni za hisabati :\n + Ongeza  (addition),\n - Toa  (subtraction)\n* Mara  (multiplication),\n/ Gawa  (division), \n^ Karisimu  (exponentiation)",
     examples: [
       {
-        code: "var a = 5\nvar b = 2\nvar jumla = a + b\nandika(jumla)  \n",
+        code: "wacha a = 5\nwacha b = 2\nwacha jumla = a + b\nandika(jumla)  \n",
         description: "Operesheni ya Jumla (Addition)",
       },
       {
-        code: "var tofauti = 10 - 3\nandika(tofauti)  \n",
+        code: "wacha tofauti = 10 - 3\nandika(tofauti)  \n",
         description: "Operesheni ya Toa (Subtraction)",
       },
       {
-        code: "var zao = 4 * 3\nandika(zao)  \n# Matokeo: 12",
+        code: "wacha zao = 4 * 3\nandika(zao)  \n# Matokeo: 12",
         description: "Operesheni ya mara (Multiplication)",
       },
     ],
@@ -104,7 +104,7 @@ const CONCEPTS = [
         question:
           "Andika msimbo unaohesabu wastani wa nambari : 10, 15, and 20",
         answer:
-          "var jumla = 10 + 15 + 20\nvar wastani = jumla / 3\nandika(wastani)",
+          "wacha jumla = 10 + 15 + 20\nwacha wastani = jumla / 3\nandika(wastani)",
       },
     ],
     requiredPoints: 30,
@@ -118,12 +118,12 @@ const CONCEPTS = [
       "Miundo ya udhibiti husimamia mtiririko wa programu kwa kutumia masharti  kama vile taarifa za `ikiwa`(if) na `kwa`(for)",
     examples: [
       {
-        code: 'var umri = 18\nikiwa umri >= 18 basi\n    andika("Umekua")\nikiwa_nyingine\n    andika("Bado mdogo")\nfunga',
+        code: 'wacha umri = 18\nikiwa umri >= 18 basi\n    andika("Umekua")\nikiwa_nyingine\n    andika("Bado mdogo")\nfunga',
         description:
           "(If-else statement) :Taarifa ya ikiwa/ikiwa_nyingine hutumika kutekeleza vitendo tofauti kulingana na sharti lililotolewa. Ikiwa sharti ni kweli (true), sehemu ya kwanza ya msimbo hufanyika. Ikiwa si kweli (false), sehemu nyingine (ikiwa_nyingine) hutekelezwa.",
       },
       {
-        code: " var i = 1\n kwa i=1 hadi 5 basi\n    andika(i)\nfunga",
+        code: " wacha i = 1\n kwa i=1 hadi 5 basi\n    andika(i)\nfunga",
         description:
           "(For loop): Kwa hutumika kurudia utekelezaji wa msimbo fulani kwa idadi maalum ya mara. ",
       },
@@ -131,7 +131,7 @@ const CONCEPTS = [
     practice: [
       {
         question: " msimbo unaoandika nambari toka moja hadi tatu",
-        answer: "var i = 1\nkwa  i = 1 hadi 4 basi\n    andika(i)\nfunga",
+        answer: "wacha i = 1\nkwa  i = 1 hadi 4 basi\n    andika(i)\nfunga",
       },
     ],
     requiredPoints: 45,
@@ -146,12 +146,12 @@ const CONCEPTS = [
       "Functions zinatambulishwa kwa kutumia neno kuu njia, na zinaweza kurudisha thamani kwa kutumia neno rudisha.Hii ni sehemu ya msimbo inayotekeleza jukumu maalum na inaweza kuitwa tena inapohitajika bila kuandikwa upya.",
     examples: [
       {
-        code: "njia ongeza(a,b)\n    rudisha (a + b)\nfunga\n\nvar jibu = ongeza(5,3)\n andika(jibu) ",
+        code: "njia ongeza(a,b)\n    rudisha (a + b)\nfunga\n\nwacha jibu = ongeza(5,3)\n andika(jibu) ",
         description:
           " Njia inayopokea thamani ya nambari  kama ingizo (integer parameter) ili kutekeleza jukumu maalum.",
       },
       {
-        code: 'njia karibisha(jina) \n    rudisha( "Habari, " + jina)\nfunga\n var jibu = karibisha("bonnie")\nandika(jibu)',
+        code: 'njia karibisha(jina) \n    rudisha( "Habari, " + jina)\nfunga\n wacha jibu = karibisha("bonnie")\nandika(jibu)',
         description:
           "njia inayopokea thamani ya maandishi  kama ingizo (string parameter) ili kutekeleza jukumu maalum.",
       },
@@ -161,7 +161,7 @@ const CONCEPTS = [
         question:
           "Andika njia inayozidisha nambari mbili(multiplication of two numbers)",
         answer:
-          "njia zidisha(a, b) \n    rudisha (a * b)\nfunga\nvar tokeo = zidisha(2,3)",
+          "njia zidisha(a, b) \n    rudisha (a * b)\nfunga\nwacha tokeo = zidisha(2,3)",
       },
     ],
     requiredPoints: 65,
@@ -175,12 +175,12 @@ const CONCEPTS = [
       " uendeshaji wa mantiki kwa kutumia na , au (AND OR Statements)  na  ulinganishaji  kwa kutumia  (==, !=, <, >, <=, >=) (Comparission operators) ni muhimu kwa kutengeneza masharti yanayosaidia kudhibiti mtiririko wa programu.",
     examples: [
       {
-        code: 'var umri = 25\nvar ana_kitambulisho = kweli\n\nikiwa umri >= 18 na ana_kitambulisho basi\n    andika("Unaweza kuingia")\nfunga',
+        code: 'wacha umri = 25\nwacha ana_kitambulisho = kweli\n\nikiwa umri >= 18 na ana_kitambulisho basi\n    andika("Unaweza kuingia")\nfunga',
         description:
           "(Logical AND operator) Na: hutumika kuunganisha masharti mawili au zaidi, na kurudisha kweli tu ikiwa yote ya masharti yaliyounganishwa ni kweli (true). Ikiwa hata moja ya masharti ni false, basi matokeo yatakuwa false.",
       },
       {
-        code: 'var saa = 17\nikiwa saa < 12 au saa > 22 basi\n    andika("Duka limefungwa")\nfunga',
+        code: 'wacha saa = 17\nikiwa saa < 12 au saa > 22 basi\n    andika("Duka limefungwa")\nfunga',
         description:
           "(Logical OR operator)Au:  hutumika kuunganisha masharti mawili au zaidi, na kurudisha kweli ikiwa angalau moja ya masharti ni kweli (true)",
       },
@@ -189,7 +189,7 @@ const CONCEPTS = [
       {
         question: "Andika msimbo unaotafuta nambari kati ya 1 na 10.",
         answer:
-          'var nambari = 5\nikiwa nambari >= 1 na nambari <= 10 basi\n    andika("Nambari sahihi")\nfunga',
+          'wacha nambari = 5\nikiwa nambari >= 1 na nambari <= 10 basi\n    andika("Nambari sahihi")\nfunga',
       },
     ],
     requiredPoints: 85,

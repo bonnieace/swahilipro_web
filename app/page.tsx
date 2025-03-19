@@ -79,8 +79,8 @@ export default function Home() {
             <div className="mt-4 md:mt-8">
               <a
                 className="inline-block rounded bg-emerald-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-emerald-700 focus:outline-none focus:ring focus:ring-yellow-400"
-                download="swa.bat"
-                href="/swa.bat"
+                download="swahilipro.exe"
+                href="/swahilipro.exe"
               >
                 Download Installer
               </a>
@@ -123,21 +123,21 @@ export default function Home() {
             <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:divide-x sm:divide-gray-100">
               <div className="flex flex-col px-4 py-8 text-center">
                 <dt className="order-last text-lg font-medium text-gray-500">
-                  Current Active Users
+                  Current Users
                 </dt>
 
                 <dd className="text-4xl font-extrabold text-emerald-600 md:text-5xl">
-                  19
+                  31
                 </dd>
               </div>
 
               <div className="flex flex-col px-4 py-8 text-center">
                 <dt className="order-last text-lg font-medium text-gray-500">
-                  Website Visits
+                 Monthly Website Visitors
                 </dt>
 
                 <dd className="text-4xl font-extrabold text-emerald-600 md:text-5xl">
-                  100+
+                  300+
                 </dd>
               </div>
 
