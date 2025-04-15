@@ -56,6 +56,35 @@ const events: EventData[] = [
       { src: "/kicc.jpg", alt: "Diplomats" },
     ],
   },
+  {
+    id: 4,
+    title: "Jkuat technological and industrialization conference",
+    description:
+      "Our team pitching swahilipro at the Jkuat scientific,technological and industrialization conference",
+    date: "March 2025",
+    images: [
+      { src: "/j5.jpeg", alt: "Banner" },
+
+      { src: "/j1.jpg", alt: "Product demo" },
+      { src: "/j2.jpg", alt: "Networking" },
+      { src: "/j4.jpg", alt: "Founder" },
+
+    ],
+  },
+  {
+    id: 5,
+    title: "Hosting Co-operative University Tech Expo",
+    description:
+      "Our team hosting the Co-operative University Tech Expo 2025 with Taifa Teule.",
+    date: "November 2024",
+    images: [
+      { src: "/coop.jpg", alt: "Venue" },   
+
+      { src: "/coop2.jpg", alt: "Product demo" },
+      { src: "/coop3.jpg", alt: "Product demo" },
+      { src: "/coop4.jpg", alt: "Networking" },       
+    ]
+  }
 ];
 
 interface AchievementsGalleryProps {
