@@ -19,7 +19,7 @@ export default function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-8">
         <a className="group flex items-center" href="/" aria-label="SwahiliPro home">
           <img
-            src="/swahilipro-logo.png"
+            src="/swahilipro-logo.svg"
             alt="SwahiliPro"
             className="h-10 w-auto max-w-[150px] object-contain transition group-hover:opacity-90 sm:max-w-[175px]"
           />
