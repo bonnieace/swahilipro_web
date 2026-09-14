@@ -1,16 +1,16 @@
-import type { ReactNode } from "react";
+import Image from "next/image";
 import {
   ArrowRight,
   BookOpen,
-  Check,
   Code2,
   Download,
   ExternalLink,
   Globe2,
-  Monitor,
+  GraduationCap,
+  Play,
+  Quote,
   Sparkles,
   Terminal,
-  Zap,
 } from "lucide-react";
 
 import Navbar from "@/components/navbar";
@@ -20,26 +20,70 @@ const marketplaceUrl =
 const releaseUrl =
   "https://github.com/bonnieace/swahilipro-downloads/releases/tag/v2.0.0";
 
+const platforms = [
+  {
+    name: "Windows",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/windows11/windows11-original.svg",
+  },
+  {
+    name: "Linux",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg",
+  },
+  {
+    name: "macOS",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apple/apple-original.svg",
+  },
+  {
+    name: "VS Code",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg",
+  },
+];
+
 const downloads = [
   {
     platform: "Windows",
     detail: "x64 · .exe",
+    icon: platforms[0].icon,
     href: "https://github.com/bonnieace/swahilipro-downloads/releases/download/v2.0.0/swa-windows-x86_64.exe",
   },
   {
     platform: "Linux",
     detail: "x64",
+    icon: platforms[1].icon,
     href: "https://github.com/bonnieace/swahilipro-downloads/releases/download/v2.0.0/swa-linux-x86_64",
   },
   {
     platform: "macOS",
     detail: "Apple Silicon",
+    icon: platforms[2].icon,
     href: "https://github.com/bonnieace/swahilipro-downloads/releases/download/v2.0.0/swa-darwin-arm64",
   },
   {
     platform: "macOS",
     detail: "Intel",
+    icon: platforms[2].icon,
     href: "https://github.com/bonnieace/swahilipro-downloads/releases/download/v2.0.0/swa-darwin-x86_64",
+  },
+];
+
+const testimonials = [
+  {
+    title: "Genius Idea!!",
+    quote:
+      "The idea from SwahiliPro foundation is groundbreaking and revolutionary.",
+    source: "Chief ICT Officer, Kiambu County, Kenya",
+  },
+  {
+    title: "Awesome",
+    quote:
+      "Writing code in Swahili feels like a dream come true. Concepts feel more familiar and easy to grasp.",
+    source: "Anonymous student",
+  },
+  {
+    title: "Incredible.",
+    quote:
+      "The idea is fascinating and caters to a lot of issues programmers face in Tanzania. Having a Swahili programming language is incredible.",
+    source: "Founder, Silabu Foundation, Tanzania",
   },
 ];
 
@@ -49,8 +93,7 @@ acha jina = "Amina"
 salimia(jina) {
   ikiwa (jina == "Amina") {
     andika("Karibu, " + jina + "!")
-  }
-  vinginevyo {
+  } vinginevyo {
     andika("Habari, " + jina)
   }
 }
@@ -61,9 +104,37 @@ kwa n katika 1..4 {
 
 salimia(jina)`;
 
-function Eyebrow({ children }: { children: ReactNode }) {
+function PlatformTicker() {
+  const repeated = [...platforms, ...platforms];
+
   return (
-    <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">
+    <div className="mt-8 flex items-center gap-4 text-sm text-stone-600">
+      <span className="font-semibold text-stone-800">Build with</span>
+      <div className="platform-ticker h-10 min-w-[170px] overflow-hidden rounded-full border border-emerald-900/10 bg-white/75 px-4 shadow-sm backdrop-blur">
+        <div className="platform-ticker-track">
+          {repeated.map((platform, index) => (
+            <div
+              key={`${platform.name}-${index}`}
+              className="flex h-10 items-center gap-2.5 whitespace-nowrap"
+            >
+              <img
+                alt=""
+                aria-hidden="true"
+                className="h-5 w-5 object-contain"
+                src={platform.icon}
+              />
+              <span className="font-semibold text-stone-800">{platform.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-white/70 px-3.5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-emerald-800 shadow-sm">
       <Sparkles className="h-3.5 w-3.5" />
       {children}
     </div>
@@ -72,380 +143,301 @@ function Eyebrow({ children }: { children: ReactNode }) {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-emerald-300 selection:text-slate-950">
+    <div className="min-h-screen bg-[#fffaf5] text-stone-900 selection:bg-emerald-200 selection:text-emerald-950">
       <Navbar />
 
       <main>
-        <section className="relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute left-1/2 top-[-18rem] h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-emerald-400/10 blur-3xl" />
-            <div className="absolute right-[-12rem] top-32 h-[24rem] w-[24rem] rounded-full bg-cyan-400/10 blur-3xl" />
+        <section className="relative overflow-hidden border-b border-emerald-950/5 bg-gradient-to-br from-rose-100 via-[#fffaf5] to-teal-100">
+          <div className="pointer-events-none absolute inset-0 opacity-70">
+            <div className="absolute -left-32 top-16 h-72 w-72 rounded-full bg-rose-200/60 blur-3xl" />
+            <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-teal-200/70 blur-3xl" />
           </div>
 
-          <div className="relative mx-auto grid max-w-7xl gap-14 px-5 pb-24 pt-20 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:px-8 lg:pb-32 lg:pt-28">
+          <div className="relative mx-auto grid max-w-7xl gap-14 px-5 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.06fr_.94fr] lg:items-center lg:px-8 lg:pb-28 lg:pt-24">
             <div>
               <a
-                href={releaseUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs font-medium text-slate-300 transition hover:border-emerald-400/30 hover:text-white"
+                className="mb-7 inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-white/70 px-3.5 py-2 text-xs font-semibold text-emerald-900 shadow-sm backdrop-blur transition hover:bg-white"
+                href="/docs"
               >
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                SwahiliPro v2.0.0 is live
+                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                Swahili programming language · v2
                 <ArrowRight className="h-3.5 w-3.5" />
               </a>
 
-              <h1 className="max-w-4xl text-5xl font-black leading-[0.98] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl">
+              <h1 className="max-w-4xl text-5xl font-black leading-[0.98] tracking-[-0.045em] text-stone-950 sm:text-6xl lg:text-7xl">
                 Program in Swahili.
-                <span className="mt-2 block bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">
+                <span className="mt-2 block bg-gradient-to-r from-emerald-700 via-teal-700 to-rose-600 bg-clip-text text-transparent">
                   Build like any modern developer.
                 </span>
               </h1>
 
-              <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
-                SwahiliPro keeps programming structure familiar while making the
-                commands you read and write feel natural in Swahili. Write real
-                <code className="mx-1 rounded bg-white/5 px-1.5 py-0.5 font-mono text-base text-emerald-300">
-                  .swa
-                </code>
-                programs in VS Code or run them directly with the standalone
-                <code className="mx-1 rounded bg-white/5 px-1.5 py-0.5 font-mono text-base text-emerald-300">
-                  swa
-                </code>
-                CLI.
+              <p className="mt-7 max-w-2xl text-lg leading-8 text-stone-700 sm:text-xl">
+                <strong className="font-semibold text-stone-950">SwahiliPro is a Swahili programming language and learning platform</strong>{" "}
+                built to make programming more accessible to Swahili speakers. Learn
+                core concepts in Kiswahili, write real <code className="rounded bg-emerald-950/5 px-1.5 py-0.5 font-mono text-base font-semibold text-emerald-800">.swa</code>{" "}
+                programs, and use the same kinds of tools and workflows modern
+                developers use every day.
+              </p>
+
+              <p className="mt-4 max-w-2xl text-base leading-7 text-stone-600">
+                Think in Swahili. Code like any other modern developer.
               </p>
 
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <a
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition hover:-translate-y-0.5 hover:bg-emerald-800"
                   href={marketplaceUrl}
-                  target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-5 py-3.5 text-sm font-bold text-slate-950 transition hover:-translate-y-0.5 hover:bg-emerald-300"
+                  target="_blank"
                 >
                   <Code2 className="h-4 w-4" />
                   Install for VS Code
                   <ExternalLink className="h-3.5 w-3.5" />
                 </a>
                 <a
-                  href="#download"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-5 py-3.5 text-sm font-semibold text-white transition hover:border-white/20 hover:bg-white/[0.07]"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-900/15 bg-white/75 px-5 py-3.5 text-sm font-bold text-stone-900 shadow-sm transition hover:bg-white"
+                  href="/lms"
                 >
-                  <Terminal className="h-4 w-4" />
-                  Download standalone CLI
+                  <GraduationCap className="h-4 w-4 text-rose-600" />
+                  Learn in Swahili
                 </a>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-400">
-                {[
-                  "Windows, Linux & macOS",
-                  "No Python install required",
-                  "VS Code + standalone CLI",
-                ].map((item) => (
-                  <span key={item} className="inline-flex items-center gap-2">
-                    <Check className="h-4 w-4 text-emerald-400" />
-                    {item}
-                  </span>
-                ))}
-              </div>
+              <PlatformTicker />
             </div>
 
             <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
-              <div className="absolute -inset-1 rounded-[1.6rem] bg-gradient-to-br from-emerald-400/25 via-cyan-400/5 to-transparent blur-xl" />
-              <div className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-slate-900/95 shadow-2xl shadow-black/30">
+              <div className="absolute -inset-4 rotate-1 rounded-[2rem] bg-gradient-to-br from-rose-200 via-teal-100 to-emerald-200 opacity-80 blur-xl" />
+              <div className="relative overflow-hidden rounded-[1.7rem] border border-stone-900/10 bg-[#151a18] shadow-2xl shadow-emerald-950/20">
                 <div className="flex h-12 items-center justify-between border-b border-white/10 px-4">
                   <div className="flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-amber-300/80" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
                   </div>
-                  <span className="font-mono text-xs text-slate-500">hello.swa</span>
+                  <span className="font-mono text-xs text-stone-400">hello.swa</span>
                 </div>
-                <pre className="overflow-x-auto p-6 text-[13px] leading-7 text-slate-300 sm:p-7 sm:text-sm">
+                <pre className="overflow-x-auto p-6 text-[13px] leading-7 text-stone-300 sm:p-7 sm:text-sm">
                   <code>{codeExample}</code>
                 </pre>
-                <div className="border-t border-white/10 bg-black/20 px-6 py-4 font-mono text-xs sm:text-sm">
-                  <span className="mr-2 text-emerald-400">$</span>
-                  <span className="text-slate-200">swa hello.swa</span>
+                <div className="flex items-center justify-between border-t border-white/10 bg-black/20 px-6 py-4 font-mono text-xs sm:text-sm">
+                  <span><span className="mr-2 text-emerald-400">$</span><span className="text-stone-200">swa hello.swa</span></span>
+                  <span className="text-emerald-300">ready</span>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="border-y border-white/10 bg-white/[0.025]" id="why">
+        <section className="bg-emerald-800 text-white" id="mission">
+          <div className="mx-auto grid max-w-7xl gap-8 px-5 py-12 sm:px-6 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:px-8">
+            <div className="flex items-center gap-4">
+              <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/10">
+                <Globe2 className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-100">SDG 4 · Quality education</p>
+                <h2 className="mt-1 text-2xl font-bold">Programming education should not begin with a language barrier.</h2>
+              </div>
+            </div>
+            <p className="text-base leading-7 text-emerald-50 lg:text-lg">
+              SwahiliPro supports more inclusive access to programming education by letting learners understand ideas in a language they already use, while preserving the concepts and structures that transfer to mainstream software development.
+            </p>
+          </div>
+        </section>
+
+        <section className="bg-[#fffaf5]" id="why">
           <div className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8">
-            <div className="max-w-3xl">
-              <Eyebrow>Why SwahiliPro</Eyebrow>
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
-                Familiar programming concepts. A language that reads closer to
-                how you think.
-              </h2>
-              <p className="mt-5 text-lg leading-8 text-slate-400">
-                SwahiliPro reduces the language barrier without hiding the core
-                ideas programmers need to learn. The structure stays conventional;
-                the human-readable commands are Swahili.
-              </p>
-            </div>
-
-            <div className="mt-12 grid gap-4 md:grid-cols-3">
-              <article className="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
-                <div className="mb-5 grid h-11 w-11 place-items-center rounded-xl bg-emerald-400/10 text-emerald-300">
-                  <Globe2 className="h-5 w-5" />
-                </div>
-                <h3 className="text-lg font-semibold text-white">Think in Swahili</h3>
-                <p className="mt-3 leading-7 text-slate-400">
-                  Use <code className="text-emerald-300">ikiwa</code>,
-                  <code className="mx-1 text-emerald-300">andika</code> and
-                  <code className="ml-1 text-emerald-300">kwa</code> while keeping
-                  familiar programming structure.
+            <div className="grid gap-12 lg:grid-cols-[.82fr_1.18fr] lg:items-start">
+              <div className="lg:sticky lg:top-28">
+                <Eyebrow>Why SwahiliPro</Eyebrow>
+                <h2 className="text-4xl font-black tracking-[-0.035em] text-stone-950 sm:text-5xl">
+                  Learn the idea first. Keep the developer skills.
+                </h2>
+                <p className="mt-5 text-lg leading-8 text-stone-600">
+                  SwahiliPro is not a simplified toy language. It is designed to make the words around programming more familiar without hiding the structures learners need to understand.
                 </p>
-              </article>
+                <a className="mt-7 inline-flex items-center gap-2 font-bold text-emerald-800 hover:text-emerald-950" href="/docs">
+                  Read the language documentation <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
 
-              <article className="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
-                <div className="mb-5 grid h-11 w-11 place-items-center rounded-xl bg-cyan-400/10 text-cyan-300">
-                  <Zap className="h-5 w-5" />
+              <div className="overflow-hidden rounded-[2rem] border border-stone-900/10 bg-white shadow-xl shadow-stone-900/5">
+                <div className="grid md:grid-cols-2">
+                  <div className="border-b border-stone-900/10 p-7 md:border-r">
+                    <span className="text-sm font-bold text-rose-600">01 · Language</span>
+                    <h3 className="mt-3 text-2xl font-bold text-stone-950">Think in Swahili</h3>
+                    <p className="mt-3 leading-7 text-stone-600">Use readable commands such as <code className="font-semibold text-emerald-800">ikiwa</code>, <code className="font-semibold text-emerald-800">andika</code> and <code className="font-semibold text-emerald-800">kwa</code> while keeping conventional programming structure.</p>
+                  </div>
+                  <div className="border-b border-stone-900/10 p-7">
+                    <span className="text-sm font-bold text-teal-700">02 · Transfer</span>
+                    <h3 className="mt-3 text-2xl font-bold text-stone-950">Learn concepts that travel</h3>
+                    <p className="mt-3 leading-7 text-stone-600">Variables, functions, conditions, loops, lists and operators map to concepts learners will meet again in other programming languages.</p>
+                  </div>
+                  <div className="border-b border-stone-900/10 p-7 md:border-b-0 md:border-r">
+                    <span className="text-sm font-bold text-amber-700">03 · Tools</span>
+                    <h3 className="mt-3 text-2xl font-bold text-stone-950">Use real developer workflows</h3>
+                    <p className="mt-3 leading-7 text-stone-600">Write <code className="font-semibold text-emerald-800">.swa</code> files in VS Code, use syntax highlighting, and run programs from the standalone <code className="font-semibold text-emerald-800">swa</code> CLI.</p>
+                  </div>
+                  <div className="p-7">
+                    <span className="text-sm font-bold text-emerald-700">04 · Access</span>
+                    <h3 className="mt-3 text-2xl font-bold text-stone-950">Start closer to how you reason</h3>
+                    <p className="mt-3 leading-7 text-stone-600">For learners who already think and learn in Swahili, the language can reduce unnecessary friction around the first programming concepts.</p>
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-white">Run it anywhere</h3>
-                <p className="mt-3 leading-7 text-slate-400">
-                  Use the VS Code experience or run a standalone native binary on
-                  Windows, Linux, macOS Intel or Apple Silicon.
-                </p>
-              </article>
-
-              <article className="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
-                <div className="mb-5 grid h-11 w-11 place-items-center rounded-xl bg-violet-400/10 text-violet-300">
-                  <BookOpen className="h-5 w-5" />
-                </div>
-                <h3 className="text-lg font-semibold text-white">Learn transferable ideas</h3>
-                <p className="mt-3 leading-7 text-slate-400">
-                  Variables, functions, conditions, loops and lists map to concepts
-                  you will meet again in mainstream languages.
-                </p>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section id="syntax">
-          <div className="mx-auto grid max-w-7xl gap-12 px-5 py-24 sm:px-6 lg:grid-cols-[.85fr_1.15fr] lg:items-start lg:px-8">
-            <div className="lg:sticky lg:top-28">
-              <Eyebrow>SwahiliPro v2 syntax</Eyebrow>
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
-                Less ceremony. More readable code.
-              </h2>
-              <p className="mt-5 text-lg leading-8 text-slate-400">
-                Version 2 uses braces for blocks, familiar punctuation and concise
-                Swahili keywords. New code no longer depends on closing words such
-                as <code className="text-slate-300">funga</code>.
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-2">
-                {[
-                  "acha variables",
-                  "ikiwa conditionals",
-                  "kwa loops",
-                  "wakati loops",
-                  "andika output",
-                  "ingiza input",
-                  "na / au / sio logic",
-                ].map((token) => (
-                  <span
-                    key={token}
-                    className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 font-mono text-xs text-slate-300"
-                  >
-                    {token}
-                  </span>
-                ))}
               </div>
             </div>
+          </div>
+        </section>
 
-            <div className="space-y-4">
-              {[
-                {
-                  number: "01",
-                  title: "Variables stay simple",
-                  copy: "Declare data with acha and work with familiar strings, numbers and lists.",
-                  code: 'acha mji = "Nairobi"',
-                },
-                {
-                  number: "02",
-                  title: "Blocks use braces",
-                  copy: "Conditionals use conventional block structure and remain readable in Swahili.",
-                  code: 'ikiwa (miaka >= 18) { andika("Karibu") }',
-                },
-                {
-                  number: "03",
-                  title: "Functions stay compact",
-                  copy: "Name the function, define parameters and write the body without a separate function keyword.",
-                  code: "jumlisha(a, b) { rudisha a + b }",
-                },
-                {
-                  number: "04",
-                  title: "Loops read naturally",
-                  copy: "Iterate over collections or end-exclusive ranges using kwa ... katika.",
-                  code: "kwa i katika 1..10 { andika(i) }",
-                },
-              ].map((item) => (
-                <article
-                  key={item.number}
-                  className="rounded-2xl border border-white/10 bg-white/[0.025] p-6 transition hover:border-emerald-400/20 hover:bg-white/[0.04] sm:p-7"
-                >
-                  <div className="flex gap-5">
-                    <span className="font-mono text-xs font-semibold text-emerald-400">
-                      {item.number}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                      <p className="mt-2 leading-7 text-slate-400">{item.copy}</p>
-                      <div className="mt-5 overflow-x-auto rounded-xl border border-white/10 bg-slate-950 px-4 py-3 font-mono text-sm text-emerald-300">
-                        {item.code}
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              ))}
+        <section className="border-y border-stone-900/10 bg-gradient-to-br from-teal-50 to-rose-50" id="proof">
+          <div className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8">
+            <div className="grid gap-12 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
+              <div>
+                <Eyebrow>Built in the real world</Eyebrow>
+                <h2 className="text-4xl font-black tracking-[-0.035em] text-stone-950 sm:text-5xl">More than a compiler on a landing page.</h2>
+                <p className="mt-5 max-w-xl text-lg leading-8 text-stone-600">SwahiliPro has been presented, tested and discussed with students, technologists, institutions and public-sector stakeholders across real technology events.</p>
+                <div className="mt-8 grid grid-cols-2 gap-3 text-sm font-semibold text-stone-700">
+                  <span className="rounded-xl bg-white/75 px-4 py-3 shadow-sm">JKUAT Tech Expo</span>
+                  <span className="rounded-xl bg-white/75 px-4 py-3 shadow-sm">KICC exhibition</span>
+                  <span className="rounded-xl bg-white/75 px-4 py-3 shadow-sm">University demos</span>
+                  <span className="rounded-xl bg-white/75 px-4 py-3 shadow-sm">Community feedback</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-12 grid-rows-6 gap-3">
+                <Image alt="SwahiliPro presentation at JKUAT Tech Expo" className="col-span-7 row-span-6 h-full min-h-[360px] rounded-[1.7rem] object-cover shadow-xl" height={900} src="/EXPO2.JPG" width={900} />
+                <Image alt="SwahiliPro product demonstration" className="col-span-5 row-span-3 h-full rounded-[1.4rem] object-cover" height={500} src="/coop2.jpg" width={600} />
+                <Image alt="SwahiliPro team meeting stakeholders at KICC" className="col-span-5 row-span-3 h-full rounded-[1.4rem] object-cover" height={500} src="/kicc1.jpg" width={600} />
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="border-y border-white/10 bg-white/[0.025]">
+        <section className="bg-[#fffaf5]" id="learn">
           <div className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <Eyebrow>Get running</Eyebrow>
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
-                From install to your first program in three steps.
-              </h2>
+              <Eyebrow>From first idea to first program</Eyebrow>
+              <h2 className="text-4xl font-black tracking-[-0.035em] text-stone-950 sm:text-5xl">A learning path that connects language, concepts and tools.</h2>
             </div>
 
-            <div className="mt-14 grid gap-4 md:grid-cols-3">
+            <div className="relative mt-14 overflow-hidden rounded-[2rem] border border-stone-900/10 bg-white shadow-xl shadow-stone-900/5">
+              <div className="grid md:grid-cols-3">
+                {[
+                  { icon: <BookOpen className="h-6 w-6" />, step: "01", title: "Learn the idea", copy: "Use the SwahiliPro LMS to understand variables, conditions, loops and functions in Swahili." },
+                  { icon: <Code2 className="h-6 w-6" />, step: "02", title: "Write real .swa code", copy: "Move from examples into actual SwahiliPro v2 programs using familiar syntax and braces." },
+                  { icon: <Terminal className="h-6 w-6" />, step: "03", title: "Run it like a developer", copy: "Use VS Code or the standalone swa CLI and keep building from there." },
+                ].map((item, index) => (
+                  <article key={item.step} className={`p-8 ${index < 2 ? "border-b border-stone-900/10 md:border-b-0 md:border-r" : ""}`}>
+                    <div className="flex items-center justify-between">
+                      <div className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-100 text-emerald-800">{item.icon}</div>
+                      <span className="font-mono text-sm font-bold text-rose-500">{item.step}</span>
+                    </div>
+                    <h3 className="mt-7 text-2xl font-bold">{item.title}</h3>
+                    <p className="mt-3 leading-7 text-stone-600">{item.copy}</p>
+                  </article>
+                ))}
+              </div>
+              <div className="flex flex-col items-center justify-between gap-4 border-t border-stone-900/10 bg-emerald-50 px-8 py-6 sm:flex-row">
+                <p className="font-semibold text-stone-800">Ready to learn programming in Swahili?</p>
+                <a className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-bold text-white" href="/lms">Open the learning path <ArrowRight className="h-4 w-4" /></a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-stone-950 text-white" id="syntax">
+          <div className="mx-auto grid max-w-7xl gap-12 px-5 py-24 sm:px-6 lg:grid-cols-[.8fr_1.2fr] lg:px-8">
+            <div>
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-emerald-300"><Code2 className="h-3.5 w-3.5" /> SwahiliPro v2 syntax</div>
+              <h2 className="text-4xl font-black tracking-[-0.035em] sm:text-5xl">Readable Swahili commands. Familiar programming structure.</h2>
+              <p className="mt-5 text-lg leading-8 text-stone-300">Version 2 uses braces for blocks, conventional operators and concise Swahili keywords. You learn the structure once, then focus on expressing the logic clearly.</p>
+              <a className="mt-8 inline-flex items-center gap-2 font-bold text-emerald-300 hover:text-emerald-200" href="/docs">Explore full documentation <ArrowRight className="h-4 w-4" /></a>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
               {[
-                {
-                  icon: <Download className="h-5 w-5" />,
-                  title: "1. Install",
-                  copy: "Install the VS Code extension or download the standalone CLI for your platform.",
-                },
-                {
-                  icon: <Code2 className="h-5 w-5" />,
-                  title: "2. Create a .swa file",
-                  copy: "Write SwahiliPro v2 using familiar blocks, operators and Swahili commands.",
-                },
-                {
-                  icon: <Terminal className="h-5 w-5" />,
-                  title: "3. Run it",
-                  copy: "Execute your program with swa hello.swa, or use Run File from the VS Code extension.",
-                },
-              ].map((step) => (
-                <article key={step.title} className="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
-                  <div className="mb-5 grid h-11 w-11 place-items-center rounded-xl bg-emerald-400/10 text-emerald-300">
-                    {step.icon}
-                  </div>
-                  <h3 className="text-lg font-semibold text-white">{step.title}</h3>
-                  <p className="mt-3 leading-7 text-slate-400">{step.copy}</p>
+                ["acha", "Variables", 'acha mji = "Nairobi"'],
+                ["ikiwa", "Conditions", 'ikiwa (miaka >= 18) { andika("Karibu") }'],
+                ["kwa", "Loops", "kwa i katika 1..10 { andika(i) }"],
+                ["rudisha", "Functions", "jumlisha(a, b) { rudisha a + b }"],
+              ].map(([keyword, title, code]) => (
+                <article key={keyword} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+                  <span className="font-mono text-sm font-bold text-emerald-300">{keyword}</span>
+                  <h3 className="mt-3 text-xl font-bold">{title}</h3>
+                  <pre className="mt-5 overflow-x-auto rounded-xl bg-black/30 p-4 text-xs leading-6 text-stone-300"><code>{code}</code></pre>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="download">
+        <section className="bg-[#fffaf5]" id="reviews">
           <div className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8">
-            <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr] lg:items-end">
+            <div className="max-w-3xl">
+              <Eyebrow>What people have said</Eyebrow>
+              <h2 className="text-4xl font-black tracking-[-0.035em] text-stone-950 sm:text-5xl">Real reactions from people who encountered SwahiliPro.</h2>
+            </div>
+            <div className="mt-12 grid gap-4 lg:grid-cols-3">
+              {testimonials.map((testimonial) => (
+                <blockquote key={testimonial.title} className="flex min-h-[285px] flex-col justify-between rounded-[1.7rem] border border-stone-900/10 bg-white p-7 shadow-lg shadow-stone-900/5">
+                  <div>
+                    <Quote className="h-7 w-7 text-rose-500" />
+                    <p className="mt-5 text-2xl font-bold text-stone-950">{testimonial.title}</p>
+                    <p className="mt-4 text-lg leading-8 text-stone-600">“{testimonial.quote}”</p>
+                  </div>
+                  <footer className="mt-8 border-t border-stone-900/10 pt-5 text-sm font-semibold text-emerald-800">{testimonial.source}</footer>
+                </blockquote>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-y border-stone-900/10 bg-gradient-to-r from-rose-100 to-teal-100" id="download">
+          <div className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8">
+            <div className="grid gap-10 lg:grid-cols-[.72fr_1.28fr] lg:items-end">
               <div>
                 <Eyebrow>Standalone CLI</Eyebrow>
-                <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
-                  Download <span className="font-mono text-emerald-300">swa</span> for your platform.
-                </h2>
-                <p className="mt-5 max-w-xl text-lg leading-8 text-slate-400">
-                  These are public release binaries. Python and pip are not required.
-                  After downloading, rename the binary to <code className="text-slate-200">swa</code>
-                  (or <code className="text-slate-200">swa.exe</code> on Windows) and place it on your PATH.
-                </p>
+                <h2 className="text-4xl font-black tracking-[-0.035em] text-stone-950 sm:text-5xl">Take SwahiliPro to the platform you already use.</h2>
+                <p className="mt-5 text-lg leading-8 text-stone-600">Download the standalone <code className="font-mono font-semibold text-emerald-800">swa</code> runtime, place it on your PATH and run SwahiliPro files directly from your terminal.</p>
               </div>
-
               <div className="grid gap-3 sm:grid-cols-2">
                 {downloads.map((item) => (
-                  <a
-                    key={`${item.platform}-${item.detail}`}
-                    href={item.href}
-                    className="group flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:-translate-y-0.5 hover:border-emerald-400/30 hover:bg-emerald-400/[0.04]"
-                  >
-                    <div>
-                      <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                        <Monitor className="h-4 w-4 text-emerald-300" />
-                        {item.platform}
-                      </div>
-                      <p className="mt-1 text-xs text-slate-500">{item.detail}</p>
-                    </div>
-                    <Download className="h-4 w-4 text-slate-500 transition group-hover:text-emerald-300" />
+                  <a key={`${item.platform}-${item.detail}`} className="group flex items-center justify-between rounded-2xl border border-stone-900/10 bg-white/80 p-5 shadow-sm transition hover:-translate-y-0.5 hover:bg-white hover:shadow-lg" href={item.href}>
+                    <span className="flex items-center gap-4">
+                      <span className="grid h-12 w-12 place-items-center rounded-xl bg-stone-50"><img alt={`${item.platform} icon`} className="h-7 w-7 object-contain" src={item.icon} /></span>
+                      <span><strong className="block text-stone-950">{item.platform}</strong><span className="text-sm text-stone-500">{item.detail}</span></span>
+                    </span>
+                    <Download className="h-5 w-5 text-emerald-700 transition group-hover:translate-y-0.5" />
                   </a>
                 ))}
               </div>
             </div>
-
-            <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-slate-500">
-              <a href={releaseUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 transition hover:text-slate-300">
-                View public v2.0.0 release <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-              <span className="hidden sm:inline">•</span>
-              <span>SHA-256 digests are published with the release assets.</span>
+            <div className="mt-8 flex flex-wrap items-center gap-4 text-sm text-stone-600">
+              <a className="inline-flex items-center gap-2 font-bold text-emerald-800" href={releaseUrl} rel="noreferrer" target="_blank">View v2.0.0 release <ExternalLink className="h-3.5 w-3.5" /></a>
+              <span>•</span>
+              <a className="inline-flex items-center gap-2 font-bold text-emerald-800" href={marketplaceUrl} rel="noreferrer" target="_blank">VS Code Marketplace <ExternalLink className="h-3.5 w-3.5" /></a>
             </div>
           </div>
         </section>
 
-        <section className="border-y border-white/10 bg-emerald-400/[0.035]">
-          <div className="mx-auto grid max-w-7xl gap-8 px-5 py-20 sm:px-6 lg:grid-cols-[1.2fr_.8fr] lg:items-center lg:px-8">
+        <section className="bg-emerald-800 text-white">
+          <div className="mx-auto grid max-w-7xl gap-8 px-5 py-16 sm:px-6 lg:grid-cols-[1fr_auto] lg:items-center lg:px-8">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-300">Learning access</p>
-              <h2 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                Programming should not start with a language barrier.
-              </h2>
-              <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
-                SwahiliPro is built around the idea that learners can understand core
-                programming concepts more naturally when the readable parts of the
-                language are closer to how they already reason. The project aligns with
-                SDG 4: inclusive and equitable quality education.
-              </p>
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-100">Start where you are</p>
+              <h2 className="mt-3 max-w-3xl text-4xl font-black tracking-[-0.035em]">Learn programming in Swahili, then keep building without changing how modern development works.</h2>
             </div>
-            <a
-              href="/lms"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-300/20 bg-emerald-300/10 px-5 py-3.5 text-sm font-semibold text-emerald-200 transition hover:bg-emerald-300/15 lg:justify-self-end"
-            >
-              <BookOpen className="h-4 w-4" />
-              Learn SwahiliPro
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
-        </section>
-
-        <section className="px-5 py-24 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl rounded-3xl border border-emerald-300/15 bg-gradient-to-br from-emerald-400/10 via-slate-900 to-cyan-400/5 p-8 text-center sm:p-12">
-            <Eyebrow>Start building</Eyebrow>
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
-              Your next program can start in Swahili.
-            </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-400">
-              Install SwahiliPro in VS Code, create a <code className="text-slate-200">.swa</code> file and run your first program.
-            </p>
-            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <a href={marketplaceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-5 py-3.5 text-sm font-bold text-slate-950 transition hover:bg-emerald-300">
-                Install for VS Code <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-              <a href="#download" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-white/5">
-                Download CLI <ArrowRight className="h-4 w-4" />
-              </a>
+            <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+              <a className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-sm font-bold text-emerald-900" href="/lms"><Play className="h-4 w-4" /> Start learning</a>
+              <a className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-3.5 text-sm font-bold text-white" href="/docs">Read the docs <BookOpen className="h-4 w-4" /></a>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 text-sm text-slate-500 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
-          <p>SwahiliPro · Swahili-first programming for learning and building.</p>
-          <div className="flex flex-wrap gap-5">
-            <a className="transition hover:text-slate-300" href="/lms">Learn</a>
-            <a className="transition hover:text-slate-300" href={releaseUrl} target="_blank" rel="noreferrer">Downloads</a>
-            <a className="transition hover:text-slate-300" href={marketplaceUrl} target="_blank" rel="noreferrer">VS Code Marketplace</a>
-          </div>
+      <footer className="bg-stone-950 text-stone-400">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-10 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+          <div><p className="font-bold text-white">SwahiliPro</p><p className="mt-1 text-sm">A Swahili programming language for learning and building.</p></div>
+          <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold"><a className="hover:text-white" href="/docs">Docs</a><a className="hover:text-white" href="/lms">Learn</a><a className="hover:text-white" href="/examples">Examples</a><a className="hover:text-white" href="/blog">Blog</a></nav>
         </div>
       </footer>
     </div>
