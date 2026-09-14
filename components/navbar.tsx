@@ -15,10 +15,10 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-emerald-950/10 bg-[#fffaf5]/90 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 bg-transparent">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-8">
         <a className="group flex items-center gap-3" href="/" aria-label="SwahiliPro home">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-emerald-700 font-mono text-sm font-black text-white shadow-sm transition group-hover:bg-emerald-800">
+          <span className="grid h-9 w-9 place-items-center rounded-xl border border-emerald-900/10 bg-white/45 font-mono text-sm font-black text-emerald-800 shadow-sm backdrop-blur-sm transition group-hover:bg-white/70">
             SW
           </span>
           <span className="text-sm font-black tracking-tight text-stone-950 sm:text-base">
@@ -30,7 +30,7 @@ export default function Navbar() {
           {links.map((link) => (
             <a
               key={link.href}
-              className="text-sm font-semibold text-stone-600 transition hover:text-emerald-800"
+              className="text-sm font-semibold text-stone-700 transition hover:text-emerald-800"
               href={link.href}
             >
               {link.label}
@@ -40,7 +40,7 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-2 md:flex">
           <a
-            className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-semibold text-stone-600 transition hover:bg-white hover:text-stone-950"
+            className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-semibold text-stone-700 transition hover:bg-white/55 hover:text-stone-950"
             href="https://github.com/bonnieace/swahilipro-downloads"
             target="_blank"
             rel="noreferrer"
@@ -49,7 +49,7 @@ export default function Navbar() {
             Releases
           </a>
           <a
-            className="inline-flex h-9 items-center gap-2 rounded-lg bg-emerald-700 px-4 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-800"
+            className="inline-flex h-9 items-center gap-2 rounded-xl bg-emerald-700 px-4 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-800"
             href="https://marketplace.visualstudio.com/items?itemName=masota.swahilipro"
             target="_blank"
             rel="noreferrer"
@@ -60,7 +60,7 @@ export default function Navbar() {
         </div>
 
         <button
-          className="grid h-10 w-10 place-items-center rounded-lg border border-emerald-950/10 bg-white/70 text-stone-800 md:hidden"
+          className="grid h-10 w-10 place-items-center rounded-xl border border-emerald-950/10 bg-white/45 text-stone-800 shadow-sm backdrop-blur-sm md:hidden"
           type="button"
           aria-label="Toggle navigation"
           aria-expanded={open}
@@ -71,12 +71,12 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="border-t border-emerald-950/10 bg-[#fffaf5] px-5 py-4 md:hidden">
+        <div className="mx-4 rounded-2xl border border-emerald-950/10 bg-[#fffaf5]/95 px-3 py-3 shadow-xl backdrop-blur-xl md:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col gap-1" aria-label="Mobile navigation">
             {links.map((link) => (
               <a
                 key={link.href}
-                className="rounded-lg px-3 py-3 text-sm font-semibold text-stone-700 hover:bg-white"
+                className="rounded-xl px-3 py-3 text-sm font-semibold text-stone-700 hover:bg-white/80"
                 href={link.href}
                 onClick={() => setOpen(false)}
               >
@@ -84,7 +84,7 @@ export default function Navbar() {
               </a>
             ))}
             <a
-              className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-700 px-4 py-3 text-sm font-bold text-white"
+              className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-bold text-white"
               href="https://marketplace.visualstudio.com/items?itemName=masota.swahilipro"
               target="_blank"
               rel="noreferrer"
