@@ -64,15 +64,41 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
   }
-}
 
-@layer base {
-  * {
-  }
   body {
     @apply bg-gradient-to-r from-rose-100 to-teal-100 text-foreground;
   }
 }
-body {
-  background: bg-gradient-to-r from-rose-100 to-teal-100;
+
+@keyframes platform-scroll {
+  0%,
+  18% {
+    transform: translateY(0);
+  }
+  25%,
+  43% {
+    transform: translateY(-58px);
+  }
+  50%,
+  68% {
+    transform: translateY(-116px);
+  }
+  75%,
+  93% {
+    transform: translateY(-174px);
+  }
+  100% {
+    transform: translateY(-232px);
+  }
+}
+
+.platform-scroll-track {
+  animation: platform-scroll 10s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .platform-scroll-track {
+    animation: none;
+  }
 }
