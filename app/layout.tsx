@@ -22,6 +22,10 @@ export const metadata: Metadata = {
     "Swahili compiler",
     "African programming language",
   ],
+  icons: {
+    icon: [{ url: "/swahilipro-icon.svg", type: "image/svg+xml" }],
+    shortcut: "/swahilipro-icon.svg",
+  },
   alternates: {
     canonical: "/",
   },
@@ -69,6 +73,7 @@ const structuredData = {
       "@id": `${siteUrl}/#software`,
       name: "Swahilipro",
       url: siteUrl,
+      image: `${siteUrl}/swahilipro-logo.png`,
       applicationCategory: "DeveloperApplication",
       operatingSystem: "Windows, Linux, macOS",
       description:
