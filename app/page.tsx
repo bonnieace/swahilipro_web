@@ -109,7 +109,7 @@ function PlatformTicker() {
   const repeated = [...platforms, ...platforms];
 
   return (
-    <div className="mt-8 flex items-center gap-4 text-sm text-stone-600">
+    <div className="mb-5 flex items-center gap-3 text-sm text-stone-600">
       <span className="font-semibold text-stone-800">Build with</span>
       <div className="platform-ticker h-10 min-w-[170px] overflow-hidden rounded-full border border-emerald-900/10 bg-white/65 px-4 shadow-sm backdrop-blur">
         <div className="platform-ticker-track">
@@ -162,7 +162,7 @@ function MissionSection() {
           <h2 className="mt-4 text-4xl font-black tracking-[-0.035em] text-stone-950 sm:text-5xl">
             Programming education in Swahili should feel accessible from the first line.
           </h2>
-          <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-stone-650 text-stone-600">
+          <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-stone-600">
             SwahiliPro supports more inclusive access to programming education by helping
             Swahili speakers learn core software concepts in a language they already use,
             while keeping the structures and workflows that transfer to modern development.
@@ -197,29 +197,22 @@ export default function Home() {
       <main>
         <section className="relative overflow-hidden border-b border-emerald-950/5">
           <div className="pointer-events-none absolute inset-0 opacity-70">
-            <div className="absolute -left-32 top-16 h-72 w-72 rounded-full bg-rose-200/60 blur-3xl" />
+            <div className="absolute -left-32 top-8 h-72 w-72 rounded-full bg-rose-200/60 blur-3xl" />
             <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-teal-200/70 blur-3xl" />
           </div>
 
-          <div className="relative mx-auto grid max-w-7xl gap-14 px-5 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.06fr_.94fr] lg:items-center lg:px-8 lg:pb-28 lg:pt-24">
+          <div className="relative mx-auto grid max-w-7xl gap-9 px-5 pb-8 pt-7 sm:px-6 sm:pb-10 sm:pt-8 lg:min-h-[calc(100svh-5rem)] lg:grid-cols-[1.04fr_.96fr] lg:items-center lg:px-8 lg:py-8">
             <div>
-              <a
-                className="mb-7 inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-white/60 px-3.5 py-2 text-xs font-semibold text-emerald-900 shadow-sm backdrop-blur transition hover:bg-white/80"
-                href="/docs"
-              >
-                <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                Swahili programming language · v2
-                <ArrowRight className="h-3.5 w-3.5" />
-              </a>
+              <PlatformTicker />
 
-              <h1 className="max-w-4xl text-5xl font-black leading-[0.98] tracking-[-0.045em] text-stone-950 sm:text-6xl lg:text-7xl">
+              <h1 className="max-w-4xl text-5xl font-black leading-[0.98] tracking-[-0.045em] text-stone-950 sm:text-6xl lg:text-[4rem] xl:text-[4.35rem]">
                 Program in Swahili.
                 <span className="mt-2 block bg-gradient-to-r from-emerald-700 via-teal-700 to-rose-600 bg-clip-text text-transparent">
                   Build like any modern developer.
                 </span>
               </h1>
 
-              <p className="mt-7 max-w-2xl text-lg leading-8 text-stone-700 sm:text-xl">
+              <p className="mt-5 max-w-2xl text-lg leading-7 text-stone-700">
                 <strong className="font-semibold text-stone-950">
                   SwahiliPro is a Swahili programming language and learning platform
                 </strong>{" "}
@@ -232,13 +225,13 @@ export default function Home() {
                 use every day.
               </p>
 
-              <p className="mt-4 max-w-2xl text-base leading-7 text-stone-600">
+              <p className="mt-3 max-w-2xl text-base leading-6 text-stone-600">
                 Think in Swahili. Code like any other modern developer.
               </p>
 
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <a
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition hover:-translate-y-0.5 hover:bg-emerald-800"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition hover:-translate-y-0.5 hover:bg-emerald-800"
                   href={marketplaceUrl}
                   rel="noreferrer"
                   target="_blank"
@@ -248,7 +241,7 @@ export default function Home() {
                   <ExternalLink className="h-3.5 w-3.5" />
                 </a>
                 <a
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-900/15 bg-white/65 px-5 py-3.5 text-sm font-bold text-stone-900 shadow-sm transition hover:bg-white"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-900/15 bg-white/65 px-5 py-3 text-sm font-bold text-stone-900 shadow-sm transition hover:bg-white"
                   href="/lms"
                 >
                   <GraduationCap className="h-4 w-4 text-rose-600" />
@@ -256,13 +249,20 @@ export default function Home() {
                 </a>
               </div>
 
-              <PlatformTicker />
+              <a
+                className="mt-5 inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-white/60 px-3.5 py-2 text-xs font-semibold text-emerald-900 shadow-sm backdrop-blur transition hover:bg-white/80"
+                href="/docs"
+              >
+                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                Swahili programming language · v2
+                <ArrowRight className="h-3.5 w-3.5" />
+              </a>
             </div>
 
             <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
-              <div className="absolute -inset-4 rotate-1 rounded-[2rem] bg-gradient-to-br from-rose-200 via-teal-100 to-emerald-200 opacity-80 blur-xl" />
+              <div className="absolute -inset-3 rotate-1 rounded-[2rem] bg-gradient-to-br from-rose-200 via-teal-100 to-emerald-200 opacity-75 blur-xl" />
               <div className="relative overflow-hidden rounded-[1.7rem] border border-stone-900/10 bg-[#151a18] shadow-2xl shadow-emerald-950/20">
-                <div className="flex h-12 items-center justify-between border-b border-white/10 px-4">
+                <div className="flex h-11 items-center justify-between border-b border-white/10 px-4">
                   <div className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
                     <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
@@ -270,10 +270,10 @@ export default function Home() {
                   </div>
                   <span className="font-mono text-xs text-stone-400">hello.swa</span>
                 </div>
-                <pre className="overflow-x-auto p-6 text-[13px] leading-7 text-stone-300 sm:p-7 sm:text-sm">
+                <pre className="overflow-x-auto p-5 text-[12px] leading-6 text-stone-300 sm:p-6 sm:text-[13px]">
                   <code>{codeExample}</code>
                 </pre>
-                <div className="flex items-center justify-between border-t border-white/10 bg-black/20 px-6 py-4 font-mono text-xs sm:text-sm">
+                <div className="flex items-center justify-between border-t border-white/10 bg-black/20 px-5 py-3.5 font-mono text-xs">
                   <span>
                     <span className="mr-2 text-emerald-400">$</span>
                     <span className="text-stone-200">swa hello.swa</span>
