@@ -1,521 +1,404 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { ChevronLeft, Lock, CheckCircle, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  ArrowLeft,
+  BookOpen,
+  CheckCircle2,
+  Code2,
+  Lock,
+  Sparkles,
+} from "lucide-react";
 
 import Navbar from "@/components/navbar";
 
-// Constants
-const BADGES = [
-  {
-    name: "Mwanafunzi",
-    requiredPoints: 25,
-    icon: "🌱",
-    description: "Mwanafunzi",
-  },
-  {
-    name: "Mjuzi",
-    requiredPoints: 60,
-    icon: "⭐",
-    description: "Mjuzi",
-  },
-  {
-    name: "Mtaalam",
-    requiredPoints: 100,
-    icon: "👑",
-    description: "Mtaalam",
-  },
-];
-
-const CONCEPTS = [
+const LESSONS = [
   {
     id: 0,
-    title: "Introduction (Utangulizi)",
-    points: 20,
-    shortDescription: "Jifunze kuandika msimbo kwa kiswahili na kutekeleza.",
+    title: "Utangulizi · Getting started",
+    points: 15,
+    requiredPoints: 0,
+    shortDescription:
+      "Jifunze kuunda faili la .swa, kuandika programu yako ya kwanza na kuitumia kupitia swa CLI.",
     explanation:
-      'Karibu katika masomo ya swahilipro.\nHapa utajifunza kuandika na kutekeleza lugha hii.\n Fungua Visual Studio Code.\nUnda faili na kiendelezi (extension) .swa. \nFungua Command Line Interface. (CMD)\nAndika swahilipro  katika CMD ili uweze kuanzisha mkusanyaji (compiler).\nKisha andika swa("filename.swa") ili kutekeleza faili hilo.',
+      "SwahiliPro ni lugha ya programu inayotumia maneno yanayosomeka kwa Kiswahili huku muundo wa programu ukiendelea kufanana na lugha nyingine za kisasa. Unda faili lenye kiendelezi .swa, liandike katika VS Code, kisha uliendeshe kwa amri swa.",
     examples: [
       {
-        code: 'ikiwa faili yako umeiita msimbo.swa \nandika swahilipro katika cmd\nKisha andika swa("msimbo.swa")',
-        description: "utekelezaji (Compilation)",
+        title: "Hello world",
+        code: 'andika("Habari Dunia!")',
       },
       {
-        code: 'andika("Habari Kenya!")',
-        description: "Hello world!",
+        title: "Run from the terminal",
+        code: "$ swa hello.swa",
       },
     ],
-    practice: [
-      {
-        question: "Unda msimbo unaoandika neno swahilipro",
-        answer: 'andika("Swahilipro.")',
-      },
-    ],
-    requiredPoints: 0,
+    practice: {
+      question: "Andika programu inayochapisha: Karibu SwahiliPro",
+      answer: 'andika("Karibu SwahiliPro")',
+    },
   },
   {
     id: 1,
-    title: "Variables (Vigezo)",
-    points: 10,
-    shortDescription: "Jifunze kuhifadhi data katika vigezo na kuvitumia.",
+    title: "Vigezo · Variables",
+    points: 15,
+    requiredPoints: 15,
+    shortDescription:
+      "Hifadhi maandishi, nambari na thamani nyingine kwa kutumia acha.",
     explanation:
-      "Variabu/Vigezo hutangazwa kwa kutumia neno kuu wacha. Vigezo hivi vinaweza kuhifadhi aina tofauti za data kama maandishi (string) na nambari (int).",
+      "Katika SwahiliPro v2, kigezo kinatangazwa kwa kutumia neno acha. Jina la kigezo linaweza kutumika baadaye katika hesabu, masharti, kazi na matokeo ya programu.",
     examples: [
       {
-        code: 'wacha jina = "Habari"\nwacha idadi = 10',
-        description: "Kutangaza Kigezo cha Msingi (Basic variable declaration)",
+        title: "Basic variables",
+        code: 'acha jina = "Amina"\nacha umri = 24\nandika(jina)',
       },
       {
-        code: 'wacha salamu = "Habari" + " Dunia"\nandika(salamu)',
-        description: "Kuunganisha maneno (String Concatenation)",
+        title: "Combine values",
+        code: 'acha salamu = "Habari " + jina\nandika(salamu)',
       },
     ],
-    practice: [
-      {
-        question: "Unda Kigezo Kinachoitwa 'umri' na Kipe Thamani 25",
-        answer: "wacha umri = 25",
-      },
-    ],
-    requiredPoints: 20,
+    practice: {
+      question: "Unda kigezo kinachoitwa umri na ukipe thamani 25.",
+      answer: "acha umri = 25",
+    },
   },
   {
     id: 2,
-    title: "Arithmetic Operations (Operesheni za Hisabati)",
+    title: "Hisabati · Arithmetic",
     points: 15,
-    shortDescription: "Jifunze kutumia operesheni za hisabati katika msimbo.",
+    requiredPoints: 30,
+    shortDescription:
+      "Tumia +, -, *, / na operesheni nyingine kufanya hesabu ndani ya programu.",
     explanation:
-      "Operesheni za hisabati :\n + Ongeza  (addition),\n - Toa  (subtraction)\n* Mara  (multiplication),\n/ Gawa  (division), \n^ Karisimu  (exponentiation)",
+      "Operesheni za hisabati hutumia alama zinazofahamika katika lugha nyingine za programu. Unaweza kuhifadhi majibu kwenye vigezo na kuyaonyesha kwa andika.",
     examples: [
       {
-        code: "wacha a = 5\nwacha b = 2\nwacha jumla = a + b\nandika(jumla)  \n",
-        description: "Operesheni ya Jumla (Addition)",
+        title: "Addition",
+        code: "acha a = 5\nacha b = 2\nacha jumla = a + b\nandika(jumla)",
       },
       {
-        code: "wacha tofauti = 10 - 3\nandika(tofauti)  \n",
-        description: "Operesheni ya Toa (Subtraction)",
-      },
-      {
-        code: "wacha zao = 4 * 3\nandika(zao)  \n# Matokeo: 12",
-        description: "Operesheni ya mara (Multiplication)",
+        title: "Average",
+        code: "acha jumla = 10 + 15 + 20\nacha wastani = jumla / 3\nandika(wastani)",
       },
     ],
-    practice: [
-      {
-        question:
-          "Andika msimbo unaohesabu wastani wa nambari : 10, 15, and 20",
-        answer:
-          "wacha jumla = 10 + 15 + 20\nwacha wastani = jumla / 3\nandika(wastani)",
-      },
-    ],
-    requiredPoints: 30,
+    practice: {
+      question: "Hesabu zao la 6 na 7 na ulichapishe.",
+      answer: "acha zao = 6 * 7\nandika(zao)",
+    },
   },
   {
     id: 3,
-    title: "Control Structures (Miundo ya Kudhibiti)",
+    title: "Masharti na marudio · Conditions & loops",
     points: 20,
-    shortDescription: "Jifunze miundo ya kudhibiti na matumizi yake.",
+    requiredPoints: 45,
+    shortDescription:
+      "Dhibiti mtiririko wa programu kwa ikiwa, vinginevyo, kwa na wakati.",
     explanation:
-      "Miundo ya udhibiti husimamia mtiririko wa programu kwa kutumia masharti  kama vile taarifa za `ikiwa`(if) na `kwa`(for)",
+      "SwahiliPro v2 hutumia mabano ya curly braces kuonyesha blocks. Masharti yanatumia ikiwa na vinginevyo. Marudio yanaweza kutumia kwa ... katika kwa collection au range, pamoja na wakati kwa while-style loops.",
     examples: [
       {
-        code: 'wacha umri = 18\nikiwa umri >= 18 basi\n    andika("Umekua")\nikiwa_nyingine\n    andika("Bado mdogo")\nfunga',
-        description:
-          "(If-else statement) :Taarifa ya ikiwa/ikiwa_nyingine hutumika kutekeleza vitendo tofauti kulingana na sharti lililotolewa. Ikiwa sharti ni kweli (true), sehemu ya kwanza ya msimbo hufanyika. Ikiwa si kweli (false), sehemu nyingine (ikiwa_nyingine) hutekelezwa.",
+        title: "Condition",
+        code: 'acha umri = 20\n\nikiwa (umri >= 18) {\n  andika("Karibu")\n} vinginevyo {\n  andika("Bado mdogo")\n}',
       },
       {
-        code: " wacha i = 1\n kwa i=1 hadi 5 basi\n    andika(i)\nfunga",
-        description:
-          "(For loop): Kwa hutumika kurudia utekelezaji wa msimbo fulani kwa idadi maalum ya mara. ",
+        title: "Range loop",
+        code: "kwa i katika 1..5 {\n  andika(i)\n}",
       },
     ],
-    practice: [
-      {
-        question: " msimbo unaoandika nambari toka moja hadi tatu",
-        answer: "wacha i = 1\nkwa  i = 1 hadi 4 basi\n    andika(i)\nfunga",
-      },
-    ],
-    requiredPoints: 45,
+    practice: {
+      question: "Andika nambari 1 hadi 3 kwa kutumia kwa ... katika.",
+      answer: "kwa i katika 1..4 {\n  andika(i)\n}",
+    },
   },
   {
     id: 4,
-    title: "Functions (Njia)",
+    title: "Kazi · Functions",
     points: 20,
+    requiredPoints: 65,
     shortDescription:
-      "Unda Vipande vya Msimbo Vinavyotumika Tena kwa Kutumia njia",
+      "Tengeneza vipande vya msimbo vinavyotumika tena na urudishe matokeo kwa rudisha.",
     explanation:
-      "Functions zinatambulishwa kwa kutumia neno kuu njia, na zinaweza kurudisha thamani kwa kutumia neno rudisha.Hii ni sehemu ya msimbo inayotekeleza jukumu maalum na inaweza kuitwa tena inapohitajika bila kuandikwa upya.",
+      "SwahiliPro v2 haitumii neno maalum la kuanzisha function. Andika jina la function, parameters ndani ya mabano, halafu body ndani ya braces. Tumia rudisha ikiwa function inahitaji kutoa thamani.",
     examples: [
       {
-        code: "njia ongeza(a,b)\n    rudisha (a + b)\nfunga\n\nwacha jibu = ongeza(5,3)\n andika(jibu) ",
-        description:
-          " Njia inayopokea thamani ya nambari  kama ingizo (integer parameter) ili kutekeleza jukumu maalum.",
+        title: "Add two numbers",
+        code: "jumlisha(a, b) {\n  rudisha a + b\n}\n\nacha jibu = jumlisha(5, 3)\nandika(jibu)",
       },
       {
-        code: 'njia karibisha(jina) \n    rudisha( "Habari, " + jina)\nfunga\n wacha jibu = karibisha("bonnie")\nandika(jibu)',
-        description:
-          "njia inayopokea thamani ya maandishi  kama ingizo (string parameter) ili kutekeleza jukumu maalum.",
+        title: "Greeting",
+        code: 'karibisha(jina) {\n  rudisha "Habari, " + jina\n}\n\nandika(karibisha("Amina"))',
       },
     ],
-    practice: [
-      {
-        question:
-          "Andika njia inayozidisha nambari mbili(multiplication of two numbers)",
-        answer:
-          "njia zidisha(a, b) \n    rudisha (a * b)\nfunga\nwacha tokeo = zidisha(2,3)",
-      },
-    ],
-    requiredPoints: 65,
+    practice: {
+      question: "Tengeneza function zidisha(a, b) inayorudisha zao la nambari mbili.",
+      answer: "zidisha(a, b) {\n  rudisha a * b\n}",
+    },
   },
   {
     id: 5,
-    title: "Logical & Comparison Operators. (Operesheni za ulinganishaji)",
+    title: "Mantiki · Logic",
     points: 15,
-    shortDescription: "Jifunze Jinsi ya Kulinganisha Thamani .",
+    requiredPoints: 85,
+    shortDescription:
+      "Unganisha masharti kwa na, au na sio pamoja na kweli na uongo.",
     explanation:
-      " uendeshaji wa mantiki kwa kutumia na , au (AND OR Statements)  na  ulinganishaji  kwa kutumia  (==, !=, <, >, <=, >=) (Comparission operators) ni muhimu kwa kutengeneza masharti yanayosaidia kudhibiti mtiririko wa programu.",
+      "Mantiki hutumika kutengeneza masharti yenye sehemu zaidi ya moja. na inahitaji masharti yote yawe kweli, au inahitaji angalau moja, na sio hubadilisha boolean. Thamani za boolean ni kweli na uongo.",
     examples: [
       {
-        code: 'wacha umri = 25\nwacha ana_kitambulisho = kweli\n\nikiwa umri >= 18 na ana_kitambulisho basi\n    andika("Unaweza kuingia")\nfunga',
-        description:
-          "(Logical AND operator) Na: hutumika kuunganisha masharti mawili au zaidi, na kurudisha kweli tu ikiwa yote ya masharti yaliyounganishwa ni kweli (true). Ikiwa hata moja ya masharti ni false, basi matokeo yatakuwa false.",
+        title: "AND logic",
+        code: 'acha umri = 25\nacha ana_kitambulisho = kweli\n\nikiwa (umri >= 18 na ana_kitambulisho) {\n  andika("Unaweza kuingia")\n}',
       },
       {
-        code: 'wacha saa = 17\nikiwa saa < 12 au saa > 22 basi\n    andika("Duka limefungwa")\nfunga',
-        description:
-          "(Logical OR operator)Au:  hutumika kuunganisha masharti mawili au zaidi, na kurudisha kweli ikiwa angalau moja ya masharti ni kweli (true)",
+        title: "OR logic",
+        code: 'acha saa = 23\n\nikiwa (saa < 6 au saa > 22) {\n  andika("Duka limefungwa")\n}',
       },
     ],
-    practice: [
-      {
-        question: "Andika msimbo unaotafuta nambari kati ya 1 na 10.",
-        answer:
-          'wacha nambari = 5\nikiwa nambari >= 1 na nambari <= 10 basi\n    andika("Nambari sahihi")\nfunga',
-      },
-    ],
-    requiredPoints: 85,
+    practice: {
+      question: "Kagua kama nambari iko kati ya 1 na 10.",
+      answer: 'acha nambari = 5\n\nikiwa (nambari >= 1 na nambari <= 10) {\n  andika("Nambari sahihi")\n}',
+    },
   },
-  // ... other concepts
+  {
+    id: 6,
+    title: "Orodha · Lists",
+    points: 15,
+    requiredPoints: 100,
+    shortDescription:
+      "Hifadhi collections za data, soma kwa index na ongeza values mpya.",
+    explanation:
+      "Lists hutumia bracket syntax inayofahamika. Indexing ni zero-based, kwa hiyo item ya kwanza iko kwenye index 0. Tumia ongeza kuweka item mpya kwenye list.",
+    examples: [
+      {
+        title: "Create and read a list",
+        code: 'acha miji = ["Nairobi", "Mombasa", "Kisumu"]\nandika(miji[0])',
+      },
+      {
+        title: "Append an item",
+        code: 'ongeza(miji, "Nakuru")\nandika(urefu(miji))',
+      },
+    ],
+    practice: {
+      question: "Unda list ya lugha tatu na uchapishe item ya pili.",
+      answer: 'acha lugha = ["SwahiliPro", "Python", "JavaScript"]\nandika(lugha[1])',
+    },
+  },
 ];
 
-// Components
-const PracticeItem = ({ item }) => {
-  const [isRevealed, setIsRevealed] = useState(false);
+const BADGES = [
+  { name: "Mwanafunzi", min: 25, icon: "🌱" },
+  { name: "Mjuzi", min: 60, icon: "⭐" },
+  { name: "Mtaalam", min: 100, icon: "👑" },
+];
+
+function Progress({ points, total }) {
+  const percent = Math.min(100, Math.round((points / total) * 100));
 
   return (
-    <div className="mb-6 bg-white rounded-lg p-6 shadow-md border border-gray-200">
-      <p className="font-medium mb-4 text-gray-800">{item.question}</p>
+    <div>
+      <div className="flex items-center justify-between text-sm font-semibold text-stone-600">
+        <span>{points} pointi</span>
+        <span>{percent}%</span>
+      </div>
+      <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-emerald-950/10">
+        <div
+          className="h-full rounded-full bg-gradient-to-r from-emerald-600 to-teal-500 transition-all"
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+    </div>
+  );
+}
 
+function Practice({ practice }) {
+  const [revealed, setRevealed] = useState(false);
+
+  return (
+    <div className="rounded-2xl border border-rose-900/10 bg-rose-50 p-5">
+      <p className="font-semibold text-stone-900">{practice.question}</p>
       <button
-        className={`transition-colors duration-300 px-4 py-2 rounded-md text-white font-medium ${
-          isRevealed
-            ? "bg-red-500 hover:bg-red-600"
-            : "bg-blue-500 hover:bg-blue-600"
-        }`}
-        onClick={() => setIsRevealed(!isRevealed)}
+        className="mt-4 rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-rose-700"
+        onClick={() => setRevealed((value) => !value)}
+        type="button"
       >
-        {isRevealed ? "Ficha Jibu" : "Onyesha Jibu"}
+        {revealed ? "Ficha jibu" : "Onyesha jibu"}
       </button>
-
-      {isRevealed && (
-        <pre className="bg-gray-900 text-white p-4 rounded-lg mt-4">
-          <code>{item.answer}</code>
+      {revealed && (
+        <pre className="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-sm leading-7 text-stone-200">
+          <code>{practice.answer}</code>
         </pre>
       )}
     </div>
   );
-};
+}
 
-const ProgressBar = ({ currentPoints, totalPoints = 100 }) => (
-  <div className="space-y-2">
-    <div className="w-full bg-gray-200 rounded-full h-2">
-      <div
-        className="bg-green-500 h-2 rounded-full transition-all duration-300"
-        style={{ width: `${(currentPoints / totalPoints) * 100}%` }}
-      />
-    </div>
-    <div className="flex justify-between text-xs sm:text-sm text-gray-600">
-      <span>Umewai pointi : {currentPoints} </span>
-      <span>Pointi {totalPoints} jumla</span>
-    </div>
-  </div>
-);
-
-const BadgeDisplay = ({ currentPoints }) => (
-  <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-    {BADGES.map((badge) => (
-      <div
-        key={badge.name}
-        className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs sm:text-sm
-          ${
-            currentPoints >= badge.requiredPoints
-              ? "bg-green-100 text-green-700"
-              : "bg-gray-100 text-gray-500"
-          }`}
-      >
-        <span>{badge.icon}</span>
-        <span>{badge.description}</span>
-      </div>
-    ))}
-  </div>
-);
-
-const CompletionAlert = ({ onClose }) => (
-  <div
-    className="fixed top-4 right-4 bg-green-100 text-green-700 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2"
-    role="alert"
-  >
-    <CheckCircle aria-hidden="true" className="w-4 h-4" />
-    Concept completed! Keep up the great work!
-    <button
-      aria-label="Close alert"
-      className="ml-2 text-green-800 hover:text-green-900"
-      onClick={onClose}
-    >
-      <X aria-hidden="true" className="w-4 h-4" />
-    </button>
-  </div>
-);
-
-const ConceptCard = ({ concept, isLocked, isCompleted, points, onClick }) => (
-  <button
-    aria-label={`${concept.title}${isLocked ? " (Locked)" : ""}`}
-    className={`p-4 sm:p-6 w-full text-left rounded-lg shadow-md transition-all hover:shadow-lg
-      ${
-        isLocked
-          ? "bg-gray-100 border border-gray-300 opacity-60 cursor-not-allowed"
-          : isCompleted
-            ? "bg-green-50 border border-green-500"
-            : "bg-blue-50 border border-blue-500"
-      }`}
-    disabled={isLocked}
-    onClick={onClick}
-  >
-    <div className="flex justify-between items-start">
-      <div>
-        <h3 className="font-semibold text-base sm:text-lg">{concept.title}</h3>
-        <p className="text-xs sm:text-sm text-gray-600">
-          {concept.shortDescription}
-        </p>
-      </div>
-      {isLocked ? (
-        <Lock
-          aria-hidden="true"
-          className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400"
-        />
-      ) : isCompleted ? (
-        <CheckCircle
-          aria-hidden="true"
-          className="w-4 h-4 sm:w-5 sm:h-5 text-green-500"
-        />
-      ) : (
-        <span className="text-xs sm:text-sm font-semibold text-blue-600">
-          +{points}
-        </span>
-      )}
-    </div>
-
-    {isLocked && (
-      <div className="text-xs sm:text-sm text-gray-500 mt-4">
-        Fungua na pointi {concept.requiredPoints}
-      </div>
-    )}
-  </button>
-);
-
-const ConceptView = ({ concept, isCompleted, onBack, onComplete }) => (
-  <div
-    aria-label={`${concept.title} details`}
-    className="fixed inset-0 z-50 overflow-auto bg-white"
-    role="dialog"
-  >
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
-      <div className="flex justify-between items-center">
-        <button
-          aria-label="Back to concepts list"
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-800"
-          onClick={onBack}
-        >
-          <ChevronLeft aria-hidden="true" className="w-5 h-5" />
-          Rudi nyuma
-        </button>
-
-        {!isCompleted && (
-          <button
-            aria-label="Mark concept as complete"
-            className="bg-blue-500 text-white px-4 py-2 fixed right-6 rounded-lg hover:bg-blue-600 flex items-center gap-2"
-            onClick={onComplete}
-          >
-            <CheckCircle aria-hidden="true" className="w-4 h-4" />
-            Maliza somo
-          </button>
-        )}
-      </div>
-
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">{concept.title}</h1>
-          <div className="flex items-center gap-2 text-sm text-gray-600 mt-2">
-            <span>Pointi {concept.points} </span>
-            {isCompleted && (
-              <span className="flex items-center gap-1 text-green-600">
-                <CheckCircle className="w-4 h-4" />
-                Imekamilika
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className="bg-gray-50 rounded-lg p-6 shadow-md">
-          {concept.explanation}
-        </div>
-
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Mifano</h2>
-          {concept.examples.map((example, index) => (
-            <div key={index} className="mb-6">
-              <h3 className="font-medium mb-2">{example.description}</h3>
-              <pre className="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto">
-                <code>{example.code}</code>
-              </pre>
-            </div>
-          ))}
-        </div>
-
-        <div>
-          <h2 className="text-xl font-semibold mb-6">Practice</h2>
-          {concept.practice.map((item, index) => (
-            <PracticeItem key={index} item={item} />
-          ))}
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-// Main Component
-const SwahiliProgrammingLMS = () => {
-  const [completedConcepts, setCompletedConcepts] = useState([]);
-  const [selectedConcept, setSelectedConcept] = useState(null);
-  const [showAlert, setShowAlert] = useState(false);
+export default function SwahiliProgrammingLMS() {
+  const [completed, setCompleted] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
 
   useEffect(() => {
-    const savedProgress = localStorage.getItem("swahiliLMSProgress");
-
-    if (savedProgress) {
-      setCompletedConcepts(JSON.parse(savedProgress));
-    }
+    const saved = localStorage.getItem("swahiliLMSProgressV2");
+    if (saved) setCompleted(JSON.parse(saved));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(
-      "swahiliLMSProgress",
-      JSON.stringify(completedConcepts),
+    localStorage.setItem("swahiliLMSProgressV2", JSON.stringify(completed));
+  }, [completed]);
+
+  const points = useMemo(
+    () =>
+      completed.reduce((sum, id) => {
+        const lesson = LESSONS.find((item) => item.id === id);
+        return sum + (lesson?.points ?? 0);
+      }, 0),
+    [completed],
+  );
+
+  const totalPoints = useMemo(
+    () => LESSONS.reduce((sum, lesson) => sum + lesson.points, 0),
+    [],
+  );
+
+  const selected = LESSONS.find((lesson) => lesson.id === selectedId);
+
+  function completeLesson(id) {
+    if (!completed.includes(id)) setCompleted((items) => [...items, id]);
+  }
+
+  if (selected) {
+    const isCompleted = completed.includes(selected.id);
+
+    return (
+      <div className="min-h-screen bg-[#fffaf5] text-stone-900">
+        <Navbar />
+        <main className="mx-auto max-w-5xl px-5 py-12 sm:px-6 lg:px-8">
+          <button
+            className="inline-flex items-center gap-2 text-sm font-bold text-emerald-800"
+            onClick={() => setSelectedId(null)}
+            type="button"
+          >
+            <ArrowLeft className="h-4 w-4" /> Rudi kwenye masomo
+          </button>
+
+          <div className="mt-8 rounded-[2rem] border border-stone-900/10 bg-white p-6 shadow-xl shadow-stone-900/5 sm:p-10">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <span className="text-xs font-black uppercase tracking-[0.16em] text-rose-600">Somo {selected.id + 1}</span>
+                <h1 className="mt-3 text-4xl font-black tracking-[-0.035em] text-stone-950">{selected.title}</h1>
+                <p className="mt-4 max-w-3xl text-lg leading-8 text-stone-600">{selected.explanation}</p>
+              </div>
+              <button
+                className={`shrink-0 rounded-xl px-4 py-3 text-sm font-bold ${isCompleted ? "bg-emerald-100 text-emerald-800" : "bg-emerald-700 text-white hover:bg-emerald-800"}`}
+                disabled={isCompleted}
+                onClick={() => completeLesson(selected.id)}
+                type="button"
+              >
+                {isCompleted ? "Imekamilika" : `Maliza somo · +${selected.points}`}
+              </button>
+            </div>
+
+            <section className="mt-10">
+              <h2 className="text-2xl font-black text-stone-950">Mifano</h2>
+              <div className="mt-5 grid gap-4">
+                {selected.examples.map((example) => (
+                  <article key={example.title} className="overflow-hidden rounded-2xl border border-stone-900/10">
+                    <div className="bg-stone-50 px-5 py-3 text-sm font-bold text-stone-700">{example.title}</div>
+                    <pre className="overflow-x-auto bg-stone-950 p-5 text-sm leading-7 text-stone-200"><code>{example.code}</code></pre>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className="mt-10">
+              <h2 className="text-2xl font-black text-stone-950">Jaribu mwenyewe</h2>
+              <div className="mt-5"><Practice practice={selected.practice} /></div>
+            </section>
+          </div>
+        </main>
+      </div>
     );
-  }, [completedConcepts]);
-
-  const getCurrentPoints = () => {
-    return completedConcepts.reduce((total, conceptId) => {
-      const concept = CONCEPTS.find((c) => c.id === conceptId);
-
-      return total + (concept ? concept.points : 0);
-    }, 0);
-  };
-
-  const handleConceptComplete = (conceptId) => {
-    if (!completedConcepts.includes(conceptId)) {
-      setCompletedConcepts([...completedConcepts, conceptId]);
-      setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 3000);
-
-      const currentPoints =
-        getCurrentPoints() + CONCEPTS.find((c) => c.id === conceptId).points;
-      const newBadge = BADGES.find(
-        (b) =>
-          b.requiredPoints <= currentPoints &&
-          b.requiredPoints > getCurrentPoints(),
-      );
-
-      if (newBadge) {
-        alert(`Congratulations! You've earned the ${newBadge.name} badge!`);
-      }
-    }
-  };
-
-  const isConceptLocked = (concept) => {
-    return getCurrentPoints() < concept.requiredPoints;
-  };
+  }
 
   return (
-    <div>
-      {showAlert && <CompletionAlert onClose={() => setShowAlert(false)} />}
+    <div className="min-h-screen bg-[#fffaf5] text-stone-900">
+      <Navbar />
 
-      {selectedConcept ? (
-        <ConceptView
-          concept={selectedConcept}
-          isCompleted={completedConcepts.includes(selectedConcept.id)}
-          onBack={() => setSelectedConcept(null)}
-          onComplete={() => handleConceptComplete(selectedConcept.id)}
-        />
-      ) : (
-        <div className=" bg-gradient-to-r from-rose-100 to-teal-100">
-          <header className="">
-            <div className="mx-auto  px-4 sm:px-6 lg:px-8">
-              <div className="flex h-16 items-center justify-between">
-                <div className="flex-1 md:flex md:items-center md:gap-12">
-                  <a className="block text-teal-600" href="/">
-                    <span className="sr-only">Home</span>
-                    <svg
-                      className="h-8"
-                      fill="none"
-                      viewBox="0 0 28 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M0.41 10.3847C1.14777 7.4194 2.85643 4.7861 5.2639 2.90424C7.6714 1.02234 10.6393 0 13.695 0C16.7507 0 19.7186 1.02234 22.1261 2.90424C24.5336 4.7861 26.2422 7.4194 26.98 10.3847H25.78C23.7557 10.3549 21.7729 10.9599 20.11 12.1147C20.014 12.1842 19.9138 12.2477 19.81 12.3047H19.67C19.5662 12.2477 19.466 12.1842 19.37 12.1147C17.6924 10.9866 15.7166 10.3841 13.695 10.3841C11.6734 10.3841 9.6976 10.9866 8.02 12.1147C7.924 12.1842 7.8238 12.2477 7.72 12.3047H7.58C7.4762 12.2477 7.376 12.1842 7.28 12.1147C5.6171 10.9599 3.6343 10.3549 1.61 10.3847H0.41ZM23.62 16.6547C24.236 16.175 24.9995 15.924 25.78 15.9447H27.39V12.7347H25.78C24.4052 12.7181 23.0619 13.146 21.95 13.9547C21.3243 14.416 20.5674 14.6649 19.79 14.6649C19.0126 14.6649 18.2557 14.416 17.63 13.9547C16.4899 13.1611 15.1341 12.7356 13.745 12.7356C12.3559 12.7356 11.0001 13.1611 9.86 13.9547C9.2343 14.416 8.4774 14.6649 7.7 14.6649C6.9226 14.6649 6.1657 14.416 5.54 13.9547C4.4144 13.1356 3.0518 12.7072 1.66 12.7347H0V15.9447H1.61C2.39051 15.924 3.154 16.175 3.77 16.6547C4.908 17.4489 6.2623 17.8747 7.65 17.8747C9.0377 17.8747 10.392 17.4489 11.53 16.6547C12.1468 16.1765 12.9097 15.9257 13.69 15.9447C14.4708 15.9223 15.2348 16.1735 15.85 16.6547C16.9901 17.4484 18.3459 17.8738 19.735 17.8738C21.1241 17.8738 22.4799 17.4484 23.62 16.6547ZM23.62 22.3947C24.236 21.915 24.9995 21.664 25.78 21.6847H27.39V18.4747H25.78C24.4052 18.4581 23.0619 18.886 21.95 19.6947C21.3243 20.156 20.5674 20.4049 19.79 20.4049C19.0126 20.4049 18.2557 20.156 17.63 19.6947C16.4899 18.9011 15.1341 18.4757 13.745 18.4757C12.3559 18.4757 11.0001 18.9011 9.86 19.6947C9.2343 20.156 8.4774 20.4049 7.7 20.4049C6.9226 20.4049 6.1657 20.156 5.54 19.6947C4.4144 18.8757 3.0518 18.4472 1.66 18.4747H0V21.6847H1.61C2.39051 21.664 3.154 21.915 3.77 22.3947C4.908 23.1889 6.2623 23.6147 7.65 23.6147C9.0377 23.6147 10.392 23.1889 11.53 22.3947C12.1468 21.9165 12.9097 21.6657 13.69 21.6847C14.4708 21.6623 15.2348 21.9135 15.85 22.3947C16.9901 23.1884 18.3459 23.6138 19.735 23.6138C21.1241 23.6138 22.4799 23.1884 23.62 22.3947Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </a>
-                </div>
-
-                <Navbar />
-              </div>
-            </div>
-          </header>
-          <div className="min-h-screen w-full mx-auto p-4 sm:p-6 space-y-6 sm:space-y-8">
-            <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-              <div className="text-center sm:text-left">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
-                  SwahiliPro
-                </h1>
-                <p className="text-gray-600">
-                  Jifunze lugha ya msimbo ya kiswahili
-                </p>
-              </div>
-              <BadgeDisplay currentPoints={getCurrentPoints()} />
-            </div>
-
-            <ProgressBar currentPoints={getCurrentPoints()} />
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {CONCEPTS.map((concept) => (
-                <ConceptCard
-                  key={concept.id}
-                  concept={concept}
-                  isCompleted={completedConcepts.includes(concept.id)}
-                  isLocked={isConceptLocked(concept)}
-                  points={concept.points}
-                  onClick={() =>
-                    !isConceptLocked(concept) && setSelectedConcept(concept)
-                  }
-                />
-              ))}
-            </div>
+      <header className="border-b border-emerald-950/10 bg-gradient-to-br from-rose-100 via-[#fffaf5] to-teal-100">
+        <div className="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:px-8 lg:py-18">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-950/10 bg-white/70 px-3.5 py-2 text-xs font-black uppercase tracking-[0.18em] text-emerald-800">
+            <Sparkles className="h-3.5 w-3.5" /> Interactive Swahili programming course
           </div>
+          <h1 className="mt-6 max-w-4xl text-5xl font-black tracking-[-0.045em] text-stone-950 sm:text-6xl">
+            Learn programming in Swahili.
+          </h1>
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-stone-700">
+            SwahiliPro’s learning path teaches beginner programming concepts in Kiswahili using the current SwahiliPro v2 syntax. Start with your first <code className="font-mono font-semibold text-emerald-800">.swa</code> file, then work through variables, arithmetic, conditions, loops, functions, logic and lists.
+          </p>
+          <p className="mt-4 max-w-3xl leading-7 text-stone-600">
+            The goal is to help you understand the idea in a language you already use while practising programming structure that transfers to other modern languages.
+          </p>
         </div>
-      )}
+      </header>
+
+      <main className="mx-auto max-w-7xl px-5 py-12 sm:px-6 lg:px-8">
+        <section className="grid gap-6 rounded-[2rem] border border-stone-900/10 bg-white p-6 shadow-lg shadow-stone-900/5 lg:grid-cols-[1fr_auto] lg:items-center lg:p-8">
+          <div>
+            <p className="text-sm font-black text-stone-950">Maendeleo yako</p>
+            <div className="mt-3 max-w-2xl"><Progress points={points} total={totalPoints} /></div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {BADGES.map((badge) => (
+              <span key={badge.name} className={`rounded-full px-3 py-2 text-xs font-bold ${points >= badge.min ? "bg-emerald-100 text-emerald-800" : "bg-stone-100 text-stone-400"}`}>
+                {badge.icon} {badge.name}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-10">
+          <div className="flex items-end justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 text-sm font-black text-rose-600"><BookOpen className="h-4 w-4" /> Kozi ya msingi</div>
+              <h2 className="mt-2 text-3xl font-black tracking-[-0.03em] text-stone-950">Masomo ya SwahiliPro v2</h2>
+            </div>
+            <a className="hidden text-sm font-bold text-emerald-800 sm:block" href="/docs">Fungua documentation →</a>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {LESSONS.map((lesson) => {
+              const locked = points < lesson.requiredPoints;
+              const done = completed.includes(lesson.id);
+
+              return (
+                <button
+                  key={lesson.id}
+                  className={`group flex min-h-[220px] flex-col justify-between rounded-[1.6rem] border p-6 text-left transition ${locked ? "cursor-not-allowed border-stone-900/5 bg-stone-100/70 opacity-65" : done ? "border-emerald-700/20 bg-emerald-50 hover:-translate-y-0.5" : "border-stone-900/10 bg-white shadow-sm hover:-translate-y-0.5 hover:shadow-lg"}`}
+                  disabled={locked}
+                  onClick={() => setSelectedId(lesson.id)}
+                  type="button"
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-100 text-emerald-800"><Code2 className="h-5 w-5" /></span>
+                      {locked ? <Lock className="h-4 w-4 text-stone-400" /> : done ? <CheckCircle2 className="h-5 w-5 text-emerald-700" /> : <span className="text-xs font-black text-rose-600">+{lesson.points}</span>}
+                    </div>
+                    <h3 className="mt-5 text-xl font-black text-stone-950">{lesson.title}</h3>
+                    <p className="mt-3 leading-7 text-stone-600">{lesson.shortDescription}</p>
+                  </div>
+                  {locked && <p className="mt-5 text-xs font-bold text-stone-400">Fungua baada ya pointi {lesson.requiredPoints}</p>}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mt-14 rounded-[2rem] bg-emerald-800 p-8 text-white sm:p-10">
+          <h2 className="text-3xl font-black tracking-[-0.03em]">Unahitaji reference ya syntax?</h2>
+          <p className="mt-3 max-w-2xl leading-7 text-emerald-50">Masomo haya yanaeleza concepts hatua kwa hatua. Documentation ndiyo reference ya haraka ya syntax, CLI, VS Code na mifano ya SwahiliPro.</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-emerald-900" href="/docs">Soma documentation</a>
+            <a className="rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-sm font-bold text-white" href="/examples">Angalia examples</a>
+          </div>
+        </section>
+      </main>
     </div>
   );
-};
-
-export default SwahiliProgrammingLMS;
+}
