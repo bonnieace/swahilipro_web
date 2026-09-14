@@ -73,7 +73,7 @@ const structuredData = {
       "@id": `${siteUrl}/#software`,
       name: "Swahilipro",
       url: siteUrl,
-      image: `${siteUrl}/swahilipro-logo.png`,
+      image: `${siteUrl}/swahilipro-logo.svg`,
       applicationCategory: "DeveloperApplication",
       operatingSystem: "Windows, Linux, macOS",
       description:
