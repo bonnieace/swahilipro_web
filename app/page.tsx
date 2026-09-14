@@ -111,7 +111,7 @@ function PlatformTicker() {
   return (
     <div className="mt-8 flex items-center gap-4 text-sm text-stone-600">
       <span className="font-semibold text-stone-800">Build with</span>
-      <div className="platform-ticker h-10 min-w-[170px] overflow-hidden rounded-full border border-emerald-900/10 bg-white/75 px-4 shadow-sm backdrop-blur">
+      <div className="platform-ticker h-10 min-w-[170px] overflow-hidden rounded-full border border-emerald-900/10 bg-white/65 px-4 shadow-sm backdrop-blur">
         <div className="platform-ticker-track">
           {repeated.map((platform, index) => (
             <div
@@ -135,20 +135,67 @@ function PlatformTicker() {
 
 function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-white/70 px-3.5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-emerald-800 shadow-sm">
+    <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-white/60 px-3.5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-emerald-800 shadow-sm backdrop-blur-sm">
       <Sparkles className="h-3.5 w-3.5" />
       {children}
     </div>
   );
 }
 
+function MissionSection() {
+  const metrics = [
+    ["31", "Current users"],
+    ["300+", "Monthly website visitors"],
+    ["5", "Collaborators"],
+  ];
+
+  return (
+    <section className="px-5 py-20 sm:px-6 lg:px-8" id="mission">
+      <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.25rem] border border-emerald-950/10 bg-gradient-to-br from-rose-100/85 via-white/70 to-teal-100/90 shadow-xl shadow-stone-900/5 backdrop-blur-sm">
+        <div className="mx-auto max-w-4xl px-6 py-14 text-center sm:px-10 sm:py-16">
+          <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-2xl border border-emerald-900/10 bg-white/70 text-emerald-800 shadow-sm">
+            <Globe2 className="h-7 w-7" />
+          </div>
+          <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-800">
+            SDG 4 · Quality Education
+          </p>
+          <h2 className="mt-4 text-4xl font-black tracking-[-0.035em] text-stone-950 sm:text-5xl">
+            Programming education in Swahili should feel accessible from the first line.
+          </h2>
+          <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-stone-650 text-stone-600">
+            SwahiliPro supports more inclusive access to programming education by helping
+            Swahili speakers learn core software concepts in a language they already use,
+            while keeping the structures and workflows that transfer to modern development.
+          </p>
+        </div>
+
+        <dl className="grid border-t border-emerald-950/10 bg-white/35 sm:grid-cols-3">
+          {metrics.map(([value, label], index) => (
+            <div
+              key={label}
+              className={`px-6 py-8 text-center ${
+                index < metrics.length - 1
+                  ? "border-b border-emerald-950/10 sm:border-b-0 sm:border-r"
+                  : ""
+              }`}
+            >
+              <dd className="text-4xl font-black text-emerald-800 sm:text-5xl">{value}</dd>
+              <dt className="mt-2 text-sm font-semibold text-stone-600">{label}</dt>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#fffaf5] text-stone-900 selection:bg-emerald-200 selection:text-emerald-950">
+    <div className="min-h-screen bg-gradient-to-b from-rose-50 via-[#fffaf5] to-teal-50 text-stone-900 selection:bg-emerald-200 selection:text-emerald-950">
       <Navbar />
 
       <main>
-        <section className="relative overflow-hidden border-b border-emerald-950/5 bg-gradient-to-br from-rose-100 via-[#fffaf5] to-teal-100">
+        <section className="relative overflow-hidden border-b border-emerald-950/5">
           <div className="pointer-events-none absolute inset-0 opacity-70">
             <div className="absolute -left-32 top-16 h-72 w-72 rounded-full bg-rose-200/60 blur-3xl" />
             <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-teal-200/70 blur-3xl" />
@@ -157,7 +204,7 @@ export default function Home() {
           <div className="relative mx-auto grid max-w-7xl gap-14 px-5 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.06fr_.94fr] lg:items-center lg:px-8 lg:pb-28 lg:pt-24">
             <div>
               <a
-                className="mb-7 inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-white/70 px-3.5 py-2 text-xs font-semibold text-emerald-900 shadow-sm backdrop-blur transition hover:bg-white"
+                className="mb-7 inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-white/60 px-3.5 py-2 text-xs font-semibold text-emerald-900 shadow-sm backdrop-blur transition hover:bg-white/80"
                 href="/docs"
               >
                 <span className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -201,7 +248,7 @@ export default function Home() {
                   <ExternalLink className="h-3.5 w-3.5" />
                 </a>
                 <a
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-900/15 bg-white/75 px-5 py-3.5 text-sm font-bold text-stone-900 shadow-sm transition hover:bg-white"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-900/15 bg-white/65 px-5 py-3.5 text-sm font-bold text-stone-900 shadow-sm transition hover:bg-white"
                   href="/lms"
                 >
                   <GraduationCap className="h-4 w-4 text-rose-600" />
@@ -238,111 +285,58 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-emerald-800 text-white" id="mission">
-          <div className="mx-auto grid max-w-7xl gap-8 px-5 py-12 sm:px-6 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:px-8">
-            <div className="flex items-center gap-4">
-              <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/10">
-                <Globe2 className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-100">
-                  SDG 4 · Quality education
-                </p>
-                <h2 className="mt-1 text-2xl font-bold">
-                  Programming education should not begin with a language barrier.
-                </h2>
-              </div>
+        <MissionSection />
+
+        <section className="px-5 py-20 sm:px-6 lg:px-8" id="why">
+          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[.82fr_1.18fr] lg:items-start">
+            <div className="lg:sticky lg:top-28">
+              <Eyebrow>Why SwahiliPro</Eyebrow>
+              <h2 className="text-4xl font-black tracking-[-0.035em] text-stone-950 sm:text-5xl">
+                Learn the idea first. Keep the developer skills.
+              </h2>
+              <p className="mt-5 text-lg leading-8 text-stone-600">
+                SwahiliPro is not a simplified toy language. It makes the words around
+                programming more familiar without hiding the structures learners need to
+                understand.
+              </p>
+              <a
+                className="mt-7 inline-flex items-center gap-2 font-bold text-emerald-800 hover:text-emerald-950"
+                href="/docs"
+              >
+                Read the language documentation <ArrowRight className="h-4 w-4" />
+              </a>
             </div>
-            <p className="text-base leading-7 text-emerald-50 lg:text-lg">
-              SwahiliPro supports more inclusive access to programming education by
-              letting learners understand ideas in a language they already use, while
-              preserving the concepts and structures that transfer to mainstream software
-              development.
-            </p>
-          </div>
-        </section>
 
-        <section className="bg-[#fffaf5]" id="why">
-          <div className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8">
-            <div className="grid gap-12 lg:grid-cols-[.82fr_1.18fr] lg:items-start">
-              <div className="lg:sticky lg:top-28">
-                <Eyebrow>Why SwahiliPro</Eyebrow>
-                <h2 className="text-4xl font-black tracking-[-0.035em] text-stone-950 sm:text-5xl">
-                  Learn the idea first. Keep the developer skills.
-                </h2>
-                <p className="mt-5 text-lg leading-8 text-stone-600">
-                  SwahiliPro is not a simplified toy language. It is designed to make the
-                  words around programming more familiar without hiding the structures
-                  learners need to understand.
-                </p>
-                <a
-                  className="mt-7 inline-flex items-center gap-2 font-bold text-emerald-800 hover:text-emerald-950"
-                  href="/docs"
-                >
-                  Read the language documentation <ArrowRight className="h-4 w-4" />
-                </a>
-              </div>
-
-              <div className="overflow-hidden rounded-[2rem] border border-stone-900/10 bg-white shadow-xl shadow-stone-900/5">
-                <div className="grid md:grid-cols-2">
-                  <div className="border-b border-stone-900/10 p-7 md:border-r">
-                    <span className="text-sm font-bold text-rose-600">01 · Language</span>
-                    <h3 className="mt-3 text-2xl font-bold text-stone-950">Think in Swahili</h3>
-                    <p className="mt-3 leading-7 text-stone-600">
-                      Use readable commands such as{" "}
-                      <code className="font-semibold text-emerald-800">ikiwa</code>,{" "}
-                      <code className="font-semibold text-emerald-800">andika</code> and{" "}
-                      <code className="font-semibold text-emerald-800">kwa</code> while
-                      keeping conventional programming structure.
-                    </p>
-                  </div>
-                  <div className="border-b border-stone-900/10 p-7">
-                    <span className="text-sm font-bold text-teal-700">02 · Transfer</span>
-                    <h3 className="mt-3 text-2xl font-bold text-stone-950">
-                      Learn concepts that travel
-                    </h3>
-                    <p className="mt-3 leading-7 text-stone-600">
-                      Variables, functions, conditions, loops, lists and operators map to
-                      concepts learners will meet again in other programming languages.
-                    </p>
-                  </div>
-                  <div className="border-b border-stone-900/10 p-7 md:border-b-0 md:border-r">
-                    <span className="text-sm font-bold text-amber-700">03 · Tools</span>
-                    <h3 className="mt-3 text-2xl font-bold text-stone-950">
-                      Use real developer workflows
-                    </h3>
-                    <p className="mt-3 leading-7 text-stone-600">
-                      Write <code className="font-semibold text-emerald-800">.swa</code>{" "}
-                      files in VS Code, use syntax highlighting, and run programs from the
-                      standalone <code className="font-semibold text-emerald-800">swa</code>{" "}
-                      CLI.
-                    </p>
-                  </div>
-                  <div className="p-7">
-                    <span className="text-sm font-bold text-emerald-700">04 · Access</span>
-                    <h3 className="mt-3 text-2xl font-bold text-stone-950">
-                      Start closer to how you reason
-                    </h3>
-                    <p className="mt-3 leading-7 text-stone-600">
-                      For learners who already think and learn in Swahili, the language can
-                      reduce unnecessary friction around the first programming concepts.
-                    </p>
-                  </div>
-                </div>
+            <div className="overflow-hidden rounded-[2rem] border border-stone-900/10 bg-white/60 shadow-xl shadow-stone-900/5 backdrop-blur-sm">
+              <div className="grid md:grid-cols-2">
+                {[
+                  ["01 · Language", "Think in Swahili", "Use readable commands such as ikiwa, andika and kwa while keeping conventional programming structure."],
+                  ["02 · Transfer", "Learn concepts that travel", "Variables, functions, conditions, loops, lists and operators map to concepts learners will meet again in other programming languages."],
+                  ["03 · Tools", "Use real developer workflows", "Write .swa files in VS Code, use syntax highlighting, and run programs from the standalone swa CLI."],
+                  ["04 · Access", "Start closer to how you reason", "For learners who already think and learn in Swahili, the language can reduce unnecessary friction around the first programming concepts."],
+                ].map(([label, title, copy], index) => (
+                  <article
+                    key={label}
+                    className={`p-7 ${index < 2 ? "border-b border-stone-900/10" : ""} ${index % 2 === 0 ? "md:border-r" : ""}`}
+                  >
+                    <span className="text-sm font-bold text-emerald-800">{label}</span>
+                    <h3 className="mt-3 text-2xl font-bold text-stone-950">{title}</h3>
+                    <p className="mt-3 leading-7 text-stone-600">{copy}</p>
+                  </article>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        <div
-          className="border-y border-stone-900/10 bg-gradient-to-br from-teal-50 to-rose-50 pt-20"
-          id="proof"
-        >
-          <AchievementsGallery />
-        </div>
+        <section className="px-5 py-12 sm:px-6 lg:px-8" id="proof">
+          <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.25rem] border border-stone-900/10 bg-white/40 pt-16 shadow-xl shadow-stone-900/5 backdrop-blur-sm">
+            <AchievementsGallery />
+          </div>
+        </section>
 
-        <section className="bg-[#fffaf5]" id="learn">
-          <div className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8">
+        <section className="px-5 py-20 sm:px-6 lg:px-8" id="learn">
+          <div className="mx-auto max-w-7xl">
             <div className="mx-auto max-w-3xl text-center">
               <Eyebrow>From first idea to first program</Eyebrow>
               <h2 className="text-4xl font-black tracking-[-0.035em] text-stone-950 sm:text-5xl">
@@ -350,7 +344,7 @@ export default function Home() {
               </h2>
             </div>
 
-            <div className="relative mt-14 overflow-hidden rounded-[2rem] border border-stone-900/10 bg-white shadow-xl shadow-stone-900/5">
+            <div className="relative mt-14 overflow-hidden rounded-[2rem] border border-stone-900/10 bg-white/60 shadow-xl shadow-stone-900/5 backdrop-blur-sm">
               <div className="grid md:grid-cols-3">
                 {[
                   {
@@ -374,29 +368,21 @@ export default function Home() {
                 ].map((item, index) => (
                   <article
                     key={item.step}
-                    className={`p-8 ${
-                      index < 2
-                        ? "border-b border-stone-900/10 md:border-b-0 md:border-r"
-                        : ""
-                    }`}
+                    className={`p-8 ${index < 2 ? "border-b border-stone-900/10 md:border-b-0 md:border-r" : ""}`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-100 text-emerald-800">
                         {item.icon}
                       </div>
-                      <span className="font-mono text-sm font-bold text-rose-500">
-                        {item.step}
-                      </span>
+                      <span className="font-mono text-sm font-bold text-rose-500">{item.step}</span>
                     </div>
                     <h3 className="mt-7 text-2xl font-bold">{item.title}</h3>
                     <p className="mt-3 leading-7 text-stone-600">{item.copy}</p>
                   </article>
                 ))}
               </div>
-              <div className="flex flex-col items-center justify-between gap-4 border-t border-stone-900/10 bg-emerald-50 px-8 py-6 sm:flex-row">
-                <p className="font-semibold text-stone-800">
-                  Ready to learn programming in Swahili?
-                </p>
+              <div className="flex flex-col items-center justify-between gap-4 border-t border-stone-900/10 bg-gradient-to-r from-rose-50/80 to-teal-50/80 px-8 py-6 sm:flex-row">
+                <p className="font-semibold text-stone-800">Ready to learn programming in Swahili?</p>
                 <a
                   className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-bold text-white"
                   href="/lms"
@@ -408,53 +394,52 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-stone-950 text-white" id="syntax">
-          <div className="mx-auto grid max-w-7xl gap-12 px-5 py-24 sm:px-6 lg:grid-cols-[.8fr_1.2fr] lg:px-8">
-            <div>
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">
-                <Code2 className="h-3.5 w-3.5" /> SwahiliPro v2 syntax
-              </div>
-              <h2 className="text-4xl font-black tracking-[-0.035em] sm:text-5xl">
-                Readable Swahili commands. Familiar programming structure.
-              </h2>
-              <p className="mt-5 text-lg leading-8 text-stone-300">
-                Version 2 uses braces for blocks, conventional operators and concise
-                Swahili keywords. You learn the structure once, then focus on expressing
-                the logic clearly.
-              </p>
-              <a
-                className="mt-8 inline-flex items-center gap-2 font-bold text-emerald-300 hover:text-emerald-200"
-                href="/docs"
-              >
-                Explore full documentation <ArrowRight className="h-4 w-4" />
-              </a>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {[
-                ["acha", "Variables", 'acha mji = "Nairobi"'],
-                ["ikiwa", "Conditions", 'ikiwa (miaka >= 18) { andika("Karibu") }'],
-                ["kwa", "Loops", "kwa i katika 1..10 { andika(i) }"],
-                ["rudisha", "Functions", "jumlisha(a, b) { rudisha a + b }"],
-              ].map(([keyword, title, code]) => (
-                <article
-                  key={keyword}
-                  className="rounded-2xl border border-white/10 bg-white/[0.04] p-6"
+        <section className="px-5 py-20 sm:px-6 lg:px-8" id="syntax">
+          <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.25rem] border border-stone-900/10 bg-gradient-to-br from-rose-100/75 via-white/65 to-teal-100/80 p-7 shadow-xl shadow-stone-900/5 backdrop-blur-sm sm:p-10 lg:p-12">
+            <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr] lg:items-start">
+              <div>
+                <Eyebrow>SwahiliPro v2 syntax</Eyebrow>
+                <h2 className="text-4xl font-black tracking-[-0.035em] text-stone-950 sm:text-5xl">
+                  Readable Swahili commands. Familiar programming structure.
+                </h2>
+                <p className="mt-5 text-lg leading-8 text-stone-600">
+                  Version 2 uses braces for blocks, conventional operators and concise
+                  Swahili keywords. You learn the structure once, then focus on expressing
+                  the logic clearly.
+                </p>
+                <a
+                  className="mt-8 inline-flex items-center gap-2 font-bold text-emerald-800 hover:text-emerald-950"
+                  href="/docs"
                 >
-                  <span className="font-mono text-sm font-bold text-emerald-300">
-                    {keyword}
-                  </span>
-                  <h3 className="mt-3 text-xl font-bold">{title}</h3>
-                  <pre className="mt-5 overflow-x-auto rounded-xl bg-black/30 p-4 text-xs leading-6 text-stone-300">
-                    <code>{code}</code>
-                  </pre>
-                </article>
-              ))}
+                  Explore full documentation <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[
+                  ["acha", "Variables", 'acha mji = "Nairobi"'],
+                  ["ikiwa", "Conditions", 'ikiwa (miaka >= 18) { andika("Karibu") }'],
+                  ["kwa", "Loops", "kwa i katika 1..10 { andika(i) }"],
+                  ["rudisha", "Functions", "jumlisha(a, b) { rudisha a + b }"],
+                ].map(([keyword, title, code]) => (
+                  <article
+                    key={keyword}
+                    className="rounded-2xl border border-stone-900/10 bg-white/65 p-6 shadow-sm backdrop-blur-sm"
+                  >
+                    <span className="font-mono text-sm font-bold text-emerald-800">{keyword}</span>
+                    <h3 className="mt-3 text-xl font-bold text-stone-950">{title}</h3>
+                    <pre className="mt-5 overflow-x-auto rounded-xl bg-[#151a18] p-4 text-xs leading-6 text-stone-300">
+                      <code>{code}</code>
+                    </pre>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="bg-[#fffaf5]" id="reviews">
-          <div className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8">
+        <section className="px-5 py-20 sm:px-6 lg:px-8" id="reviews">
+          <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
               <Eyebrow>What people have said</Eyebrow>
               <h2 className="text-4xl font-black tracking-[-0.035em] text-stone-950 sm:text-5xl">
@@ -465,16 +450,12 @@ export default function Home() {
               {testimonials.map((testimonial) => (
                 <blockquote
                   key={testimonial.title}
-                  className="flex min-h-[285px] flex-col justify-between rounded-[1.7rem] border border-stone-900/10 bg-white p-7 shadow-lg shadow-stone-900/5"
+                  className="flex min-h-[285px] flex-col justify-between rounded-[1.7rem] border border-stone-900/10 bg-white/60 p-7 shadow-lg shadow-stone-900/5 backdrop-blur-sm"
                 >
                   <div>
                     <Quote className="h-7 w-7 text-rose-500" />
-                    <p className="mt-5 text-2xl font-bold text-stone-950">
-                      {testimonial.title}
-                    </p>
-                    <p className="mt-4 text-lg leading-8 text-stone-600">
-                      “{testimonial.quote}”
-                    </p>
+                    <p className="mt-5 text-2xl font-bold text-stone-950">{testimonial.title}</p>
+                    <p className="mt-4 text-lg leading-8 text-stone-600">“{testimonial.quote}”</p>
                   </div>
                   <footer className="mt-8 border-t border-stone-900/10 pt-5 text-sm font-semibold text-emerald-800">
                     {testimonial.source}
@@ -485,11 +466,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section
-          className="border-y border-stone-900/10 bg-gradient-to-r from-rose-100 to-teal-100"
-          id="download"
-        >
-          <div className="mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8">
+        <section className="px-5 py-20 sm:px-6 lg:px-8" id="download">
+          <div className="mx-auto max-w-7xl rounded-[2.25rem] border border-stone-900/10 bg-gradient-to-r from-rose-100/80 to-teal-100/80 p-7 shadow-xl shadow-stone-900/5 sm:p-10 lg:p-12">
             <div className="grid gap-10 lg:grid-cols-[.72fr_1.28fr] lg:items-end">
               <div>
                 <Eyebrow>Standalone CLI</Eyebrow>
@@ -497,26 +475,21 @@ export default function Home() {
                   Take SwahiliPro to the platform you already use.
                 </h2>
                 <p className="mt-5 text-lg leading-8 text-stone-600">
-                  Download the standalone{" "}
-                  <code className="font-mono font-semibold text-emerald-800">swa</code>{" "}
-                  runtime, place it on your PATH and run SwahiliPro files directly from
-                  your terminal.
+                  Download the standalone <code className="font-mono font-semibold text-emerald-800">swa</code>{" "}
+                  runtime, place it on your PATH and run SwahiliPro files directly from your terminal.
                 </p>
               </div>
+
               <div className="grid gap-3 sm:grid-cols-2">
                 {downloads.map((item) => (
                   <a
                     key={`${item.platform}-${item.detail}`}
-                    className="group flex items-center justify-between rounded-2xl border border-stone-900/10 bg-white/80 p-5 shadow-sm transition hover:-translate-y-0.5 hover:bg-white hover:shadow-lg"
+                    className="group flex items-center justify-between rounded-2xl border border-stone-900/10 bg-white/65 p-5 shadow-sm backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg"
                     href={item.href}
                   >
                     <span className="flex items-center gap-4">
-                      <span className="grid h-12 w-12 place-items-center rounded-xl bg-stone-50">
-                        <img
-                          alt={`${item.platform} icon`}
-                          className="h-7 w-7 object-contain"
-                          src={item.icon}
-                        />
+                      <span className="grid h-12 w-12 place-items-center rounded-xl bg-white/80">
+                        <img alt={`${item.platform} icon`} className="h-7 w-7 object-contain" src={item.icon} />
                       </span>
                       <span>
                         <strong className="block text-stone-950">{item.platform}</strong>
@@ -528,50 +501,32 @@ export default function Home() {
                 ))}
               </div>
             </div>
+
             <div className="mt-8 flex flex-wrap items-center gap-4 text-sm text-stone-600">
-              <a
-                className="inline-flex items-center gap-2 font-bold text-emerald-800"
-                href={releaseUrl}
-                rel="noreferrer"
-                target="_blank"
-              >
+              <a className="inline-flex items-center gap-2 font-bold text-emerald-800" href={releaseUrl} rel="noreferrer" target="_blank">
                 View v2.0.0 release <ExternalLink className="h-3.5 w-3.5" />
               </a>
               <span>•</span>
-              <a
-                className="inline-flex items-center gap-2 font-bold text-emerald-800"
-                href={marketplaceUrl}
-                rel="noreferrer"
-                target="_blank"
-              >
+              <a className="inline-flex items-center gap-2 font-bold text-emerald-800" href={marketplaceUrl} rel="noreferrer" target="_blank">
                 VS Code Marketplace <ExternalLink className="h-3.5 w-3.5" />
               </a>
             </div>
           </div>
         </section>
 
-        <section className="bg-emerald-800 text-white">
-          <div className="mx-auto grid max-w-7xl gap-8 px-5 py-16 sm:px-6 lg:grid-cols-[1fr_auto] lg:items-center lg:px-8">
+        <section className="px-5 pb-16 pt-8 sm:px-6 lg:px-8">
+          <div className="mx-auto grid max-w-7xl gap-8 rounded-[2.25rem] border border-stone-900/10 bg-gradient-to-br from-teal-100/85 via-white/65 to-rose-100/80 px-7 py-10 shadow-xl shadow-stone-900/5 sm:px-10 lg:grid-cols-[1fr_auto] lg:items-center lg:px-12">
             <div>
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-100">
-                Start where you are
-              </p>
-              <h2 className="mt-3 max-w-3xl text-4xl font-black tracking-[-0.035em]">
-                Learn programming in Swahili, then keep building without changing how
-                modern development works.
+              <p className="text-sm font-black uppercase tracking-[0.2em] text-emerald-800">Start where you are</p>
+              <h2 className="mt-3 max-w-3xl text-4xl font-black tracking-[-0.035em] text-stone-950">
+                Learn programming in Swahili, then keep building with modern developer tools.
               </h2>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-              <a
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-sm font-bold text-emerald-900"
-                href="/lms"
-              >
+              <a className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3.5 text-sm font-bold text-white" href="/lms">
                 <Play className="h-4 w-4" /> Start learning
               </a>
-              <a
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-3.5 text-sm font-bold text-white"
-                href="/docs"
-              >
+              <a className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-900/15 bg-white/55 px-5 py-3.5 text-sm font-bold text-stone-900" href="/docs">
                 Read the docs <BookOpen className="h-4 w-4" />
               </a>
             </div>
@@ -579,27 +534,17 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="bg-stone-950 text-stone-400">
+      <footer className="border-t border-emerald-950/10 bg-transparent text-stone-600">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-10 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <div>
-            <p className="font-bold text-white">SwahiliPro</p>
-            <p className="mt-1 text-sm">
-              A Swahili programming language for learning and building.
-            </p>
+            <p className="font-black text-stone-950">SwahiliPro</p>
+            <p className="mt-1 text-sm">A Swahili programming language for learning and building.</p>
           </div>
           <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold">
-            <a className="hover:text-white" href="/docs">
-              Docs
-            </a>
-            <a className="hover:text-white" href="/lms">
-              Learn
-            </a>
-            <a className="hover:text-white" href="/examples">
-              Examples
-            </a>
-            <a className="hover:text-white" href="/blog">
-              Blog
-            </a>
+            <a className="hover:text-emerald-800" href="/docs">Docs</a>
+            <a className="hover:text-emerald-800" href="/lms">Learn</a>
+            <a className="hover:text-emerald-800" href="/examples">Examples</a>
+            <a className="hover:text-emerald-800" href="/blog">Blog</a>
           </nav>
         </div>
       </footer>
