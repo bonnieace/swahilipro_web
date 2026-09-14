@@ -40,12 +40,12 @@ export default function Navbar() {
         <div className="hidden items-center gap-2 md:flex">
           <a
             className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white"
-            href="https://github.com/bonnieace/swahilipro-compiler"
+            href="https://github.com/bonnieace/swahilipro-downloads"
             target="_blank"
             rel="noreferrer"
           >
             <Github className="h-4 w-4" />
-            GitHub
+            Releases
           </a>
           <a
             className="inline-flex h-9 items-center gap-2 rounded-lg bg-emerald-400 px-4 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300"
