@@ -4,22 +4,87 @@ import { Analytics } from "@vercel/analytics/react";
 
 import "./globals.css";
 
+const siteUrl = "https://swahilipro.com";
+
 export const metadata: Metadata = {
-  title: "SwahiliPro — Program in Swahili",
+  metadataBase: new URL(siteUrl),
+  title: "Swahilipro | Swahili programming language",
   description:
-    "A Swahili-first programming language with a VS Code extension and standalone CLI for Windows, Linux and macOS.",
+    "Swahilipro is a Swahili programming language for learning programming, writing code in Kiswahili, and building software with modern developer tools.",
+  keywords: [
+    "Swahili programming language",
+    "programming in Swahili",
+    "coding in Swahili",
+    "Kiswahili programming language",
+    "learn programming in Swahili",
+    "learn coding in Swahili",
+    "Swahili code",
+    "Swahili compiler",
+    "African programming language",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
-    title: "SwahiliPro — Program in Swahili",
+    title: "Swahilipro | Swahili programming language",
     description:
-      "Write real programs with familiar structure and human-readable Swahili commands.",
+      "Learn programming and write real software in Swahili with Swahilipro, a modern Kiswahili programming language and developer platform.",
+    url: siteUrl,
+    siteName: "Swahilipro",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Swahilipro | Swahili programming language",
+    description:
+      "Learn programming and write real software in Swahili with Swahilipro.",
+  },
+};
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: "Swahilipro",
+      description:
+        "A Swahili programming language and learning platform for coding in Kiswahili.",
+      inLanguage: ["en", "sw"],
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${siteUrl}/#software`,
+      name: "Swahilipro",
+      url: siteUrl,
+      applicationCategory: "DeveloperApplication",
+      operatingSystem: "Windows, Linux, macOS",
+      description:
+        "Swahilipro is a Swahili programming language for learning programming and building software using Swahili commands with familiar programming structure.",
+    },
+  ],
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="relative antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
         {children}
         <Analytics />
       </body>
