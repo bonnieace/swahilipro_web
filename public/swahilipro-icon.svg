@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="SwahiliPro">
+  <defs>
+    <linearGradient id="left" x1="12" y1="16" x2="63" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#12cfa6"/>
+      <stop offset="1" stop-color="#087b70"/>
+    </linearGradient>
+    <linearGradient id="right" x1="66" y1="18" x2="116" y2="105" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#075a66"/>
+      <stop offset="1" stop-color="#053e48"/>
+    </linearGradient>
+    <linearGradient id="coral" x1="76" y1="45" x2="105" y2="86" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff806f"/>
+      <stop offset="1" stop-color="#ff5e58"/>
+    </linearGradient>
+  </defs>
+  <path d="M13 18c0-5 4-9 9-8 18 2 31 8 42 18v85c-12-9-27-14-43-15-5 0-8-4-8-9V18Z" fill="url(#left)"/>
+  <path d="M115 18c0-5-4-9-9-8-18 2-31 8-42 18v85c12-9 27-14 43-15 5 0 8-4 8-9V18Z" fill="url(#right)"/>
+  <path d="M20 88c16 2 31 7 44 18v9c-13-9-28-14-44-15V88Z" fill="#9ce8da" opacity=".9"/>
+  <path d="M108 88c-16 2-31 7-44 18v9c13-9 28-14 44-15V88Z" fill="#ff9b8f" opacity=".95"/>
+  <path d="M28 45c10 1 19 4 27 9" fill="none" stroke="#d2fff7" stroke-width="7" stroke-linecap="round"/>
+  <path d="M28 62c10 1 19 4 27 9" fill="none" stroke="#d2fff7" stroke-width="7" stroke-linecap="round"/>
+  <path d="M28 79c10 1 19 4 27 9" fill="none" stroke="#d2fff7" stroke-width="7" stroke-linecap="round"/>
+  <path d="m79 47 17 15-17 15" fill="none" stroke="url(#coral)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="94" y="77" width="14" height="7" rx="3.5" fill="#ff7469"/>
+</svg>
