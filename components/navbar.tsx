@@ -17,13 +17,12 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-emerald-950/10 bg-[#fffaf5]/78 shadow-sm shadow-stone-900/[0.025] backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-8">
-        <a className="group flex items-center gap-2.5" href="/" aria-label="SwahiliPro home">
-          <span className="grid h-8 w-8 place-items-center border border-emerald-900/10 bg-white/55 font-mono text-xs font-black text-emerald-800 transition group-hover:bg-white/80">
-            SW
-          </span>
-          <span className="text-sm font-black tracking-tight text-stone-950 sm:text-base">
-            SwahiliPro
-          </span>
+        <a className="group flex items-center" href="/" aria-label="SwahiliPro home">
+          <img
+            src="/swahilipro-logo.png"
+            alt="SwahiliPro"
+            className="h-10 w-auto max-w-[150px] object-contain transition group-hover:opacity-90 sm:max-w-[175px]"
+          />
         </a>
 
         <nav className="hidden items-center gap-5 md:flex" aria-label="Primary navigation">
