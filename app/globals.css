@@ -54,55 +54,6 @@ main > section:first-child a[href="/docs"].mt-5 {
   display: none;
 }
 
-/* Hero photography: keep the real SwahiliPro imagery moving without adding UI noise. */
-main > section:first-child div:has(> img[src="/EXPO2.JPG"]) {
-  position: relative;
-  isolation: isolate;
-  min-height: 360px;
-  background: linear-gradient(135deg, rgba(236, 253, 245, 0.9), rgba(255, 241, 242, 0.9));
-}
-
-main > section:first-child div:has(> img[src="/EXPO2.JPG"]) > img {
-  opacity: 0;
-  pointer-events: none;
-}
-
-main > section:first-child div:has(> img[src="/EXPO2.JPG"])::before,
-main > section:first-child div:has(> img[src="/EXPO2.JPG"])::after {
-  content: "";
-  position: absolute;
-  inset: 0.5rem;
-  z-index: 1;
-  border-radius: 1.55rem;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  will-change: opacity, transform, filter;
-  backface-visibility: hidden;
-  transform: scale(1.025);
-  filter: saturate(0.98) contrast(1.015);
-}
-
-main > section:first-child div:has(> img[src="/EXPO2.JPG"])::before {
-  background-image:
-    linear-gradient(180deg, rgba(5, 78, 72, 0.02), rgba(15, 23, 42, 0.08)),
-    url("/j1.jpg");
-  animation: heroPhotoA 20s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-main > section:first-child div:has(> img[src="/EXPO2.JPG"])::after {
-  background-image:
-    linear-gradient(180deg, rgba(5, 78, 72, 0.02), rgba(15, 23, 42, 0.08)),
-    url("/j2.jpg");
-  opacity: 0;
-  animation: heroPhotoB 20s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-main > section:first-child div:has(> img[src="/EXPO2.JPG"]):hover::before,
-main > section:first-child div:has(> img[src="/EXPO2.JPG"]):hover::after {
-  animation-play-state: paused;
-}
-
 @keyframes platformTicker {
   0%, 18% {
     transform: translateY(0);
@@ -121,119 +72,6 @@ main > section:first-child div:has(> img[src="/EXPO2.JPG"]):hover::after {
   }
 }
 
-@keyframes heroPhotoA {
-  0% {
-    opacity: 1;
-    transform: scale(1.025) translate3d(0, 0, 0);
-    background-image:
-      linear-gradient(180deg, rgba(5, 78, 72, 0.02), rgba(15, 23, 42, 0.08)),
-      url("/j1.jpg");
-  }
-  20% {
-    opacity: 1;
-    transform: scale(1.07) translate3d(-0.5%, -0.5%, 0);
-  }
-  25% {
-    opacity: 0;
-    transform: scale(1.085) translate3d(-0.7%, -0.7%, 0);
-  }
-  25.1% {
-    opacity: 0;
-    transform: scale(1.025) translate3d(0.35%, 0.15%, 0);
-    background-image:
-      linear-gradient(180deg, rgba(5, 78, 72, 0.02), rgba(15, 23, 42, 0.08)),
-      url("/coop3.jpg");
-  }
-  45% {
-    opacity: 0;
-    transform: scale(1.025) translate3d(0.35%, 0.15%, 0);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.035) translate3d(0.2%, 0, 0);
-  }
-  70% {
-    opacity: 1;
-    transform: scale(1.075) translate3d(-0.35%, -0.45%, 0);
-  }
-  75% {
-    opacity: 0;
-    transform: scale(1.09) translate3d(-0.5%, -0.6%, 0);
-  }
-  75.1% {
-    opacity: 0;
-    transform: scale(1.025) translate3d(0, 0, 0);
-    background-image:
-      linear-gradient(180deg, rgba(5, 78, 72, 0.02), rgba(15, 23, 42, 0.08)),
-      url("/j1.jpg");
-  }
-  95% {
-    opacity: 0;
-    transform: scale(1.025) translate3d(0, 0, 0);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1.025) translate3d(0, 0, 0);
-  }
-}
-
-@keyframes heroPhotoB {
-  0%, 20% {
-    opacity: 0;
-    transform: scale(1.025) translate3d(0.2%, 0.1%, 0);
-    background-image:
-      linear-gradient(180deg, rgba(5, 78, 72, 0.02), rgba(15, 23, 42, 0.08)),
-      url("/j2.jpg");
-  }
-  25% {
-    opacity: 1;
-    transform: scale(1.035) translate3d(0.1%, 0, 0);
-  }
-  45% {
-    opacity: 1;
-    transform: scale(1.075) translate3d(-0.45%, -0.35%, 0);
-  }
-  50% {
-    opacity: 0;
-    transform: scale(1.09) translate3d(-0.6%, -0.5%, 0);
-  }
-  50.1% {
-    opacity: 0;
-    transform: scale(1.025) translate3d(0.25%, 0.1%, 0);
-    background-image:
-      linear-gradient(180deg, rgba(5, 78, 72, 0.02), rgba(15, 23, 42, 0.08)),
-      url("/EXPO7.JPG");
-  }
-  70% {
-    opacity: 0;
-    transform: scale(1.025) translate3d(0.25%, 0.1%, 0);
-  }
-  75% {
-    opacity: 1;
-    transform: scale(1.035) translate3d(0.1%, 0, 0);
-  }
-  95% {
-    opacity: 1;
-    transform: scale(1.075) translate3d(-0.4%, -0.45%, 0);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.09) translate3d(-0.55%, -0.6%, 0);
-  }
-}
-
-@media (min-width: 640px) {
-  main > section:first-child div:has(> img[src="/EXPO2.JPG"]) {
-    min-height: 430px;
-  }
-}
-
-@media (min-width: 1024px) {
-  main > section:first-child div:has(> img[src="/EXPO2.JPG"]) {
-    min-height: min(63vh, 540px);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -241,18 +79,5 @@ main > section:first-child div:has(> img[src="/EXPO2.JPG"]):hover::after {
 
   .platform-ticker-track {
     animation: none;
-  }
-
-  main > section:first-child div:has(> img[src="/EXPO2.JPG"])::before {
-    animation: none;
-    opacity: 1;
-    transform: none;
-    background-image:
-      linear-gradient(180deg, rgba(5, 78, 72, 0.02), rgba(15, 23, 42, 0.08)),
-      url("/j1.jpg");
-  }
-
-  main > section:first-child div:has(> img[src="/EXPO2.JPG"])::after {
-    display: none;
   }
 }
