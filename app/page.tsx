@@ -88,23 +88,6 @@ const testimonials = [
   },
 ];
 
-const codeExample = `# hello.swa
-acha jina = "Amina"
-
-salimia(jina) {
-  ikiwa (jina == "Amina") {
-    andika("Karibu, " + jina + "!")
-  } vinginevyo {
-    andika("Habari, " + jina)
-  }
-}
-
-kwa n katika 1..4 {
-  andika(n)
-}
-
-salimia(jina)`;
-
 function PlatformTicker() {
   const repeated = [...platforms, ...platforms];
 
@@ -201,51 +184,38 @@ export default function Home() {
             <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-teal-200/70 blur-3xl" />
           </div>
 
-          <div className="relative mx-auto grid max-w-7xl gap-9 px-5 pb-8 pt-7 sm:px-6 sm:pb-10 sm:pt-8 lg:min-h-[calc(100svh-5rem)] lg:grid-cols-[1.04fr_.96fr] lg:items-center lg:px-8 lg:py-8">
-            <div>
+          <div className="relative mx-auto grid max-w-7xl gap-8 px-5 pb-7 pt-5 sm:px-6 sm:pb-9 sm:pt-6 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-[1fr_.92fr] lg:items-center lg:px-8 lg:py-7">
+            <div className="max-w-2xl">
               <PlatformTicker />
 
-              <h1 className="max-w-4xl text-5xl font-black leading-[0.98] tracking-[-0.045em] text-stone-950 sm:text-6xl lg:text-[4rem] xl:text-[4.35rem]">
-                Program in Swahili.
+              <h1 className="text-5xl font-black leading-[0.98] tracking-[-0.045em] text-stone-950 sm:text-6xl lg:text-[4rem] xl:text-[4.35rem]">
+                Think in Swahili.
                 <span className="mt-2 block bg-gradient-to-r from-emerald-700 via-teal-700 to-rose-600 bg-clip-text text-transparent">
                   Build like any modern developer.
                 </span>
               </h1>
 
-              <p className="mt-5 max-w-2xl text-lg leading-7 text-stone-700">
-                <strong className="font-semibold text-stone-950">
-                  SwahiliPro is a Swahili programming language and learning platform
-                </strong>{" "}
-                built to make programming more accessible to Swahili speakers. Learn
-                core concepts in Kiswahili, write real{" "}
-                <code className="rounded bg-emerald-950/5 px-1.5 py-0.5 font-mono text-base font-semibold text-emerald-800">
-                  .swa
-                </code>{" "}
-                programs, and use the same kinds of tools and workflows modern developers
-                use every day.
-              </p>
-
-              <p className="mt-3 max-w-2xl text-base leading-6 text-stone-600">
-                Think in Swahili. Code like any other modern developer.
+              <p className="mt-5 max-w-xl text-lg leading-7 text-stone-700">
+                Learn programming in the language you already think in. SwahiliPro brings
+                core coding concepts into Kiswahili so you can focus on ideas, solve
+                problems and grow from your first .swa program into modern software
+                development.
               </p>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <a
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition hover:-translate-y-0.5 hover:bg-emerald-800"
-                  href={marketplaceUrl}
-                  rel="noreferrer"
-                  target="_blank"
+                  href="/lms"
                 >
-                  <Code2 className="h-4 w-4" />
-                  Install for VS Code
-                  <ExternalLink className="h-3.5 w-3.5" />
+                  <GraduationCap className="h-4 w-4" />
+                  Start learning
                 </a>
                 <a
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-900/15 bg-white/65 px-5 py-3 text-sm font-bold text-stone-900 shadow-sm transition hover:bg-white"
-                  href="/lms"
+                  href="/docs"
                 >
-                  <GraduationCap className="h-4 w-4 text-rose-600" />
-                  Learn in Swahili
+                  <BookOpen className="h-4 w-4 text-emerald-800" />
+                  Explore the docs
                 </a>
               </div>
 
@@ -260,26 +230,13 @@ export default function Home() {
             </div>
 
             <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
-              <div className="absolute -inset-3 rotate-1 rounded-[2rem] bg-gradient-to-br from-rose-200 via-teal-100 to-emerald-200 opacity-75 blur-xl" />
-              <div className="relative overflow-hidden rounded-[1.7rem] border border-stone-900/10 bg-[#151a18] shadow-2xl shadow-emerald-950/20">
-                <div className="flex h-11 items-center justify-between border-b border-white/10 px-4">
-                  <div className="flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                  </div>
-                  <span className="font-mono text-xs text-stone-400">hello.swa</span>
-                </div>
-                <pre className="overflow-x-auto p-5 text-[12px] leading-6 text-stone-300 sm:p-6 sm:text-[13px]">
-                  <code>{codeExample}</code>
-                </pre>
-                <div className="flex items-center justify-between border-t border-white/10 bg-black/20 px-5 py-3.5 font-mono text-xs">
-                  <span>
-                    <span className="mr-2 text-emerald-400">$</span>
-                    <span className="text-stone-200">swa hello.swa</span>
-                  </span>
-                  <span className="text-emerald-300">ready</span>
-                </div>
+              <div className="absolute -inset-3 rotate-1 rounded-[2rem] bg-gradient-to-br from-rose-200 via-teal-100 to-emerald-200 opacity-65 blur-xl" />
+              <div className="relative overflow-hidden rounded-[2rem] border border-stone-900/10 bg-white/45 p-2 shadow-2xl shadow-emerald-950/10 backdrop-blur-sm">
+                <img
+                  alt="SwahiliPro presentation at the JKUAT Tech Expo"
+                  className="h-[360px] w-full rounded-[1.55rem] object-cover object-center sm:h-[430px] lg:h-[min(63vh,540px)]"
+                  src="/EXPO2.JPG"
+                />
               </div>
             </div>
           </div>
