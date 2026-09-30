@@ -2,6 +2,7 @@
 
 Status: proposed implementation plan; no application behavior changed.
 Date: 2026-09-30.
+Revision: self-hosted Supabase on the existing Coolify server replaces the proposed Better Auth and separate PostgreSQL setup.
 Repository inspected: bonnieace/swahilipro_web, master at bcfe2bebb25fd9cd9cff359c6bbc77249cf3ecd4.
 
 ## Goal
@@ -22,11 +23,29 @@ Use the existing Next.js site as the account portal and server API for SwahiliPr
 
 ## Architecture and proposed choices
 
-Deploy one Next.js Node server and PostgreSQL on the existing Coolify VPS, with persistent volumes, backups, HTTPS, and private database networking. Route Handlers provide the API. Add a scheduled reconciliation command from the same codebase for interrupted inference requests; it does not require a separate backend application.
+Deploy the Next.js Node application and a pinned self-hosted Supabase Docker Compose stack as separate services on the existing Coolify VPS. Supabase supplies Auth and PostgreSQL; Next.js supplies the account/consent UI, product rules, and Bedrock streaming gateway. Use Supabase's PostgreSQL instance rather than creating another database server for the application.
 
-Use PostgreSQL transactions for credits, sessions, and usage. Proposed data access: Drizzle with committed SQL migrations. Start with database-backed rate limits; introduce Redis only when measured traffic warrants it.
+Use Supabase Auth as the single identity source across web, LMS, CLI, and extension. Start with GitHub sign-in; enable email/password, verification, and recovery with configured production SMTP. Preserve any real existing identities discovered during deployment inventory. Remove unused Clerk, NextAuth, and Firebase dependencies after that inventory; do not introduce Better Auth alongside Supabase.
 
-Proposed auth: Better Auth with its OAuth provider and device authorization support, subject to a compatibility spike against pinned versions. It provides the required authorization-server role as well as web sign-in. An installed social-login library alone is not sufficient for issuing scoped CLI/extension credentials. Start with GitHub sign-in; add verified email/password and recovery only with a configured email service. Preserve any actual existing identities discovered during deployment inventory.
+Use supabase-js and the Next.js SSR integration for supported account/data operations. Keep application SQL migrations and database functions in supabase/migrations as the single schema source of truth. Avoid adding Drizzle and a second migration system without a concrete need. Use generated database types and generated data APIs for simple authorized reads and progress updates. Start with database-backed rate limits; introduce Redis only when measured traffic warrants it.
+
+Begin with Auth, PostgreSQL, the required API/gateway dependencies, and secured Studio administration. Omit optional Realtime, Storage, image processing, Edge Runtime, and analytics services where the pinned Compose stack permits it. Add them only when needed. Keep the Bedrock gateway in Next.js rather than duplicating it in Edge Functions.
+
+### Access boundaries and reduced boilerplate
+
+- Supabase owns identities, credential recovery, and supported token lifecycle operations. Application profiles reference auth.users by stable user ID; do not maintain a second password or identity table.
+- Use row-level security on every application table exposed through the data API. Users may read their own balances, usage, and progress; they cannot mutate balances, ledger entries, reservations, model policies, or admin roles.
+- Safe browser reads and validated LMS progress updates can use Supabase directly under RLS. Financial mutations must pass through Next.js authorization and restricted transactional database functions.
+- Implement reserve, settle, refund, and grant operations as atomic SQL functions with row locking and idempotency constraints. Revoke public/anon/authenticated execute permissions for privileged functions, restrict server credentials, and set a fixed search_path on SECURITY DEFINER functions.
+- Keep Supabase secret/service-role keys and AWS credentials server-only. A service-role key bypasses RLS: every privileged handler must independently authenticate the user and authorize the action; prefer narrowly granted database roles for financial operations where practical.
+- Keep financial internals in a non-exposed schema where practical. Test access through both direct data APIs and Next.js so an alternate route cannot bypass spending controls.
+- Keep scheduled reconciliation in this codebase, invoked by a Coolify scheduled job; no separate backend application is required.
+
+### Native-client authentication compatibility gate
+
+Supabase documents an OAuth authorization-server flow with PKCE. Before committing to a rollout, test the exact self-hosted Auth image and configuration for enabling that server, registering public clients, consent, callback restrictions, refresh rotation, claims/scopes, and revocation. Social login into the website alone does not prove native-client authorization-server support.
+
+Device authorization is not assumed available. Check the pinned release explicitly. Ship browser-based desktop login first if device flow is unavailable; defer headless/SSH login rather than inventing a custom token relay. If required native-client capabilities fail the spike, record the gap and revise the authentication design before implementing either client.
 
 Keep the landing page, documentation, and guest lessons public. Add protected account pages. Separate learning points from AI credits; local lesson completion must never mint paid inference allowance.
 
@@ -37,10 +56,12 @@ Keep the landing page, documentation, and guest lessons public. Add protected ac
 3. The website signs in or registers the user and displays explicit client consent.
 4. The authorization code is short-lived, single-use, and bound to the client, callback, and PKCE challenge.
 5. The client receives short-lived access credentials and rotating refresh credentials. Public clients contain no client secret.
-6. Headless/SSH clients use a device code and verification URL, with expiration, polling intervals, rate limiting, and approve/deny behavior.
+6. If supported by the pinned self-hosted release, headless/SSH clients use a device code and verification URL, with expiration, polling intervals, rate limiting, and approve/deny behavior. Otherwise defer this capability explicitly.
 7. The portal lists connected devices and supports per-device revocation and sign out everywhere.
 
-Use maintained auth-library protocol handlers. Confirm callback support, refresh rotation/reuse detection, and revocation behavior in the spike; do not hand-roll cryptographic protocols to fill gaps. Validate token issuer, audience, expiry, client and scopes, plus session revocation on each gateway request. Suggested scopes: profile:read, credits:read, inference:invoke. Web admin privileges cannot be acquired through client scopes.
+Use Supabase's supported protocol handlers. Confirm callback support, refresh rotation/reuse detection, and revocation behavior in the spike; do not hand-roll cryptographic protocols to fill gaps. Validate token signature, issuer, audience, expiry, and supported client/scope claims on gateway requests. Proposed product permissions are profile:read, credits:read, and inference:invoke; map them to verified Supabase capabilities or enforce them in a server-owned grant record. Web admin privileges cannot be acquired through client scopes.
+
+Do not equate revoking refresh credentials with immediately invalidating an already-issued JWT. Establish and test a bounded revocation policy. If immediate blocking of inference is required, check a server-owned client grant/session denylist on every paid request, tied to a verified token identifier. Device listing and individual revocation remain acceptance gates until confirmed in the pinned release.
 
 Store extension secrets in VS Code SecretStorage and CLI credentials in the OS credential store. Where no secure store exists, document and explicitly opt into a restricted-permission fallback. Never log tokens or embed them in callback query strings.
 
@@ -48,7 +69,8 @@ Store extension secrets in VS Code SecretStorage and CLI credentials in the OS c
 
 | Record | Purpose and invariants |
 | --- | --- |
-| Auth library tables | Users, identities, web sessions, OAuth clients, grants, refresh credentials, device authorization records; use the pinned library schema |
+| Supabase-managed auth schema | Users, identities, sessions, and supported OAuth records; managed by Supabase, not application migrations |
+| Profile / ClientGrant | Application profile and server-owned product permissions or revocation metadata where needed; reference verified Supabase user/client identifiers |
 | CreditAccount | One account per user; integer balance and reserved amount; transactionally enforce available = balance - reserved >= 0 |
 | CreditLedgerEntry | Append-only grants, charges, refunds, and adjustments; unique operation keys; admin actor/reason for adjustments |
 | InferenceRequest | User/client, idempotency key, request hash, model, pricing snapshot, reservation, provider ID, usage, status, timestamps |
@@ -60,7 +82,7 @@ Store amounts in integer microcredits, define a documented conversion and roundi
 
 ## API and interface contract
 
-Auth endpoints are supplied by the selected library under /api/auth; publish actual discovery and authorization/token/device/revocation URLs after the spike.
+Auth endpoints are provided by the self-hosted Supabase Auth service, normally under /auth/v1 on its configured public origin. Publish the actual discovery, authorization, token, and supported revocation/device endpoints after the compatibility spike. Do not assume the old /api/auth layout. Next.js remains the API origin for product operations.
 
 | Route | Purpose |
 | --- | --- |
@@ -72,10 +94,10 @@ Auth endpoints are supplied by the selected library under /api/auth; publish act
 | GET /api/v1/requests/:id | Recover request status after a dropped connection |
 | GET /api/v1/devices | List the user's authorized clients |
 | DELETE /api/v1/devices/:id | Revoke that user's client session |
-| GET/PUT /api/v1/lms/progress | Optional account-backed progress synchronization |
+| Supabase data API for LessonProgress | Account-backed progress synchronization under tested RLS; add a Next.js wrapper only if validation cannot be enforced cleanly in PostgreSQL |
 | POST /api/admin/credits/grants | Authorized, audited, idempotent beta credit grant |
 
-Browser pages: /sign-in, /sign-up if needed, /authorize, /device, /account, /account/usage, /account/devices, and /admin/credits. Auth-library-specific paths may differ; document the final mapping.
+Browser pages: /sign-in, /sign-up if needed, /authorize, /account, /account/usage, /account/devices, and /admin/credits. Add /device only if device authorization passes the compatibility gate. Document the final mapping between Next.js consent pages and Supabase Auth endpoints.
 
 Define an OpenAPI contract plus stream event fixtures before updating clients. Stream events should include request.started, text.delta, tool_call.delta, usage, request.completed, and request.failed, carrying a request ID and event version. Specify complete tool-call assembly, cancellation, maximum body sizes, context limits, and error codes such as insufficient_credits, rate_limited, model_unavailable, and reauthentication_required.
 
@@ -98,16 +120,16 @@ The client agent loop sends each model turn through this API and executes approv
 ## Implementation order and acceptance criteria
 
 ### PR 1 — Runtime and deployment foundation
-Upgrade Next.js to a currently supported patched release and align React, TypeScript, UI dependencies, and ESLint. Add a lockfile, non-mutating lint command, typecheck, tests, CI, container/standalone build, health check, environment example, PostgreSQL migrations, and deployment instructions.
+Upgrade Next.js to a currently supported patched release and align React, TypeScript, UI dependencies, and ESLint. Add a lockfile, non-mutating lint command, typecheck, tests, CI, container/standalone build, health check, environment example, Supabase SQL migrations, and deployment instructions. Add a pinned minimal Supabase Compose configuration compatible with Coolify, generated secrets, secured Studio access, and persistent volumes.
 Accept: build passes; landing/docs/LMS retain behavior; production container starts; database backup and restore are demonstrated in staging. Keep upgrades reviewable independently of auth changes.
 
 ### PR 2 — Web accounts and authorization server
-Run the auth compatibility spike, add sign-in and account pages, establish users and roles, and implement PKCE/device consent and session management. Remove unused auth dependencies only after confirming no deployed integration relies on them.
-Accept: login/logout, expired/replayed codes, wrong PKCE/callback, denied/expired device flow, refresh reuse, revocation, and cross-user access tests pass.
+Run the self-hosted Supabase OAuth compatibility spike, add Supabase SSR integration, sign-in and consent/account pages, establish profiles and roles, and implement PKCE and verified session-management capabilities. Remove unused auth dependencies only after confirming no deployed integration relies on them.
+Accept: login/logout, expired/replayed codes, wrong PKCE/callback, refresh reuse, revocation (including already-issued access tokens), and cross-user access tests pass. Test direct Supabase data access under RLS. Denied/expired device-flow tests are required only if that feature is supported and included; otherwise document it as deferred.
 
 ### PR 3 — Credit ledger and administrative grants
-Add credit records, transactional reservations, pricing snapshots, usage views, and audited beta grants. Start with admin-assigned credits; paid checkout is a separate milestone.
-Accept: simultaneous CLI/extension requests cannot overspend; grants and settlements are idempotent; balances reconcile to ledger entries; ordinary users cannot grant credits.
+Add credit records, restricted transactional SQL functions for reservations/settlements/grants, RLS policies, pricing snapshots, usage views, and audited beta grants. Start with admin-assigned credits; paid checkout is a separate milestone.
+Accept: simultaneous CLI/extension requests cannot overspend; grants and settlements are idempotent; balances reconcile to ledger entries; ordinary users cannot grant credits or invoke privileged functions through Supabase's data/RPC APIs.
 
 ### PR 4 — Bedrock inference and reconciliation
 Add one verified model first, server credential handling, model policies, normalized streaming, limits, cancellation, request recovery, and scheduled reconciliation.
@@ -118,15 +140,19 @@ Implement against the published API in bonnieace/swahilipro-compiler first: swa 
 Accept: one account authorizes both clients; credit updates are consistent; revocation works; stream reconnects do not rerun paid calls; edits/commands require appropriate local approval. Existing language/runtime features remain usable.
 
 ### PR 6 — LMS sync and beta rollout
-Move lesson data out of the page for reuse, add account-backed progress, and optionally import browser progress once per course version with validation and deduplication. Treat imported progress as educational state, not trusted evidence for awarding AI credits.
+Move lesson data out of the page for reuse, add Supabase-backed progress with RLS and server-defined lesson validation, and optionally import browser progress once per course version with validation and deduplication. Treat imported progress as educational state, not trusted evidence for awarding AI credits.
 Accept: guest learning remains usable; invalid local JSON does not crash the page; progress is not overwritten before hydration; signed-in progress follows the user across devices.
 Roll out to a small allowlisted cohort, monitor latency/errors/spend, verify backups, and enable additional models only after capability and cost tests.
 
 ## Coolify operations
 
-Use separate staging and production databases and credentials. Run migrations as a controlled release step, not concurrently from every server instance. Configure proxy streaming without response buffering, appropriate idle timeouts, cancellation handling, and health checks. Test an actual multi-minute stream through the production proxy. Schedule reconciliation independently of web requests and persist all financial state in PostgreSQL.
+Use isolated staging and production Supabase stacks and credentials. Pin and record all service image versions, including Auth; verify Coolify's template versions rather than assuming managed-Supabase feature parity. Configure public HTTPS origins for the site and Supabase (for example a dedicated subdomain under uzanet.co.ke), exact callback allowlists, internal service URLs, and private database connectivity. Restrict Studio to administrators.
 
-Document deployment origin, OAuth callback URLs, DATABASE_URL, auth secrets, GitHub OAuth credentials, optional email credentials, AWS region/credentials, enabled model configuration, global spending cap, and internal job authentication. Confirm VPS memory/CPU headroom before setting inference concurrency. No GPU is needed on the VPS.
+Measure free RAM, CPU, disk, and existing workloads before rollout. The Supabase full-stack guide lists 4 GB RAM/2 cores/40 GB SSD minimum and 8 GB+/4 cores+/80 GB+ SSD recommended; these are not guarantees of spare capacity for Next.js and the other VPS apps. Omit optional services and load-test the combined deployment. The shared VPS is a common failure domain: keep encrypted off-server database backups, required configuration/secrets, and any later Storage objects, and rehearse restoring the entire stack.
+
+Configure production SMTP for verification/recovery messages, and test delivery. Self-hosting leaves upgrades, monitoring, security patching, backup scheduling, and restores with us. Run migrations as a controlled release step, not concurrently from every server instance. Configure proxy streaming without response buffering, appropriate idle timeouts, cancellation handling, and health checks. Test an actual multi-minute stream through the production proxy. Schedule reconciliation independently of web requests and persist all financial state in PostgreSQL.
+
+Document deployment origin, OAuth callback URLs, Supabase public/internal URLs, publishable key, server-only secret/service-role credentials, restricted database connection settings, Supabase signing/auth secrets, GitHub OAuth credentials, SMTP settings, AWS region/credentials, enabled model configuration, global spending cap, and internal job authentication. Confirm VPS memory/CPU headroom before setting inference concurrency. No GPU is needed on the VPS.
 
 Roll back the app independently of additive schema migrations. Disable new inference using the kill switch during billing incidents while preserving account access and reconciliation.
 
@@ -137,14 +163,17 @@ Roll back the app independently of additive schema migrations. Disable new infer
 - Which AWS region and exact models are enabled, and what credit programme/expiry applies?
 - What beta allowance, model limits, conversion rate, and account eligibility should apply?
 - Is paid checkout required for launch? Default plan: beta grants first; add payments with verified, idempotent webhooks later.
-- Which auth-library version passes the required native-client security and lifecycle tests?
+- Which pinned self-hosted Supabase/Auth version passes the native-client authorization, claims, refresh, and revocation tests? Is device flow available or deferred?
+- What resources remain on the shared VPS, and where will off-server backups be stored?
 
 ## References checked
 
 - https://nextjs.org/support-policy — Next.js 14 is listed as unsupported.
 - https://nextjs.org/docs/app/guides/backend-for-frontend — Route Handlers and server APIs.
-- https://better-auth.com/docs/plugins/oauth-provider — OAuth authorization server and PKCE.
-- https://better-auth.com/docs/plugins/device-authorization — device authorization integration.
+- https://supabase.com/docs/guides/self-hosting/docker — self-hosted services, resource guidance, and configuration.
+- https://supabase.com/docs/guides/auth/oauth-server — OAuth authorization-server capability; verify the pinned self-hosted release.
+- https://supabase.com/docs/guides/auth/oauth-server/oauth-flows — PKCE authorization flow.
+- https://supabase.com/docs/guides/auth/server-side/advanced-guide — SSR integration and session handling.
 - https://www.rfc-editor.org/rfc/rfc8252 — native app browser authorization.
 - https://www.rfc-editor.org/rfc/rfc8628 — device authorization protocol.
 - https://docs.aws.amazon.com/bedrock/latest/userguide/models-api-compatibility.html — model/API compatibility.
