@@ -11,7 +11,8 @@
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json",
     "typecheck": "tsc --noEmit",
-    "test": "node --import tsx --test tests/*.test.ts"
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:firestore": "node --import tsx --test tests/firestore.integration.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.9.9",

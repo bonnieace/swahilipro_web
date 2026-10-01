@@ -16,5 +16,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: npx --yes firebase-tools@13.35.1 emulators:exec --only firestore --project demo-swahilipro 'npm run test:firestore'
       - run: npm run typecheck
       - run: npm run build
