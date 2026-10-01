@@ -2,7 +2,7 @@
 
 Status: proposed implementation plan; no application behavior changed.
 Date: 2026-09-30.
-Revision: self-hosted Supabase on the existing Coolify server replaces the proposed Better Auth and separate PostgreSQL setup.
+Revision 2026-10-01: Firebase Authentication and Cloud Firestore replace self-hosted Supabase. Next.js remains on the existing Coolify VPS.
 Repository inspected: bonnieace/swahilipro_web, master at bcfe2bebb25fd9cd9cff359c6bbc77249cf3ecd4.
 
 ## Goal
@@ -23,66 +23,66 @@ Use the existing Next.js site as the account portal and server API for SwahiliPr
 
 ## Architecture and proposed choices
 
-Deploy the Next.js Node application and a pinned self-hosted Supabase Docker Compose stack as separate services on the existing Coolify VPS. Supabase supplies Auth and PostgreSQL; Next.js supplies the account/consent UI, product rules, and Bedrock streaming gateway. Use Supabase's PostgreSQL instance rather than creating another database server for the application.
+Use managed Firebase Authentication for website accounts and Cloud Firestore for application data. Keep the Next.js Node server on Coolify for account pages, client authorization, Bedrock streaming, and credit enforcement. No Supabase stack, PostgreSQL server, SQL migration system, or separate auth server is required.
 
-Use Supabase Auth as the single identity source across web, LMS, CLI, and extension. Start with GitHub sign-in; enable email/password, verification, and recovery with configured production SMTP. Preserve any real existing identities discovered during deployment inventory. Remove unused Clerk, NextAuth, and Firebase dependencies after that inventory; do not introduce Better Auth alongside Supabase.
+The repository already declares firebase and firebase-admin. Audit any real deployed Firebase project/users first; reuse identities where appropriate. Configure one production Firebase project and an isolated staging project or Emulator Suite. Start with GitHub or Google login and optional verified email/password; avoid phone/SMS and additional paid Firebase services for the initial beta.
 
-Use supabase-js and the Next.js SSR integration for supported account/data operations. Keep application SQL migrations and database functions in supabase/migrations as the single schema source of truth. Avoid adding Drizzle and a second migration system without a concrete need. Use generated database types and generated data APIs for simple authorized reads and progress updates. Start with database-backed rate limits; introduce Redis only when measured traffic warrants it.
+Use Firebase browser SDK for web login and Firebase Admin SDK only on the server. Exchange a recently issued verified Firebase ID token for an HttpOnly Secure SameSite web session cookie with CSRF protection. Verify session revocation/disabled-user state for sensitive operations. Browser sign-in is not a CLI OAuth authorization server.
 
-Begin with Auth, PostgreSQL, the required API/gateway dependencies, and secured Studio administration. Omit optional Realtime, Storage, image processing, Edge Runtime, and analytics services where the pinned Compose stack permits it. Add them only when needed. Keep the Bedrock gateway in Next.js rather than duplicating it in Edge Functions.
+Keep the landing page/docs/guest lessons public. Authenticated learning progress follows the Firebase UID. Learning points cannot mint AI credits.
 
-### Access boundaries and reduced boilerplate
+### Native clients: application authorization broker
 
-- Supabase owns identities, credential recovery, and supported token lifecycle operations. Application profiles reference auth.users by stable user ID; do not maintain a second password or identity table.
-- Use row-level security on every application table exposed through the data API. Users may read their own balances, usage, and progress; they cannot mutate balances, ledger entries, reservations, model policies, or admin roles.
-- Safe browser reads and validated LMS progress updates can use Supabase directly under RLS. Financial mutations must pass through Next.js authorization and restricted transactional database functions.
-- Implement reserve, settle, refund, and grant operations as atomic SQL functions with row locking and idempotency constraints. Revoke public/anon/authenticated execute permissions for privileged functions, restrict server credentials, and set a fixed search_path on SECURITY DEFINER functions.
-- Keep Supabase secret/service-role keys and AWS credentials server-only. A service-role key bypasses RLS: every privileged handler must independently authenticate the user and authorize the action; prefer narrowly granted database roles for financial operations where practical.
-- Keep financial internals in a non-exposed schema where practical. Test access through both direct data APIs and Next.js so an alternate route cannot bypass spending controls.
-- Keep scheduled reconciliation in this codebase, invoked by a Coolify scheduled job; no separate backend application is required.
+Use one explicit Next.js client-authorization flow for both CLI and extension. This is an application protocol, not a claim that Firebase implements RFC 8628 or OAuth authorization-server endpoints. Define and security-test the protocol before rollout; use maintained cryptographic/session primitives.
 
-### Native-client authentication compatibility gate
+1. Client generates a cryptographically random verifier and sends its S256 challenge, public client type and label to POST /api/v1/auth/client/start. Server creates a short-lived login attempt and returns a high-entropy polling secret, attempt ID, verification URL, and polling interval. Store only hashes of bearer secrets.
+2. swa login or extension Sign in opens the website with the attempt reference; headless users can open the URL on another device. No passwords or access/refresh tokens appear in URLs.
+3. Website signs in using Firebase and displays exact client type, label, requested permissions and a matching confirmation phrase/code. User explicitly approves or denies with CSRF protection and recent sign-in. Never automatically approve from an existing web session.
+4. The client polls a bounded endpoint with the polling secret. Completion requires the original verifier matching the challenge and atomically consumes the approved attempt once.
+5. Server issues SwahiliPro client credentials: short-lived opaque access tokens and rotating opaque refresh tokens bound to a server-owned grant and Firebase UID. This protocol does not distribute Firebase refresh credentials to native clients.
+6. Tokens are stored hashed in Firestore, excluded from logs; validate grant revocation, account status and expiry for every paid request. Refresh reuse revokes the credential family. Serialize concurrent client refresh and specify safe recovery for a lost refresh response; do not create ad-hoc replay windows.
+7. Portal lists and revokes grants per device. Account disable/delete and sign out everywhere invalidate grants. Firebase's account-wide refresh revocation alone does not revoke these application grants: implement and test coordinated revocation/account epoch checks.
 
-Supabase documents an OAuth authorization-server flow with PKCE. Before committing to a rollout, test the exact self-hosted Auth image and configuration for enabling that server, registering public clients, consent, callback restrictions, refresh rotation, claims/scopes, and revocation. Social login into the website alone does not prove native-client authorization-server support.
+Use random secrets of at least 256 bits, short attempt expiry, constant-time comparisons, strict request limits, deny/expire states, and bounded polling/backoff. Neither possession of an attempt URL nor knowledge of a human confirmation code authorizes token retrieval. No callback URI allowlists or Firebase OAuth-server compatibility gates are needed for this initial flow. Standard native OAuth can be reconsidered later if a maintained provider is introduced.
 
-Device authorization is not assumed available. Check the pinned release explicitly. Ship browser-based desktop login first if device flow is unavailable; defer headless/SSH login rather than inventing a custom token relay. If required native-client capabilities fail the spike, record the gap and revise the authentication design before implementing either client.
+Store CLI refresh tokens in OS credential storage and extension refresh tokens in VS Code SecretStorage. Public clients contain no client secret. Repository settings cannot change trusted auth/API destinations.
 
-Keep the landing page, documentation, and guest lessons public. Add protected account pages. Separate learning points from AI credits; local lesson completion must never mint paid inference allowance.
+### Firestore access and data management
+
+Keep collection schemas, indexes, Security Rules, emulator configuration, generated/validated types, and versioned data-upgrade scripts in the repository. Use additive document schema versions rather than SQL migrations.
+
+Browser reads of own profile/progress may use Firestore under strict Security Rules. Validate lesson IDs/course versions and prevent edits to admin flags, credits, ledger, grants, and inference records. For the beta, keep balances/usage behind Next.js API to simplify authorization and consistent freshness.
+
+Financial/session collections deny direct client access. Firebase Admin bypasses Security Rules: enforce UID, roles, grant ownership, and permissions in every privileged handler, with least-privilege IAM credentials kept server-only. Never accept authoritative UID, prices, balances, or usage from clients.
 
 ## User login and session lifecycle
 
-1. The installed CLI offers swa login; the extension offers Sign in to SwahiliPro when first opened. Do not launch a browser merely because installation occurred.
-2. A desktop client opens the system browser for authorization-code login with PKCE S256 and state. Use a loopback callback for the CLI and a registered VS Code callback for the extension.
-3. The website signs in or registers the user and displays explicit client consent.
-4. The authorization code is short-lived, single-use, and bound to the client, callback, and PKCE challenge.
-5. The client receives short-lived access credentials and rotating refresh credentials. Public clients contain no client secret.
-6. If supported by the pinned self-hosted release, headless/SSH clients use a device code and verification URL, with expiration, polling intervals, rate limiting, and approve/deny behavior. Otherwise defer this capability explicitly.
-7. The portal lists connected devices and supports per-device revocation and sign out everywhere.
+Website accounts are Firebase identities. Native credentials belong to individual SwahiliPro grants referencing those identities; they are not Firebase ID tokens and must not be fed into Firebase token verification APIs. Document accepted credential type per endpoint.
 
-Use Supabase's supported protocol handlers. Confirm callback support, refresh rotation/reuse detection, and revocation behavior in the spike; do not hand-roll cryptographic protocols to fill gaps. Validate token signature, issuer, audience, expiry, and supported client/scope claims on gateway requests. Proposed product permissions are profile:read, credits:read, and inference:invoke; map them to verified Supabase capabilities or enforce them in a server-owned grant record. Web admin privileges cannot be acquired through client scopes.
-
-Do not equate revoking refresh credentials with immediately invalidating an already-issued JWT. Establish and test a bounded revocation policy. If immediate blocking of inference is required, check a server-owned client grant/session denylist on every paid request, tied to a verified token identifier. Device listing and individual revocation remain acceptance gates until confirmed in the pinned release.
-
-Store extension secrets in VS Code SecretStorage and CLI credentials in the OS credential store. Where no secure store exists, document and explicitly opt into a restricted-permission fallback. Never log tokens or embed them in callback query strings.
+Browser web session creation requires a verified recent ID token, CSRF controls, and suitable expiry. Native refresh/logout/revocation follow the grant protocol above. Privileged role changes and account disable/delete immediately block paid work through server-owned state. Polling attempts and revoked/expired token records need scheduled cleanup; do not rely on paid TTL deletion being available on the chosen Firebase plan.
 
 ## Database records
 
-| Record | Purpose and invariants |
+| Collection / system | Purpose |
 | --- | --- |
-| Supabase-managed auth schema | Users, identities, sessions, and supported OAuth records; managed by Supabase, not application migrations |
-| Profile / ClientGrant | Application profile and server-owned product permissions or revocation metadata where needed; reference verified Supabase user/client identifiers |
-| CreditAccount | One account per user; integer balance and reserved amount; transactionally enforce available = balance - reserved >= 0 |
-| CreditLedgerEntry | Append-only grants, charges, refunds, and adjustments; unique operation keys; admin actor/reason for adjustments |
-| InferenceRequest | User/client, idempotency key, request hash, model, pricing snapshot, reservation, provider ID, usage, status, timestamps |
-| ModelPolicy | Enabled model IDs, endpoint/API/region, context/output limits, supported tools, pricing version, permissions |
-| LessonProgress | User + course version + lesson unique key; completion timestamp; points computed server-side from course content |
-| AuditEvent | Consent, revocation, administrative grants, model changes, and reconciliation actions; redact secrets and source content |
+| Firebase Auth | Website identities/providers/password recovery; managed by Firebase |
+| profiles / lessonProgress | Firebase UID, course version and validated progress; learning points derived from lesson definitions |
+| loginAttempts | Challenge, hashed polling secret, confirmation phrase, expiry, approval/denial and consumed state |
+| clientGrants / clientTokens | Device label, Firebase UID, permissions, revocation epoch, hashed access/refresh credentials and rotation family |
+| creditAccounts | Integer posted balance/reserved amount; available = balance - reserved must remain nonnegative |
+| creditLedger | Append-only grant/charge/refund/adjustment records with deterministic operation IDs and actor/reason |
+| inferenceRequests | Per-user idempotency key, request hash, reservation, pricing snapshot, provider ID, usage, lifecycle and lease |
+| modelPolicies / auditEvents | Model allowlist/pricing and redacted administrative/security history |
 
-Store amounts in integer microcredits, define a documented conversion and rounding rule, and keep provider currency/cost separate. Do not store floating-point wallet balances. Never accept authoritative prices, balances, user IDs, or token counts from a client.
+Use integer microcredits within validated JavaScript safe-integer bounds, documented conversion/rounding, and separate provider currency/cost. Financial mutations run in Admin SDK Firestore transactions. Reserve wallet balance, create request and ledger records atomically; settle/refund using deterministic document IDs and request state to prevent duplicate charges.
+
+Firestore transactions can retry: never invoke Bedrock, send email, issue external actions, or emit a successful stream inside a transaction callback. Commit the reservation first, then invoke the provider once under a durable lease. Keep unknown provider outcomes tracked instead of automatically retrying or releasing holds. Transaction retries and provider retries are different operations.
+
+Avoid a single global hot document at scale; for initial small beta a global budget reservation can be transactional, with contention monitored. Paginate usage, use indexed queries, bound document size, and avoid writing streaming deltas or prompts into Firestore.
 
 ## API and interface contract
 
-Auth endpoints are provided by the self-hosted Supabase Auth service, normally under /auth/v1 on its configured public origin. Publish the actual discovery, authorization, token, and supported revocation/device endpoints after the compatibility spike. Do not assume the old /api/auth layout. Next.js remains the API origin for product operations.
+Firebase hosts website provider sign-in; Next.js exposes /api/v1/auth/client/start, status/complete, refresh, and logout for the application client-grant protocol. Publish exact request/response schemas, timeout/rotation semantics and error codes before client implementation.
 
 | Route | Purpose |
 | --- | --- |
@@ -94,10 +94,10 @@ Auth endpoints are provided by the self-hosted Supabase Auth service, normally u
 | GET /api/v1/requests/:id | Recover request status after a dropped connection |
 | GET /api/v1/devices | List the user's authorized clients |
 | DELETE /api/v1/devices/:id | Revoke that user's client session |
-| Supabase data API for LessonProgress | Account-backed progress synchronization under tested RLS; add a Next.js wrapper only if validation cannot be enforced cleanly in PostgreSQL |
+| Firestore SDK for lessonProgress | Account-backed progress under tested Security Rules; Next.js validates operations needing server logic |
 | POST /api/admin/credits/grants | Authorized, audited, idempotent beta credit grant |
 
-Browser pages: /sign-in, /sign-up if needed, /authorize, /account, /account/usage, /account/devices, and /admin/credits. Add /device only if device authorization passes the compatibility gate. Document the final mapping between Next.js consent pages and Supabase Auth endpoints.
+Browser pages: /sign-in, /sign-up if needed, /authorize-client, /account, /account/usage, /account/devices, and /admin/credits. All native client authorization is explicit on /authorize-client; no Supabase OAuth endpoints are used.
 
 Define an OpenAPI contract plus stream event fixtures before updating clients. Stream events should include request.started, text.delta, tool_call.delta, usage, request.completed, and request.failed, carrying a request ID and event version. Specify complete tool-call assembly, cancellation, maximum body sizes, context limits, and error codes such as insufficient_credits, rate_limited, model_unavailable, and reauthentication_required.
 
@@ -119,42 +119,49 @@ The client agent loop sends each model turn through this API and executes approv
 
 ## Implementation order and acceptance criteria
 
-### PR 1 — Runtime and deployment foundation
-Upgrade Next.js to a currently supported patched release and align React, TypeScript, UI dependencies, and ESLint. Add a lockfile, non-mutating lint command, typecheck, tests, CI, container/standalone build, health check, environment example, Supabase SQL migrations, and deployment instructions. Add a pinned minimal Supabase Compose configuration compatible with Coolify, generated secrets, secured Studio access, and persistent volumes.
-Accept: build passes; landing/docs/LMS retain behavior; production container starts; database backup and restore are demonstrated in staging. Keep upgrades reviewable independently of auth changes.
+### PR 1 — Runtime and Firebase foundation
+Upgrade to a supported patched Next.js release, align dependencies, add lockfile, non-mutating lint, typecheck, CI, container build/healthcheck and environment guide. Initialize Firebase project config, Firestore rules/indexes and Emulator Suite. Audit existing users before removing Clerk/NextAuth or unused provider dependencies.
+Accept: build and existing public pages work; emulator rules tests pass; deployment needs no local database/auth stack.
 
-### PR 2 — Web accounts and authorization server
-Run the self-hosted Supabase OAuth compatibility spike, add Supabase SSR integration, sign-in and consent/account pages, establish profiles and roles, and implement PKCE and verified session-management capabilities. Remove unused auth dependencies only after confirming no deployed integration relies on them.
-Accept: login/logout, expired/replayed codes, wrong PKCE/callback, refresh reuse, revocation (including already-issued access tokens), and cross-user access tests pass. Test direct Supabase data access under RLS. Denied/expired device-flow tests are required only if that feature is supported and included; otherwise document it as deferred.
+### PR 2 — Web accounts and client authorization
+Firebase sign-in, secure web cookies, account pages, and Next.js login attempt/grant/refresh/revocation protocol.
+Accept: wrong verifier, stolen URL, denied/expired attempt, duplicate completion, refresh races/reuse, disabled account, grant revoke, account-wide revoke and cross-user operations are covered. No secrets in URLs/logs.
 
-### PR 3 — Credit ledger and administrative grants
-Add credit records, restricted transactional SQL functions for reservations/settlements/grants, RLS policies, pricing snapshots, usage views, and audited beta grants. Start with admin-assigned credits; paid checkout is a separate milestone.
-Accept: simultaneous CLI/extension requests cannot overspend; grants and settlements are idempotent; balances reconcile to ledger entries; ordinary users cannot grant credits or invoke privileged functions through Supabase's data/RPC APIs.
+### PR 3 — Credit transactions and beta grants
+Firestore wallet/ledger/request transactions, indexed usage, pricing snapshots, admin grants.
+Accept: simultaneous CLI/extension requests cannot overspend; retrying a transaction never invokes Bedrock; deterministic settlements/grants are idempotent; browser/client cannot mutate financial records.
 
-### PR 4 — Bedrock inference and reconciliation
-Add one verified model first, server credential handling, model policies, normalized streaming, limits, cancellation, request recovery, and scheduled reconciliation.
-Accept: text and tool calls stream correctly; provider failures and application restarts do not double-charge; ambiguous provider outcomes remain tracked; global kill switch blocks new paid work. Use explicit small budgets for real-provider smoke tests.
+### PR 4 — Bedrock and reconciliation
+One verified model, normalized streaming, durable reservations/leases, cancellation, status recovery, kill switch and scheduled Coolify reconciliation.
+Accept: disconnects/restarts do not duplicate paid invocations or charges; unknown outcomes remain recoverable; real smoke tests use small explicit budgets.
 
-### PR 5 — Connect CLI, then extension
-Implement against the published API in bonnieace/swahilipro-compiler first: swa login/logout/whoami, credits, then chat. Connect bonnieace/swahilipro_extension using the same contract, with a dedicated sidebar and secure token storage. Inspect those codebases before choosing how to package the shared agent engine.
-Accept: one account authorizes both clients; credit updates are consistent; revocation works; stream reconnects do not rerun paid calls; edits/commands require appropriate local approval. Existing language/runtime features remain usable.
+### PR 5 — CLI then extension
+Connect clients to the shared Next.js authorization protocol and existing gateway contract; keep local agent architecture from companion plans.
+Accept: one Firebase user authorizes separate CLI/extension grants; shared credits, revocation, streaming and approvals work end-to-end.
 
-### PR 6 — LMS sync and beta rollout
-Move lesson data out of the page for reuse, add Supabase-backed progress with RLS and server-defined lesson validation, and optionally import browser progress once per course version with validation and deduplication. Treat imported progress as educational state, not trusted evidence for awarding AI credits.
-Accept: guest learning remains usable; invalid local JSON does not crash the page; progress is not overwritten before hydration; signed-in progress follows the user across devices.
-Roll out to a small allowlisted cohort, monitor latency/errors/spend, verify backups, and enable additional models only after capability and cost tests.
+### PR 6 — LMS sync and beta
+Validate/import browser progress once per course version; keep guest learning. Small cohort beta with quota and cost monitoring, deletion controls and tested recovery.
+Accept: progress does not mint AI credits; no corruption during hydration; quota failures block new paid work safely.
 
-## Coolify operations
+## Free-tier operating plan
 
-Use isolated staging and production Supabase stacks and credentials. Pin and record all service image versions, including Auth; verify Coolify's template versions rather than assuming managed-Supabase feature parity. Configure public HTTPS origins for the site and Supabase (for example a dedicated subdomain under uzanet.co.ke), exact callback allowlists, internal service URLs, and private database connectivity. Restrict Studio to administrators.
+Target Firebase Spark/no-cost allowances for Auth and Firestore initially; choose standard sign-in providers and do not require Cloud Functions, Cloud Run, Firebase Storage, paid exports/backups, or automatic TTL cleanup. Next.js and scheduled jobs stay on the already available VPS. AWS inference remains separately billed against eligible credits.
 
-Measure free RAM, CPU, disk, and existing workloads before rollout. The Supabase full-stack guide lists 4 GB RAM/2 cores/40 GB SSD minimum and 8 GB+/4 cores+/80 GB+ SSD recommended; these are not guarantees of spare capacity for Next.js and the other VPS apps. Omit optional services and load-test the combined deployment. The shared VPS is a common failure domain: keep encrypted off-server database backups, required configuration/secrets, and any later Storage objects, and rehearse restoring the entire stack.
+Firestore currently documents free allowances of 1 GiB stored data, 50,000 reads/day, 20,000 writes/day, 20,000 deletes/day and 10 GiB outbound/month for one eligible database. Verify current project/product eligibility and Auth limits during setup; these are not a guarantee that all workloads fit free usage.
 
-Configure production SMTP for verification/recovery messages, and test delivery. Self-hosting leaves upgrades, monitoring, security patching, backup scheduling, and restores with us. Run migrations as a controlled release step, not concurrently from every server instance. Configure proxy streaming without response buffering, appropriate idle timeouts, cancellation handling, and health checks. Test an actual multi-minute stream through the production proxy. Schedule reconciliation independently of web requests and persist all financial state in PostgreSQL.
+Estimate reads/writes per login, refresh, paid model turn, reservation/settlement, reconciliation and dashboard view. Paginate history, cap polling, avoid broad realtime listeners, fetch balance on relevant events rather than every streamed chunk, and never persist stream tokens. Do not cache revocation state beyond the stated security SLA just to save reads.
 
-Document deployment origin, OAuth callback URLs, Supabase public/internal URLs, publishable key, server-only secret/service-role credentials, restricted database connection settings, Supabase signing/auth secrets, GitHub OAuth credentials, SMTP settings, AWS region/credentials, enabled model configuration, global spending cap, and internal job authentication. Confirm VPS memory/CPU headroom before setting inference concurrency. No GPU is needed on the VPS.
+Quota exhaustion must fail closed: no successful reservation means no Bedrock invocation. Already-invoked requests that cannot settle stay tracked and reconcile when service recovers. Alert on quota trends; Spark can reject requests at limits. Moving to Blaze requires an explicit cost decision; budget alerts are not hard spending caps.
 
-Roll back the app independently of additive schema migrations. Disable new inference using the kill switch during billing incidents while preserving account access and reconciliation.
+## Coolify operations and recovery
+
+Only the Next.js application and its scheduled jobs run on Coolify; Firebase is managed externally. Select Firestore location considering VPS latency and data requirements. Use Firebase Emulator Suite for deterministic CI and an isolated staging project for integration.
+
+Server-only Firebase Admin credentials/IAM and AWS credentials are stored as Coolify secrets, never NEXT_PUBLIC values. Public Firebase browser config is not an admin credential; Security Rules and server authorization enforce data access. Configure Firebase authorized domains and provider callbacks for the real website origin.
+
+Deploy rules/indexes and data upgrade scripts in controlled releases. Test proxy streaming, cancellation and health checks. Schedule reconciliation and expired-record cleanup on the VPS, not through mandatory Cloud Functions/paid TTL.
+
+Define recovery for application records and Auth users. Keep versioned rules/config and secrets recovery procedures; maintain a tested scheduled application-level export/restore approach within quotas if available, or explicitly choose paid managed export/backup later. Do not assume Spark includes managed backups/PITR. Protect encrypted recovery copies off the VPS, never export raw active bearer tokens, and revoke grants on security recovery. Keep Bedrock kill switch available independently of normal UI.
 
 ## Decisions to confirm during implementation
 
@@ -163,19 +170,20 @@ Roll back the app independently of additive schema migrations. Disable new infer
 - Which AWS region and exact models are enabled, and what credit programme/expiry applies?
 - What beta allowance, model limits, conversion rate, and account eligibility should apply?
 - Is paid checkout required for launch? Default plan: beta grants first; add payments with verified, idempotent webhooks later.
-- Which pinned self-hosted Supabase/Auth version passes the native-client authorization, claims, refresh, and revocation tests? Is device flow available or deferred?
-- What resources remain on the shared VPS, and where will off-server backups be stored?
+- Which existing Firebase project/users should be reused, and which Firestore region and standard sign-in provider should we choose?
+- What measured request volume fits the no-cost quotas, and what retention/recovery policy applies?
+- What client-grant lifetimes, refresh-loss recovery and account revocation SLA should apply?
 
 ## References checked
 
-- https://nextjs.org/support-policy — Next.js 14 is listed as unsupported.
-- https://nextjs.org/docs/app/guides/backend-for-frontend — Route Handlers and server APIs.
-- https://supabase.com/docs/guides/self-hosting/docker — self-hosted services, resource guidance, and configuration.
-- https://supabase.com/docs/guides/auth/oauth-server — OAuth authorization-server capability; verify the pinned self-hosted release.
-- https://supabase.com/docs/guides/auth/oauth-server/oauth-flows — PKCE authorization flow.
-- https://supabase.com/docs/guides/auth/server-side/advanced-guide — SSR integration and session handling.
-- https://www.rfc-editor.org/rfc/rfc8252 — native app browser authorization.
-- https://www.rfc-editor.org/rfc/rfc8628 — device authorization protocol.
-- https://docs.aws.amazon.com/bedrock/latest/userguide/models-api-compatibility.html — model/API compatibility.
+- https://nextjs.org/support-policy
+- https://firebase.google.com/docs/auth/admin/manage-cookies
+- https://firebase.google.com/docs/auth/admin/manage-sessions
+- https://firebase.google.com/docs/firestore/manage-data/transactions
+- https://firebase.google.com/docs/firestore/security/rules-conditions
+- https://firebase.google.com/docs/firestore/quotas
+- https://firebase.google.com/docs/firestore/pricing
+- https://firebase.google.com/docs/emulator-suite
+- https://docs.aws.amazon.com/bedrock/latest/userguide/models-api-compatibility.html
 
 This is a source inspection and design plan, not a production audit or a claim that any deployment, account, model, or billing integration has been tested.
