@@ -15,6 +15,7 @@
     "test:firestore": "node --import tsx --test tests/firestore.integration.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.1144.0",
     "@clerk/nextjs": "^6.9.9",
     "@nextui-org/button": "2.0.33",
     "@nextui-org/card": "^2.0.30",
