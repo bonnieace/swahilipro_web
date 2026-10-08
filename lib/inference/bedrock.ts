@@ -1,4 +1,5 @@
 import 'server-only';
+import { bedrockClientOptions } from './bedrock-client';
 import { BedrockRuntimeClient, ConverseStreamCommand, CountTokensCommand } from '@aws-sdk/client-bedrock-runtime';
 import { Provider, InferenceInput, ModelPolicy } from './types';
 import { PlatformError } from '@/lib/platform/store';
@@ -7,7 +8,7 @@ function conversation(input: InferenceInput) {
 }
 export const bedrockProvider: Provider = {
   async count(policy: ModelPolicy, input: InferenceInput, signal: AbortSignal) {
-    const client = new BedrockRuntimeClient({ region: policy.region, maxAttempts: 1 });
+    const client = new BedrockRuntimeClient(bedrockClientOptions(policy.region));
     try {
       const result = await client.send(new CountTokensCommand({ modelId: policy.id, input: { converse: conversation(input) } }), { abortSignal: signal });
       if (!Number.isSafeInteger(result.inputTokens)) throw new PlatformError('token_count_unavailable', 503);
@@ -16,7 +17,7 @@ export const bedrockProvider: Provider = {
   },
   async *stream(policy: ModelPolicy, input: InferenceInput, signal: AbortSignal) {
     // No SDK auto-retry of paid invocation: ambiguous transport failure is tracked.
-    const client = new BedrockRuntimeClient({ region: policy.region, maxAttempts: 1 });
+    const client = new BedrockRuntimeClient(bedrockClientOptions(policy.region));
     try {
       const result = await client.send(new ConverseStreamCommand({ modelId: policy.id, ...conversation(input), inferenceConfig: { maxTokens: input.maxOutputTokens } }), { abortSignal: signal });
       if (!result.stream) throw new PlatformError('provider_stream_missing', 503);

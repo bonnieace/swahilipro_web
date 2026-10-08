@@ -24,7 +24,7 @@ export async function grantCredits(store: Store, uid: string, amount: number, op
 }
 // Internal functions: no public reservation endpoint. Gateway must authenticate,
 // calculate price/output bounds, then reserve before invoking any paid provider.
-export async function reserveCredits(store: Store, uid: string, amount: number, operationKey: string, requestHash: string, now = Date.now(), options?: { model: string; prices: { input: number; output: number }; inputTokens: number; maxOutputTokens: number; dailyCap: number; grantId: string | null }) {
+export async function reserveCredits(store: Store, uid: string, amount: number, operationKey: string, requestHash: string, now = Date.now(), options?: { model: string; prices: { input: number; output: number }; inputTokens: number; maxOutputTokens: number; dailyCap: number; grantId: string | null; providerBudget?: { cap: number; reservation: number; prices: { input: number; output: number } } }) {
   requireValue(amountValid(amount), 'invalid_amount'); keyValid(operationKey);
   requireValue(/^[a-f0-9]{64}$/.test(requestHash), 'invalid_request_hash');
   const id = hash(`${uid}:inference:${operationKey}`);
@@ -36,18 +36,27 @@ export async function reserveCredits(store: Store, uid: string, amount: number, 
     const day = Math.floor(now / 86400000);
     const budget = options ? await tx.get(`inferenceBudgets/${day}`) : null;
     const userLimit = options ? await tx.get(`inferenceLimits/${hash(`${uid}:${day}`)}`) : null;
+    const lifetime = options?.providerBudget ? await tx.get('inferenceProviderBudgets/lifetime') : null;
     if (options) {
+      if (options.providerBudget) {
+        const { cap, reservation } = options.providerBudget;
+        const held = Number(lifetime?.held ?? 0), spent = Number(lifetime?.spent ?? 0);
+        requireValue(amountValid(cap) && cap <= 300e9 && amountValid(reservation), 'invalid_total_budget', 503);
+        requireValue(Number.isSafeInteger(held) && held >= 0 && Number.isSafeInteger(spent) && spent >= 0, 'invalid_total_budget', 503);
+        requireValue(Number.isSafeInteger(held + spent + reservation) && held + spent + reservation <= cap, 'total_budget_exceeded', 429);
+      }
       requireValue(amountValid(options.dailyCap), 'invalid_budget', 503);
       const held = Number(budget?.held ?? 0), spent = Number(budget?.spent ?? 0);
       requireValue(Number.isSafeInteger(held + spent + amount) && held + spent + amount <= options.dailyCap, 'daily_budget_exceeded', 429);
       requireValue(Number(row.activeRequests ?? 0) < 2 && Number(userLimit?.count ?? 0) < 100 && Number(budget?.count ?? 0) < 1000, 'rate_limited', 429);
       row.activeRequests = Number(row.activeRequests ?? 0) + 1;
+      if (options.providerBudget) tx.set('inferenceProviderBudgets/lifetime', { held: Number(lifetime?.held ?? 0) + options.providerBudget.reservation, spent: Number(lifetime?.spent ?? 0) });
       tx.set(`inferenceBudgets/${day}`, { held: held + amount, spent, count: Number(budget?.count ?? 0) + 1 });
       tx.set(`inferenceLimits/${hash(`${uid}:${day}`)}`, { count: Number(userLimit?.count ?? 0) + 1 });
     }
     row.reserved += amount;
     tx.set(`creditAccounts/${uid}`, row);
-    tx.set(`inferenceRequests/${id}`, { uid, requestHash, reservation: amount, state: 'reserved', createdAt: now, ...(options ? { model: options.model, prices: options.prices, inputTokens: options.inputTokens, maxOutputTokens: options.maxOutputTokens, budgetDay: day, grantId: options.grantId, leaseUntil: now + 120000 } : {}) });
+    tx.set(`inferenceRequests/${id}`, { uid, requestHash, reservation: amount, state: 'reserved', createdAt: now, ...(options ? { model: options.model, prices: options.prices, inputTokens: options.inputTokens, maxOutputTokens: options.maxOutputTokens, ...(options.providerBudget ? { providerReservation: options.providerBudget.reservation, providerPrices: options.providerBudget.prices } : {}), budgetDay: day, grantId: options.grantId, leaseUntil: now + 120000 } : {}) });
     return { id, duplicate: false, state: 'reserved' };
   });
 }
@@ -65,6 +74,15 @@ export async function settleCredits(store: Store, uid: string, id: string, actua
     }
     requireValue(actual <= Number(request.reservation) && row.reserved >= Number(request.reservation), 'invalid_settlement');
     const budget = request.budgetDay === undefined ? null : await tx.get(`inferenceBudgets/${request.budgetDay}`);
+    const lifetime = request.providerReservation === undefined ? null : await tx.get('inferenceProviderBudgets/lifetime');
+    if (request.providerReservation !== undefined) {
+      const reservation = Number(request.providerReservation);
+      // Release only known usage or a call that provably never started. An
+      // operator wallet adjustment without AWS usage retains full dollar cost.
+      const nanodollars = request.confirmedNanodollars === undefined ? (request.state === 'reserved' ? 0 : reservation) : Number(request.confirmedNanodollars);
+      requireValue(lifetime && Number(lifetime.held) >= reservation && Number.isSafeInteger(nanodollars) && nanodollars >= 0 && nanodollars <= reservation && Number.isSafeInteger(Number(lifetime.spent) + nanodollars), 'invalid_total_budget', 503);
+      tx.set('inferenceProviderBudgets/lifetime', { held: Number(lifetime.held) - reservation, spent: Number(lifetime.spent) + nanodollars });
+    }
     if (request.budgetDay !== undefined) {
       requireValue(budget && Number(budget.held) >= Number(request.reservation) && Number(row.activeRequests) > 0, 'invalid_budget', 503);
       tx.set(`inferenceBudgets/${request.budgetDay}`, { ...budget, held: Number(budget.held) - Number(request.reservation), spent: Number(budget.spent) + actual });

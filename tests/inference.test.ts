@@ -5,7 +5,7 @@ import { grantCredits } from '../lib/credits/ledger';
 import { prepare, invoke, reconcileRequest } from '../lib/inference/engine';
 import { policies, parseInput } from '../lib/inference/policy';
 import { ModelPolicy, InferenceInput, Provider } from '../lib/inference/types';
-export const policy: ModelPolicy = { id: 'fake', name: 'Fake', region: 'us-east-1', api: 'converse', billingVerified: true, inputMicrocreditsPerToken: 2, outputMicrocreditsPerToken: 3, maxInputTokens: 1000, maxOutputTokens: 100 };
+export const policy: ModelPolicy = { id: 'fake', name: 'Fake', region: 'us-east-1', api: 'converse', billingVerified: true, inputNanodollarsPerToken: 2000, outputNanodollarsPerToken: 3000, inputMicrocreditsPerToken: 2, outputMicrocreditsPerToken: 3, maxInputTokens: 1000, maxOutputTokens: 100 };
 export const input: InferenceInput = { model: 'fake', messages: [{ role: 'user', content: 'Hello' }], maxOutputTokens: 10 };
 const signal = () => new AbortController().signal;
 async function setup() { const store = new MemoryStore(); await grantCredits(store, 'alice', 10000, 'grant_key_00000001', 'admin', 'test'); return store; }
@@ -74,4 +74,36 @@ test('operator resolution requires expired unknown state and records evidence', 
   await settleCredits(store, 'alice', ready.id, 16, Date.now(), 'unknown', { actor: 'admin', reason: 'AWS usage record verified' });
   assert.equal(store.records.get(`creditLedger/${ready.id}`)!.reviewed, true);
   assert.equal(store.records.get('creditAccounts/alice')!.balance, 9984);
+});
+
+test('cumulative provider budget serializes different accounts and survives day changes', async () => {
+  const { reserveCredits, settleCredits } = await import('../lib/credits/ledger');
+  const store = await setup(); await grantCredits(store, 'bob', 10000, 'grant_key_00000001', 'admin', 'test');
+  const options = { model: 'fake', prices: { input: 2, output: 3 }, inputTokens: 5, maxOutputTokens: 10, dailyCap: 1000, grantId: null, providerBudget: { cap: 60000, reservation: 40000, prices: { input: 2000, output: 3000 } } };
+  const rows = await Promise.allSettled(['alice', 'bob'].map((uid) => reserveCredits(store, uid, 40, 'request_key_000001', 'a'.repeat(64), 86400000, options)));
+  assert.equal(rows.filter((r) => r.status === 'fulfilled').length, 1);
+  assert.match(String((rows.find((r) => r.status === 'rejected') as PromiseRejectedResult).reason), /total_budget_exceeded/);
+  const ready = (rows[0] as PromiseFulfilledResult<{ id: string }>).value;
+  Object.assign(store.records.get(`inferenceRequests/${ready.id}`)!, { state: 'invoking', confirmedNanodollars: 16000 });
+  await settleCredits(store, 'alice', ready.id, 16);
+  await settleCredits(store, 'alice', ready.id, 16);
+  assert.deepEqual(store.records.get('inferenceProviderBudgets/lifetime'), { held: 0, spent: 16000 });
+  const next = await reserveCredits(store, 'alice', 40, 'request_key_000002', 'a'.repeat(64), 86400000 * 2, options);
+  await assert.rejects(reserveCredits(store, 'bob', 40, 'request_key_000002', 'a'.repeat(64), 86400000 * 3, options), /total_budget_exceeded/);
+  Object.assign(store.records.get(`inferenceRequests/${next.id}`)!, { state: 'unknown', leaseUntil: 0 });
+  await settleCredits(store, 'alice', next.id, 0, Date.now(), 'unknown', { actor: 'admin', reason: 'Wallet refund without confirmed AWS token usage' });
+  assert.deepEqual(store.records.get('inferenceProviderBudgets/lifetime'), { held: 0, spent: 56000 });
+});
+
+test('confirmed usage settles provider price snapshot; unknown calls retain dollar holds', async () => {
+  const store = await setup();
+  const a = await prepare(store, success, 'alice', null, 'request_key_000001', input, policy, 1000, signal(), 100000);
+  await invoke(store, success, 'alice', a.id, input, { ...policy, inputNanodollarsPerToken: 9999 }, signal(), () => {});
+  assert.deepEqual(store.records.get('inferenceProviderBudgets/lifetime'), { held: 0, spent: 16000 });
+  const b = await prepare(store, success, 'alice', null, 'request_key_000002', input, policy, 1000, signal(), 100000);
+  await invoke(store, { ...success, async *stream() { throw new Error('disconnected'); } }, 'alice', b.id, input, policy, signal(), () => {});
+  assert.deepEqual(store.records.get('inferenceProviderBudgets/lifetime'), { held: 40000, spent: 16000 });
+  const c = await prepare(store, success, 'alice', null, 'request_key_000003', input, policy, 1000, signal(), 100000);
+  await reconcileRequest(store, c.id, Date.now() + 200000);
+  assert.deepEqual(store.records.get('inferenceProviderBudgets/lifetime'), { held: 40000, spent: 16000 });
 });

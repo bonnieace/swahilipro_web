@@ -13,6 +13,8 @@ export function policies(raw: string | undefined): ModelPolicy[] {
     requireValue(typeof row.name === 'string' && row.name.length <= 100 && /^[a-z]{2}-[a-z]+-\d+$/.test(row.region), 'invalid_model_configuration', 503);
     requireValue(row.api === 'converse' && row.billingVerified === true, 'unsupported_model', 503);
     requireValue(amountValid(row.inputMicrocreditsPerToken) && amountValid(row.outputMicrocreditsPerToken), 'invalid_model_price', 503);
+    requireValue(amountValid(row.inputNanodollarsPerToken) && amountValid(row.outputNanodollarsPerToken), 'invalid_provider_price', 503);
+    requireValue(Number.isSafeInteger(row.maxInputTokens * row.inputNanodollarsPerToken + row.maxOutputTokens * row.outputNanodollarsPerToken), 'invalid_provider_price', 503);
     requireValue(amountValid(row.maxInputTokens) && row.maxInputTokens <= 100000 && amountValid(row.maxOutputTokens) && row.maxOutputTokens <= 8192, 'invalid_model_limit', 503);
     requireValue(Number.isSafeInteger(row.maxInputTokens * row.inputMicrocreditsPerToken + row.maxOutputTokens * row.outputMicrocreditsPerToken), 'invalid_model_price', 503);
   }
@@ -36,4 +38,9 @@ export function cost(policy: ModelPolicy, inputTokens: number, outputTokens: num
   requireValue(Number.isSafeInteger(inputTokens) && inputTokens >= 0 && Number.isSafeInteger(outputTokens) && outputTokens >= 0, 'invalid_provider_usage', 503);
   const amount = inputTokens * policy.inputMicrocreditsPerToken + outputTokens * policy.outputMicrocreditsPerToken;
   requireValue(Number.isSafeInteger(amount) && amount >= 0, 'invalid_provider_usage', 503); return amount;
+}
+
+// Integer nanodollars keep provider spending independent of wallet pricing.
+export function providerCost(policy: ModelPolicy, inputTokens: number, outputTokens: number) {
+  return cost({ ...policy, inputMicrocreditsPerToken: policy.inputNanodollarsPerToken, outputMicrocreditsPerToken: policy.outputNanodollarsPerToken }, inputTokens, outputTokens);
 }

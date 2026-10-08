@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     const identity = await apiUser(req, 'inference:invoke'); uid = identity.uid;
     const config = gatewayConfig();
     parsed = parseInput(await body(req, 65536), config.policies);
-    ready = await prepare(store(), bedrockProvider, uid, identity.grantId, req.headers.get('idempotency-key') || '', parsed.input, parsed.policy, config.dailyCap, req.signal);
+    ready = await prepare(store(), bedrockProvider, uid, identity.grantId, req.headers.get('idempotency-key') || '', parsed.input, parsed.policy, config.dailyCap, req.signal, config.totalCap);
     if (ready.duplicate) return json({ duplicate: true, request: { id: ready.id, state: ready.row.state, actual: ready.row.actual ?? null, responseRetained: false } }, 202);
   } catch (error) { return handle(async () => { throw error; }); }
   const controller = new AbortController(); const abort = () => controller.abort();
