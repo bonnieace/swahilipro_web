@@ -23,7 +23,12 @@ and Bedrock remain subsequent milestones; no credits are minted and no inference
 
 Local development: copy .env.example to .env.local; set APP_ORIGIN=http://localhost:3000.
 Use a staging Firebase project for popup integration. Never point tests at production.
-Production sessions are Secure, HttpOnly, SameSite=Strict and expire after five days.
+Production sessions are Secure, HttpOnly, SameSite=Lax and expire after five days.
+Lax permits existing sessions on top-level approval links opened from a CLI or another site.
+Session and authorization mutations still require the configured same-site Origin.
+The sign-in page checks the existing server session; approving a client still requires
+a sign-in within five minutes. The session check migrates older Strict cookies
+without extending the signed session expiry.
 POST/DELETE session requests require an exact trusted Origin; session creation also
 requires a revoked-token check and sign-in within five minutes. Logout clears this
 browser session only. Account-wide/device revocation belongs to the client-grant milestone.

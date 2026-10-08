@@ -1,9 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth } from '@/lib/firebase/admin';
-import { recentSignIn, SESSION_COOKIE, SESSION_SECONDS, trustedOrigin } from '@/lib/auth/policy';
+import { recentSignIn, remainingSessionSeconds, SESSION_COOKIE, SESSION_SECONDS, SESSION_SAME_SITE, trustedOrigin } from '@/lib/auth/policy';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 function allowed(req: NextRequest) { return trustedOrigin(req.headers.get('origin'), process.env.APP_ORIGIN); }
+export async function GET(req: NextRequest) {
+  const token = req.cookies.get(SESSION_COOKIE)?.value;
+  if (token) {
+    try {
+      const identity = await adminAuth().verifySessionCookie(token, true);
+      const now = Date.now() / 1000;
+      const response = NextResponse.json({ signedIn: true, recentSignIn: recentSignIn(identity.auth_time, now) }, { headers: { 'Cache-Control': 'no-store' } });
+      // Migrate existing Strict cookies without minting a session or extending its expiry.
+      response.cookies.set(SESSION_COOKIE, token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: SESSION_SAME_SITE, path: '/', maxAge: remainingSessionSeconds(identity.exp, now) });
+      return response;
+    } catch { /* Invalid or revoked sessions must sign in again. */ }
+  }
+  return NextResponse.json({ signedIn: false, recentSignIn: false }, { headers: { 'Cache-Control': 'no-store' } });
+}
 export async function POST(req: NextRequest) {
   if (!allowed(req)) return NextResponse.json({ error: 'forbidden' }, { status: 403 });
   if (!req.headers.get('content-type')?.startsWith('application/json')) return NextResponse.json({ error: 'invalid_request' }, { status: 415 });
@@ -18,13 +32,13 @@ export async function POST(req: NextRequest) {
     if (!recentSignIn(identity.auth_time, Date.now() / 1000)) return NextResponse.json({ error: 'recent_sign_in_required' }, { status: 401 });
     const token = await auth.createSessionCookie(idToken, { expiresIn: SESSION_SECONDS * 1000 });
     const response = NextResponse.json({ ok: true }, { headers: { 'Cache-Control': 'no-store' } });
-    response.cookies.set(SESSION_COOKIE, token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', path: '/', maxAge: SESSION_SECONDS });
+    response.cookies.set(SESSION_COOKIE, token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: SESSION_SAME_SITE, path: '/', maxAge: SESSION_SECONDS });
     return response;
   } catch { return NextResponse.json({ error: 'sign_in_failed' }, { status: 401 }); }
 }
 export async function DELETE(req: NextRequest) {
   if (!allowed(req)) return NextResponse.json({ error: 'forbidden' }, { status: 403 });
   const response = NextResponse.json({ ok: true }, { headers: { 'Cache-Control': 'no-store' } });
-  response.cookies.set(SESSION_COOKIE, '', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', path: '/', maxAge: 0 });
+  response.cookies.set(SESSION_COOKIE, '', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: SESSION_SAME_SITE, path: '/', maxAge: 0 });
   return response;
 }
