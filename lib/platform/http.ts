@@ -14,11 +14,11 @@ export async function handle(work: () => Promise<unknown>) {
     return json({ error: 'service_unavailable' }, 503);
   }
 }
-export async function body(req: NextRequest) {
+export async function body(req: NextRequest, limit = 4096) {
   requireValue(req.headers.get('content-type')?.startsWith('application/json'), 'invalid_content_type', 415);
   const reader = req.body?.getReader(); requireValue(reader, 'invalid_request');
   const chunks: Uint8Array[] = []; let size = 0;
-  for (;;) { const { value, done } = await reader.read(); if (done) break; size += value.length; if (size > 4096) { await reader.cancel(); throw new PlatformError('request_too_large', 413); } chunks.push(value); }
+  for (;;) { const { value, done } = await reader.read(); if (done) break; size += value.length; if (size > limit) { await reader.cancel(); throw new PlatformError('request_too_large', 413); } chunks.push(value); }
   try { const result = JSON.parse(Buffer.concat(chunks).toString('utf8')); requireValue(result && typeof result === 'object' && !Array.isArray(result), 'invalid_request'); return result as Record<string, unknown>; } catch { throw new PlatformError('invalid_request'); }
 }
 export async function webUser(req: NextRequest, mutation = false) {

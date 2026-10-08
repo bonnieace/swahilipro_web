@@ -38,3 +38,25 @@ checks against the Firestore emulator using a demo project.
 
 Use Spark where eligible and monitor Auth/Firestore quotas. This milestone does not
 promise every future operation remains free. Do not enable paid products implicitly.
+
+## Configured production project
+
+The public Firebase web configuration for `swahiliprohub` is included in
+lib/firebase/project.ts. Browser configuration uses it by default; explicit
+NEXT_PUBLIC_FIREBASE_* build values can select a staging project. Firebase Analytics
+is not initialized by this account integration. Admin project ID defaults to the
+same project; its service-account credentials are still required at runtime.
+
+Production origin is https://swahilipro.com. The Docker runner sets this default;
+other hosting methods should set APP_ORIGIN from .env.production.example. Keep
+FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY server-only in Coolify, or mount a
+service-account JSON and set GOOGLE_APPLICATION_CREDENTIALS. Public browser
+configuration alone does not give the server permission to manage accounts/credits.
+
+In the Firebase console for swahiliprohub, enable GitHub sign-in, configure its
+OAuth app using the callback shown by Firebase (normally
+https://swahiliprohub.firebaseapp.com/__/auth/handler), add swahilipro.com to
+Authentication's authorized domains, and create Firestore. Deploy the existing
+rules/indexes with an explicit --project swahiliprohub after checking the database
+has no other clients that need direct access (these rules deny all client access).
+Firebase Storage and Analytics are not needed for account/credit operations.

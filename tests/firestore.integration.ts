@@ -5,6 +5,8 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { adaptFirestore } from '../lib/platform/firestore-adapter';
 import { grantCredits, reserveCredits, settleCredits } from '../lib/credits/ledger';
 import { startAttempt, challenge, decideAttempt, completeAttempt, refreshGrant, verifyAccess } from '../lib/auth/client-grants';
+import { prepare, invoke, reconcileRequest } from '../lib/inference/engine';
+import { ModelPolicy, InferenceInput, Provider } from '../lib/inference/types';
 const projectId = 'demo-swahilipro';
 // Refuse to fall back to a live service. This suite never accepts production config.
 assert.ok(process.env.FIRESTORE_EMULATOR_HOST, 'Firestore emulator required');
@@ -39,5 +41,23 @@ test('Firestore client API cannot read or write a financial document', async () 
   assert.equal(read.status, 403);
   const write = await fetch(url, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fields: { balance: { integerValue: '99999' } } }) });
   assert.equal(write.status, 403);
+});
+test('real Firestore claims paid invocation once and reconciles confirmed usage', async () => {
+  const uid = `inference-${Date.now()}`;
+  const policy: ModelPolicy = { id: 'fake', name: 'Fake', region: 'us-east-1', api: 'converse', billingVerified: true, inputMicrocreditsPerToken: 2, outputMicrocreditsPerToken: 3, maxInputTokens: 100, maxOutputTokens: 10 };
+  const input: InferenceInput = { model: 'fake', messages: [{ role: 'user', content: 'Hello' }], maxOutputTokens: 10 };
+  let calls = 0;
+  const provider: Provider = { count: async () => 5, async *stream() { calls++; yield { type: 'usage', inputTokens: 5, outputTokens: 2 }; } };
+  await grantCredits(store, uid, 1000, 'grant_key_00000001', 'admin', 'Emulator');
+  const rows = await Promise.all([1, 2].map(() => prepare(store, provider, uid, null, 'request_key_000001', input, policy, 100000, new AbortController().signal)));
+  assert.equal(rows.filter((row) => !row.duplicate).length, 1);
+  const invoked = await Promise.allSettled(rows.map((row) => invoke(store, provider, uid, row.id, input, policy, new AbortController().signal, () => {})));
+  assert.equal(invoked.filter((row) => row.status === 'fulfilled').length, 1);
+  assert.equal(calls, 1);
+  assert.deepEqual((await db.doc(`creditAccounts/${uid}`).get()).data(), { balance: 984, reserved: 0, activeRequests: 0 });
+  const next = await prepare(store, provider, uid, null, 'request_key_000002', input, policy, 100000, new AbortController().signal);
+  await db.doc(`inferenceRequests/${next.id}`).update({ state: 'invoking', confirmedActual: 16 });
+  assert.equal(await reconcileRequest(store, next.id), 'settled');
+  assert.equal((await db.doc(`creditAccounts/${uid}`).get()).data()!.balance, 968);
 });
 test.after(async () => { await db.terminate(); });

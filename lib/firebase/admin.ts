@@ -2,11 +2,12 @@ import 'server-only';
 import { applicationDefault, cert, getApps, initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
+import { firebaseProject } from './project';
 
 function adminApp() {
   const existing = getApps().find((app) => app.name === 'swahilipro');
   if (existing) return existing;
-  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const projectId = process.env.FIREBASE_PROJECT_ID || firebaseProject.projectId;
   if (!projectId) throw new Error('Firebase server configuration is missing');
   const email = process.env.FIREBASE_CLIENT_EMAIL;
   const key = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
