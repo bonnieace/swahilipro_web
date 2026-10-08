@@ -6,5 +6,5 @@ export function bedrockClientOptions(region: string, key = process.env.AWS_BEARE
 }
 
 export function countingModelId(policy: { id: string; countModelId?: string }) {
-  return policy.countModelId ?? policy.id;
+  return policy.countModelId ?? policy.id.replace(/^(us|eu|au|jp|in|apac|global)\./, '');
 }

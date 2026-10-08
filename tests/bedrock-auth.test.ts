@@ -37,4 +37,23 @@ test('counting uses configured underlying model while inference retains profile 
   assert.equal(countingModelId(policy), 'anthropic.claude-sonnet-4-6');
   assert.equal(policy.id, 'us.anthropic.claude-sonnet-4-6');
   assert.equal(countingModelId({ id: 'fake' }), 'fake');
+  assert.equal(countingModelId({ id: 'us.anthropic.claude-sonnet-4-6' }), 'anthropic.claude-sonnet-4-6');
+  assert.equal(countingModelId({ id: 'eu.anthropic.claude-sonnet-4-6' }), 'anthropic.claude-sonnet-4-6');
+  assert.equal(countingModelId({ id: 'anthropic.claude-sonnet-4-6' }), 'anthropic.claude-sonnet-4-6');
+});
+
+import { countingError } from '../lib/inference/bedrock-errors';
+import { PlatformError } from '../lib/platform/store';
+test('count failures expose fixed codes without SDK messages or credentials', () => {
+  const cases = { CredentialsProviderError: 'provider_credentials_missing', AccessDeniedException: 'provider_access_denied', UnrecognizedClientException: 'provider_authentication_failed', InvalidSignatureException: 'provider_authentication_failed', ExpiredTokenException: 'provider_authentication_failed', ValidationException: 'provider_count_rejected', AbortError: 'token_count_timeout', TimeoutError: 'token_count_timeout', Error: 'provider_count_unavailable' };
+  for (const [name, code] of Object.entries(cases)) {
+    const result = countingError({ name, message: 'secret SDK details', stack: 'secret stack' });
+    assert.equal(result.code, code);
+    assert.equal(result.status, 503);
+    assert.equal(result.message, code);
+    assert.ok(!result.stack?.includes('secret'));
+  }
+  const domain = new PlatformError('token_count_unavailable', 503);
+  assert.equal(countingError(domain), domain);
+  assert.equal(countingError(null).code, 'provider_count_unavailable');
 });
