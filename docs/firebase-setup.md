@@ -2,8 +2,9 @@
 
 This first milestone adds GitHub sign-in, Firebase-backed HttpOnly web sessions,
 protected account page, authenticated /api/v1/me and deny-by-default Firestore rules.
-Client grants, wallet transactions, LMS synchronization and Bedrock are subsequent
-milestones; no credits are minted and no inference is billed by this change.
+Client authorization and wallet transactions are now implemented in the follow-up
+client-authorization milestone; see client-authorization.md. LMS synchronization
+and Bedrock remain subsequent milestones; no credits are minted and no inference is billed by this change.
 
 ## Setup
 1. Audit any existing Firebase project/users before creating a production project.
@@ -32,8 +33,8 @@ npm ci; npm test; npm run typecheck; npm run build.
 Manual staging checks: successful GitHub login, cancelled popup, protected /account,
 unauthenticated /api/v1/me, logout, disabled/revoked user and missing config.
 Firebase credentials are required for live checks; builds do not initialize Admin SDK.
-CI tests policy decisions without service credentials. Firestore emulator rules tests
-will be expanded alongside the first accessible collection.
+CI tests domain policy without service credentials and runs transactional/rules
+checks against the Firestore emulator using a demo project.
 
 Use Spark where eligible and monitor Auth/Firestore quotas. This milestone does not
 promise every future operation remains free. Do not enable paid products implicitly.

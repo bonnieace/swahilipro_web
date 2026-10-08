@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
-import { currentUser } from '@/lib/auth/session';
+import { NextRequest } from 'next/server';
+import { apiUser, handle } from '@/lib/platform/http';
+import { adminAuth } from '@/lib/firebase/admin';
 export const dynamic = 'force-dynamic';
-export async function GET() {
-  const user = await currentUser();
-  if (!user) return NextResponse.json({ error: 'unauthenticated' }, { status: 401, headers: { 'Cache-Control': 'no-store' } });
-  return NextResponse.json({ uid: user.uid, email: user.email || null, name: user.name || null }, { headers: { 'Cache-Control': 'no-store' } });
-}
+export async function GET(req: NextRequest) { return handle(async () => {
+  const identity = await apiUser(req, 'profile:read'); const user = await adminAuth().getUser(identity.uid);
+  return { uid: user.uid, email: user.email || null, name: user.displayName || null, grantId: identity.grantId };
+}); }
