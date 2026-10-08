@@ -3,6 +3,7 @@ import { countingModelId, bedrockClientOptions } from './bedrock-client';
 import { BedrockRuntimeClient, ConverseStreamCommand, CountTokensCommand } from '@aws-sdk/client-bedrock-runtime';
 import { Provider, InferenceInput, ModelPolicy } from './types';
 import { PlatformError } from '@/lib/platform/store';
+import { countingError } from './bedrock-errors';
 function conversation(input: InferenceInput) {
   return { messages: input.messages.map((message) => ({ role: message.role, content: [{ text: message.content }] })), ...(input.system ? { system: [{ text: input.system }] } : {}) };
 }
@@ -13,7 +14,8 @@ export const bedrockProvider: Provider = {
       const result = await client.send(new CountTokensCommand({ modelId: countingModelId(policy), input: { converse: conversation(input) } }), { abortSignal: signal });
       if (!Number.isSafeInteger(result.inputTokens)) throw new PlatformError('token_count_unavailable', 503);
       return result.inputTokens!;
-    } finally { client.destroy(); }
+    } catch (error) { throw countingError(error); }
+    finally { client.destroy(); }
   },
   async *stream(policy: ModelPolicy, input: InferenceInput, signal: AbortSignal) {
     // No SDK auto-retry of paid invocation: ambiguous transport failure is tracked.
