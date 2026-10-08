@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { BedrockRuntimeClient, CountTokensCommand, ConverseStreamCommand } from '@aws-sdk/client-bedrock-runtime';
-import { bedrockClientOptions } from '../lib/inference/bedrock-client';
+import { countingModelId, bedrockClientOptions } from '../lib/inference/bedrock-client';
 
 test('API-key SDK sends bearer auth for counting and streaming without IAM credentials or retries', async () => {
   const seen: string[] = [];
@@ -30,4 +30,11 @@ test('provider budget rejects missing/expired credits and ceilings over 300 USD'
   assert.throws(() => providerBudgetConfig({ ...env, BEDROCK_TOTAL_USD_CAP: '301' }, now), /invalid_total_budget/);
   assert.throws(() => providerBudgetConfig({ ...env, BEDROCK_CREDIT_EXPIRES_AT: '' }, now), /credit_expired_or_unverified/);
   assert.throws(() => providerBudgetConfig(env, Date.parse(env.BEDROCK_CREDIT_EXPIRES_AT)), /credit_expired_or_unverified/);
+});
+
+test('counting uses configured underlying model while inference retains profile ID', () => {
+  const policy = { id: 'us.anthropic.claude-sonnet-4-6', countModelId: 'anthropic.claude-sonnet-4-6' };
+  assert.equal(countingModelId(policy), 'anthropic.claude-sonnet-4-6');
+  assert.equal(policy.id, 'us.anthropic.claude-sonnet-4-6');
+  assert.equal(countingModelId({ id: 'fake' }), 'fake');
 });

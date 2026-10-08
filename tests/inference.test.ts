@@ -107,3 +107,9 @@ test('confirmed usage settles provider price snapshot; unknown calls retain doll
   await reconcileRequest(store, c.id, Date.now() + 200000);
   assert.deepEqual(store.records.get('inferenceProviderBudgets/lifetime'), { held: 40000, spent: 16000 });
 });
+
+test('count model configuration cannot switch tokenizers', () => {
+  const model = { ...policy, id: 'us.anthropic.claude-sonnet-4-6', countModelId: 'anthropic.claude-sonnet-4-6' };
+  assert.equal(policies(JSON.stringify([model]))[0].countModelId, model.countModelId);
+  assert.throws(() => policies(JSON.stringify([{ ...model, countModelId: 'anthropic.claude-haiku-4-5-20251001-v1:0' }])), /invalid_count_model/);
+});

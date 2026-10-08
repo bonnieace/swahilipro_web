@@ -1,5 +1,5 @@
 import 'server-only';
-import { bedrockClientOptions } from './bedrock-client';
+import { countingModelId, bedrockClientOptions } from './bedrock-client';
 import { BedrockRuntimeClient, ConverseStreamCommand, CountTokensCommand } from '@aws-sdk/client-bedrock-runtime';
 import { Provider, InferenceInput, ModelPolicy } from './types';
 import { PlatformError } from '@/lib/platform/store';
@@ -10,7 +10,7 @@ export const bedrockProvider: Provider = {
   async count(policy: ModelPolicy, input: InferenceInput, signal: AbortSignal) {
     const client = new BedrockRuntimeClient(bedrockClientOptions(policy.region));
     try {
-      const result = await client.send(new CountTokensCommand({ modelId: policy.id, input: { converse: conversation(input) } }), { abortSignal: signal });
+      const result = await client.send(new CountTokensCommand({ modelId: countingModelId(policy), input: { converse: conversation(input) } }), { abortSignal: signal });
       if (!Number.isSafeInteger(result.inputTokens)) throw new PlatformError('token_count_unavailable', 503);
       return result.inputTokens!;
     } finally { client.destroy(); }

@@ -4,3 +4,7 @@ export function bedrockClientOptions(region: string, key = process.env.AWS_BEARE
   const token = key?.trim();
   return { region, maxAttempts: 1, ...(token ? { token: { token }, authSchemePreference: ['httpBearerAuth'] } : {}) };
 }
+
+export function countingModelId(policy: { id: string; countModelId?: string }) {
+  return policy.countModelId ?? policy.id;
+}

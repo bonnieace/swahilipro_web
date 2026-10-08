@@ -157,3 +157,23 @@ The cap covers calls through this gateway using verified rates, not other client
 using the same AWS account/key, taxes, or additional AWS services. AWS billing is
 updated asynchronously; this ledger does not inspect the live promotional balance
 or guarantee that AWS applies credits to a particular Marketplace model.
+
+
+## Verified live model routing (2026-10-08)
+
+In us-east-1, CountTokens rejected the US inference profile IDs for Sonnet 4.6,
+Haiku 4.5 and Opus 4.6. Counting succeeded using their underlying model IDs.
+Configure `countModelId` explicitly while leaving `id` set to the US profile:
+
+| Inference id | countModelId |
+| --- | --- |
+| us.anthropic.claude-sonnet-4-6 | anthropic.claude-sonnet-4-6 |
+| us.anthropic.claude-haiku-4-5-20251001-v1:0 | anthropic.claude-haiku-4-5-20251001-v1:0 |
+| us.anthropic.claude-opus-4-6-v1 | anthropic.claude-opus-4-6-v1 |
+
+The policy parser requires the count ID to match the profile's underlying model.
+Sonnet ConverseStream succeeded in a live 16-output-token-limit smoke test with
+12 billed input and 4 output tokens (estimated $0.0001056). Counting the same
+text returned 29 tokens, conservatively above the stream's final billed input.
+Haiku and Opus counting succeeded; their streaming/account model access has not
+yet been tested. No automatic retry of the paid smoke test was performed.

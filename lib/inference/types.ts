@@ -1,5 +1,5 @@
 export type ModelPolicy = {
-  id: string; name: string; region: string; api: 'converse';
+  id: string; countModelId?: string; name: string; region: string; api: 'converse';
   inputMicrocreditsPerToken: number; outputMicrocreditsPerToken: number;
   inputNanodollarsPerToken: number; outputNanodollarsPerToken: number;
   maxInputTokens: number; maxOutputTokens: number; billingVerified: true;
