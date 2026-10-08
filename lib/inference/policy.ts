@@ -10,6 +10,8 @@ export function policies(raw: string | undefined): ModelPolicy[] {
     requireValue(row && typeof row === 'object', 'invalid_model_configuration', 503);
     requireValue(typeof row.id === 'string' && row.id.length > 0 && row.id.length <= 250 && !ids.has(row.id), 'invalid_model_configuration', 503);
     ids.add(row.id);
+    // Counting must use the same underlying model, never a cheaper tokenizer.
+    requireValue(row.countModelId === undefined || row.countModelId === row.id.replace(/^(us|eu|au|jp|in|apac|global)\./, ''), 'invalid_count_model', 503);
     requireValue(typeof row.name === 'string' && row.name.length <= 100 && /^[a-z]{2}-[a-z]+-\d+$/.test(row.region), 'invalid_model_configuration', 503);
     requireValue(row.api === 'converse' && row.billingVerified === true, 'unsupported_model', 503);
     requireValue(amountValid(row.inputMicrocreditsPerToken) && amountValid(row.outputMicrocreditsPerToken), 'invalid_model_price', 503);
