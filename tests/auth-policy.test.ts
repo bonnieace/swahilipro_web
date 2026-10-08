@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { recentSignIn, remainingSessionSeconds, resumeSession, SESSION_SECONDS, signInDestination, trustedOrigin } from '../lib/auth/policy';
+import { recentSignIn, resumeSession, signInDestination, trustedOrigin } from '../lib/auth/policy';
 test('session mutation rejects missing or cross-site origins', () => {
   assert.equal(trustedOrigin(null, 'https://swahilipro.com'), false);
   assert.equal(trustedOrigin('https://evil.example', 'https://swahilipro.com'), false);
@@ -19,12 +19,6 @@ test('resuming a session respects recent approval authentication and explicit re
   assert.equal(resumeSession(destination, false, false), false);
   assert.equal(resumeSession(destination, true, true), false);
   assert.equal(resumeSession('/account', true, true), false);
-});
-test('cookie migration never extends the signed session lifetime', () => {
-  assert.equal(remainingSessionSeconds(1200, 1000), 200);
-  assert.equal(remainingSessionSeconds(1000, 1200), 0);
-  assert.equal(remainingSessionSeconds(NaN, 1000), 0);
-  assert.equal(remainingSessionSeconds(SESSION_SECONDS * 2, 0), SESSION_SECONDS);
 });
 test('only recent sign-ins can mint web sessions', () => {
   assert.equal(recentSignIn(1000, 1200), true);

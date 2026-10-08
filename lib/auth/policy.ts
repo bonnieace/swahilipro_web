@@ -7,9 +7,6 @@ export function signInDestination(next: string | null): string {
 export function resumeSession(destination: string, recent: boolean, reauthenticate: boolean): boolean {
   return !reauthenticate && (destination === '/account' || recent);
 }
-export function remainingSessionSeconds(expiresAt: number, now: number): number {
-  return Number.isFinite(expiresAt) ? Math.max(0, Math.min(SESSION_SECONDS, Math.floor(expiresAt - now))) : 0;
-}
 export function trustedOrigin(origin: string | null, configured: string | undefined): boolean {
   if (!origin || !configured) return false;
   try { return origin === new URL(configured).origin; } catch { return false; }
