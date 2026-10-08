@@ -44,19 +44,19 @@ test('Firestore client API cannot read or write a financial document', async () 
 });
 test('real Firestore claims paid invocation once and reconciles confirmed usage', async () => {
   const uid = `inference-${Date.now()}`;
-  const policy: ModelPolicy = { id: 'fake', name: 'Fake', region: 'us-east-1', api: 'converse', billingVerified: true, inputMicrocreditsPerToken: 2, outputMicrocreditsPerToken: 3, maxInputTokens: 100, maxOutputTokens: 10 };
+  const policy: ModelPolicy = { id: 'fake', name: 'Fake', region: 'us-east-1', api: 'converse', billingVerified: true, inputNanodollarsPerToken: 2000, outputNanodollarsPerToken: 3000, inputMicrocreditsPerToken: 2, outputMicrocreditsPerToken: 3, maxInputTokens: 100, maxOutputTokens: 10 };
   const input: InferenceInput = { model: 'fake', messages: [{ role: 'user', content: 'Hello' }], maxOutputTokens: 10 };
   let calls = 0;
   const provider: Provider = { count: async () => 5, async *stream() { calls++; yield { type: 'usage', inputTokens: 5, outputTokens: 2 }; } };
   await grantCredits(store, uid, 1000, 'grant_key_00000001', 'admin', 'Emulator');
-  const rows = await Promise.all([1, 2].map(() => prepare(store, provider, uid, null, 'request_key_000001', input, policy, 100000, new AbortController().signal)));
+  const rows = await Promise.all([1, 2].map(() => prepare(store, provider, uid, null, 'request_key_000001', input, policy, 100000, new AbortController().signal, 1000000)));
   assert.equal(rows.filter((row) => !row.duplicate).length, 1);
   const invoked = await Promise.allSettled(rows.map((row) => invoke(store, provider, uid, row.id, input, policy, new AbortController().signal, () => {})));
   assert.equal(invoked.filter((row) => row.status === 'fulfilled').length, 1);
   assert.equal(calls, 1);
   assert.deepEqual((await db.doc(`creditAccounts/${uid}`).get()).data(), { balance: 984, reserved: 0, activeRequests: 0 });
-  const next = await prepare(store, provider, uid, null, 'request_key_000002', input, policy, 100000, new AbortController().signal);
-  await db.doc(`inferenceRequests/${next.id}`).update({ state: 'invoking', confirmedActual: 16 });
+  const next = await prepare(store, provider, uid, null, 'request_key_000002', input, policy, 100000, new AbortController().signal, 1000000);
+  await db.doc(`inferenceRequests/${next.id}`).update({ state: 'invoking', confirmedActual: 16, confirmedNanodollars: 16000 });
   assert.equal(await reconcileRequest(store, next.id), 'settled');
   assert.equal((await db.doc(`creditAccounts/${uid}`).get()).data()!.balance, 968);
 });

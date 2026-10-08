@@ -25,6 +25,8 @@ Set `BEDROCK_MODELS_JSON` to an array of up to ten model policies. Example schem
   "billingVerified": true,
   "inputMicrocreditsPerToken": 2,
   "outputMicrocreditsPerToken": 3,
+  "inputNanodollarsPerToken": 2000,
+  "outputNanodollarsPerToken": 3000,
   "maxInputTokens": 32000,
   "maxOutputTokens": 4096
 }]
@@ -119,3 +121,39 @@ local agent loop are the next phase for the compiler and extension.
 AWS references:
 - https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_CountTokens.html
 - https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ConverseStream.html
+
+
+## Vercel API key and cumulative provider budget
+
+Set the replacement long-term key only in Vercel Production as
+`AWS_BEARER_TOKEN_BEDROCK`. The server explicitly selects the SDK bearer auth
+scheme when a key exists; otherwise the IAM credential chain remains available.
+Both token counting and streaming use that configuration with retries disabled.
+Never copy the key into the CLI, extension, public variables, or source control.
+
+Keep `BEDROCK_ENABLED=false` until the selected model's credit eligibility,
+permissions, token counting and prices are verified. Set
+`BEDROCK_CREDIT_EXPIRES_AT` to the credit's UTC expiry timestamp; missing or expired
+values block new calls. This date must conservatively reflect the actual expiry.
+
+Set `BEDROCK_TOTAL_USD_CAP=300` (or a smaller positive amount). Values above 300
+are rejected. Each model policy now also requires positive integer
+`inputNanodollarsPerToken` and `outputNanodollarsPerToken`: multiply the USD price
+per million tokens by 1000, rounding upward if necessary. These must cover the
+selected model's actual text inference charges independently of wallet pricing.
+Do not copy unverified rates from an example. Price snapshots survive subsequent
+configuration changes.
+
+The shared `inferenceProviderBudgets/lifetime` document atomically holds maximum
+provider costs before invocation, then settles final token costs without resetting
+at midnight or after a deployment. Unknown calls retain their holds. Manual wallet
+resolution without confirmed provider usage conservatively spends the full dollar
+reservation. Never delete or reset this document to bypass the total limit.
+Existing requests created before this change are not retroactively priced: before
+enabling an already-used gateway, reconcile and seed historical provider spending.
+This deployment has made no paid gateway calls yet.
+
+The cap covers calls through this gateway using verified rates, not other clients
+using the same AWS account/key, taxes, or additional AWS services. AWS billing is
+updated asynchronously; this ledger does not inspect the live promotional balance
+or guarantee that AWS applies credits to a particular Marketplace model.
