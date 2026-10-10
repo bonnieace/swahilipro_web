@@ -6,7 +6,6 @@ import {
   Download,
   ExternalLink,
   Globe2,
-  GraduationCap,
   Play,
   Quote,
   Sparkles,
@@ -205,10 +204,12 @@ export default function Home() {
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <a
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition hover:-translate-y-0.5 hover:bg-emerald-800"
-                  href="/lms"
+                  href={marketplaceUrl}
+                  rel="noreferrer"
+                  target="_blank"
                 >
-                  <GraduationCap className="h-4 w-4" />
-                  Start learning
+                  <Code2 className="h-4 w-4" />
+                  Get VS Code extension
                 </a>
                 <a
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-900/15 bg-white/65 px-5 py-3 text-sm font-bold text-stone-900 shadow-sm transition hover:bg-white"
