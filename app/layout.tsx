@@ -47,9 +47,11 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: "Swahilipro",
     type: "website",
+    images: [{ url: "/social-preview.png", width: 1200, height: 630, alt: "SwahiliPro — Write code in Kiswahili" }],
   },
   twitter: {
     card: "summary_large_image",
+    images: ["/social-preview.png"],
     title: "Swahilipro | Swahili programming language",
     description:
       "Learn programming and write real software in Swahili with Swahilipro.",
