@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     "Official SwahiliPro documentation for learning Swahili programming syntax, variables, conditions, loops, functions, lists, the swa CLI and VS Code workflow.",
   alternates: { canonical: "/docs" },
   openGraph: {
+    images: [{ url: "/social-preview-soma-v2.png", width: 1200, height: 630, alt: "SwahiliPro — Think in Swahili. Build something real." }],
     title: "SwahiliPro Documentation | Swahili Programming Language Docs",
     description:
       "Learn SwahiliPro syntax, core programming concepts, CLI usage and VS Code workflow.",

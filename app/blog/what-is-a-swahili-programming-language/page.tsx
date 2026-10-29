@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     "Learn what a Swahili programming language is, how coding in Kiswahili works, and how SwahiliPro combines Swahili commands with familiar programming structure.",
   alternates: { canonical: "/blog/what-is-a-swahili-programming-language" },
   openGraph: {
+    images: [{ url: "/social-preview-soma-v2.png", width: 1200, height: 630, alt: "SwahiliPro — Think in Swahili. Build something real." }],
     title: "What Is a Swahili Programming Language? | SwahiliPro",
     description:
       "A practical guide to programming in Swahili and the ideas behind SwahiliPro.",

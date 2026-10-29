@@ -47,11 +47,11 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: "Swahilipro",
     type: "website",
-    images: [{ url: "/social-preview.png", width: 1200, height: 630, alt: "SwahiliPro — Write code in Kiswahili" }],
+    images: [{ url: "/social-preview-soma-v2.png", width: 1200, height: 630, alt: "Soma the teal chameleon coding — Think in Swahili. Build something real." }],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/social-preview.png"],
+    images: [{ url: "/social-preview-soma-v2.png", alt: "Soma the teal chameleon coding — Think in Swahili. Build something real." }],
     title: "Swahilipro | Swahili programming language",
     description:
       "Learn programming and write real software in Swahili with Swahilipro.",

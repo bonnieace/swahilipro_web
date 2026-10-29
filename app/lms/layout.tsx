@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/lms" },
   openGraph: {
+    images: [{ url: "/social-preview-soma-v2.png", width: 1200, height: 630, alt: "SwahiliPro — Think in Swahili. Build something real." }],
     title: "Learn Programming in Swahili | SwahiliPro",
     description:
       "An interactive Swahili programming course for learning core coding concepts in Kiswahili.",
