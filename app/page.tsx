@@ -17,7 +17,7 @@ import AchievementsGallery from "@/components/achieve";
 import Navbar from "@/components/navbar";
 
 const marketplaceUrl =
-  "https://marketplace.visualstudio.com/items?itemName=masota.swahilipro";
+  "https://marketplace.visualstudio.com/items?itemName=masota.swahilipro-language";
 const releaseUrl =
   "https://github.com/bonnieace/swahilipro-downloads/releases/tag/v2.0.0";
 
