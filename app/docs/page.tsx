@@ -134,8 +134,8 @@ export default function DocsPage() {
           </DocSection>
 
           <DocSection id="vscode" title="VS Code extension">
-            <p>The SwahiliPro extension adds language recognition, syntax highlighting, Run File, Open REPL and editor actions for <code className="font-mono font-semibold text-emerald-800">.swa</code> files.</p>
-            <a className="inline-flex items-center gap-2 font-bold text-emerald-800" href="https://marketplace.visualstudio.com/items?itemName=masota.swahilipro" rel="noreferrer" target="_blank"><Code2 className="h-4 w-4" /> Install from VS Code Marketplace <ExternalLink className="h-3.5 w-3.5" /></a>
+            <p>The SwahiliPro extension adds language recognition, syntax highlighting, keyword hovers and a New File command for <code className="font-mono font-semibold text-emerald-800">.swa</code> files. To run programs, install the standalone CLI above.</p>
+            <a className="inline-flex items-center gap-2 font-bold text-emerald-800" href="https://marketplace.visualstudio.com/items?itemName=masota.swahilipro-language" rel="noreferrer" target="_blank"><Code2 className="h-4 w-4" /> Install from VS Code Marketplace <ExternalLink className="h-3.5 w-3.5" /></a>
           </DocSection>
         </article>
       </main>

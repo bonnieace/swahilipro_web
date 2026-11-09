@@ -50,7 +50,7 @@ export default function Navbar() {
           </a>
           <a
             className="inline-flex h-9 items-center gap-2 bg-emerald-700 px-4 text-sm font-bold text-white transition hover:bg-emerald-800"
-            href="https://marketplace.visualstudio.com/items?itemName=masota.swahilipro"
+            href="https://marketplace.visualstudio.com/items?itemName=masota.swahilipro-language"
             target="_blank"
             rel="noreferrer"
           >
@@ -85,7 +85,7 @@ export default function Navbar() {
             ))}
             <a
               className="mt-2 inline-flex items-center justify-center gap-2 bg-emerald-700 px-4 py-3 text-sm font-bold text-white"
-              href="https://marketplace.visualstudio.com/items?itemName=masota.swahilipro"
+              href="https://marketplace.visualstudio.com/items?itemName=masota.swahilipro-language"
               target="_blank"
               rel="noreferrer"
             >
